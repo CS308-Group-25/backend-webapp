@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+        POSTGRES_USER: cs308
+        POSTGRES_PASSWORD: cs308pass
+        POSTGRES_DB: cs308db
+    ports:
+        - "5432:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+volumes: 
+    postgres_data:
+        
