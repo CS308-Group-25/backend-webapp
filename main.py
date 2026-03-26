@@ -3,7 +3,7 @@ from fastapi import FastAPI
 
 load_dotenv()
 
-app = FastAPI(title="CS308 Online Store")
+app = FastAPI(title="SUpplements Store")
 
 @app.get("/")
 def health_check():
