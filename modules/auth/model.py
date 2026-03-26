@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship  # noqa: F401
 
 from core.database import Base
+
 
 class User(Base):
     __tablename__ = "users"
