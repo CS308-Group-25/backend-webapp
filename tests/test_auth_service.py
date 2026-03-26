@@ -34,7 +34,7 @@ def test_register_hashes_password_never_plain_text():
 
     # Assert
     # Obtain the arguments that were passed into the repository's `create_user` method
-    args, kwargs = mock_repo.create_user.call_args
+    _, kwargs = mock_repo.create_user.call_args
     
     stored_hash = kwargs.get("password_hash")
     
