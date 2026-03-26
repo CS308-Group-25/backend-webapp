@@ -1,9 +1,10 @@
 import os
 from logging.config import fileConfig
 
-from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 
 load_dotenv()
 
@@ -13,7 +14,8 @@ config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", ""))
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from core.database import Base # noqa: E402
+from core.database import Base  # noqa: E402
+
 target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
