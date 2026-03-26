@@ -14,6 +14,7 @@ config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", ""))
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+import core.models  # noqa: E402, F401
 from core.database import Base  # noqa: E402
 
 target_metadata = Base.metadata
