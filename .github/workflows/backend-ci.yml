@@ -46,5 +46,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Smoke test app import
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
         run: |
           python -c "from main import app; print(app.title)"
