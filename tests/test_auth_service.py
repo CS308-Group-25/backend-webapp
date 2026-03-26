@@ -14,7 +14,7 @@ def test_register_hashes_password_never_plain_text():
     mock_user.id = 1
     mock_user.name = "Test User"
     mock_user.email = "test@example.com"
-    mock_user.role = "CUSTOMER"
+    mock_user.role = "customer"
     mock_repo.create_user.return_value = mock_user
 
     service = AuthService(repo=mock_repo)
