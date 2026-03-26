@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
-from modules.auth.service import AuthService, pwd_context
+
 from modules.auth.schema import RegisterRequest
+from modules.auth.service import AuthService, pwd_context
 
 
 def test_register_hashes_password_never_plain_text():
@@ -29,7 +30,7 @@ def test_register_hashes_password_never_plain_text():
     )
 
     # Act
-    response = service.register(req)
+    service.register(req)
 
     # Assert
     # Obtain the arguments that were passed into the repository's `create_user` method
@@ -39,8 +40,13 @@ def test_register_hashes_password_never_plain_text():
     
     
     # 1. Confirm the password is never stored as plain text
-    assert stored_hash is not None, "A password hash should be provided to the repository."
-    assert stored_hash != plain_password, "The stored password MUST NOT match the plain text!"
+    assert stored_hash is not None, (
+        "A password hash should be provided to the repository."
+    )
+
+    assert stored_hash != plain_password, (
+        "The stored password MUST NOT match the plain text!"
+    )
     
     # 2. Confirm it was correctly hashed using our passlib configuration
     assert pwd_context.verify(plain_password, stored_hash) is True
