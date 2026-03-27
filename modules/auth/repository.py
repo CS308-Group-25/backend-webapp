@@ -15,8 +15,8 @@ class UserRepository:
         name: str,
         email: str,
         password_hash: str,
-        tax_id: str,
-        address: str,
+        tax_id: str | None = None,
+        address: str | None = None,
         role: str = "customer",
     ) -> User:
         user = User(
