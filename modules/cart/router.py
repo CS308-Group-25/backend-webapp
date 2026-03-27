@@ -9,14 +9,15 @@ from modules.cart.schema import (
     CartItemUpdateRequest,
 )
 from modules.cart.service import CartService
+from modules.products.repository import ProductRepository
 
 router = APIRouter(prefix="/api/v1/cart/items", tags=["cart"])
 
 
 def get_cart_service(db: Session = Depends(get_db)):
     repo = CartRepository(db)
-    return CartService(repo, db)
-
+    product_repo = ProductRepository(db)
+    return CartService(repo, product_repo)
 
 @router.get("", response_model=list[CartItemResponse])
 def get_cart_items(user_id: int, service: CartService = Depends(get_cart_service)):
