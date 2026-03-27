@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 
 from modules.cart.model import Cart, CartItem
 from modules.cart.repository import CartRepository
-from modules.products.model import Product
+from modules.products.repository import ProductRepository
 
 
 class CartService:
-    def __init__(self, repo: CartRepository, db: Session):
+    def __init__(self, repo: CartRepository, product_repo: ProductRepository):
         self.repo = repo
-        self.db = db
+        self.product_repo = product_repo
 
     def get_cart(self, user_id: int) -> Cart | None:
         cart = self.repo.get(user_id)
@@ -18,7 +18,7 @@ class CartService:
         return cart
 
     def add_item(self, user_id: int, product_id: int, quantity: int = 1) -> CartItem:
-        product = self.db.query(Product).filter(Product.id == product_id).first()
+        product = self.product_repo.get_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
