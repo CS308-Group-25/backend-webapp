@@ -1,11 +1,11 @@
+from unittest.mock import MagicMock
+
 import pytest
 from fastapi import HTTPException
 
-from unittest.mock import MagicMock
-
+from modules.auth.model import User
 from modules.auth.schema import RegisterRequest
 from modules.auth.service import AuthService, pwd_context
-from modules.auth.model import User
 
 
 def test_register_hashes_password_never_plain_text():
