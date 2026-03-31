@@ -1,10 +1,11 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
-from modules.auth.router import router as auth_router
-from modules.cart.router import router as cart_router
-
 load_dotenv()
+
+import core.models  # noqa: E402, F401
+from modules.auth.router import router as auth_router  # noqa: E402
+from modules.cart.router import router as cart_router  # noqa: E402
 
 app = FastAPI(title="SUpplements Store")
 app.include_router(auth_router)
