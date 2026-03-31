@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi import HTTPException
 
-from modules.auth.model import User
 from modules.auth.schema import RegisterRequest
 from modules.auth.service import AuthService, pwd_context
 
@@ -56,16 +55,14 @@ def test_register_hashes_password_never_plain_text():
     assert pwd_context.verify(plain_password, stored_hash) is True
 
 def test_register_success(mock_repo):
+    mock_user = MagicMock()
+    mock_user.id = 1
+    mock_user.name = "Test User"
+    mock_user.email = "test@example.com"
+    mock_user.role = "customer"
+
     mock_repo.get_by_email.return_value = None
-    mock_repo.create_user.return_value = User(
-        id=1,
-        name="Test User",
-        email="test@example.com",
-        password_hash="hashed",
-        tax_id="123456789",
-        address="123 Example St",
-        role="customer",
-    )
+    mock_repo.create_user.return_value = mock_user
 
     service = AuthService(repo=mock_repo)
     data = RegisterRequest(
@@ -82,7 +79,13 @@ def test_register_success(mock_repo):
     assert result.role == "customer"
 
 def test_register_duplicate_email_raises_400(mock_repo):
-    mock_repo.get_by_email.return_value = User(id=1, email="test@example.com")
+    mock_user = MagicMock()
+    mock_user.id = 1
+    mock_user.name = "Test User"
+    mock_user.email = "test@example.com"
+    mock_user.role = "customer"
+
+    mock_repo.get_by_email.return_value = mock_user    
 
     service = AuthService(repo=mock_repo)
     data = RegisterRequest(
