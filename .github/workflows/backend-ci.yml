@@ -48,5 +48,13 @@ jobs:
       - name: Smoke test app import
         env:
           DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
+          SECRET_KEY: test-secret-key-for-ci
         run: |
           python -c "from main import app; print(app.title)"
+
+      - name: Run unit tests
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
+          SECRET_KEY: test-secret-key-for-ci
+        run: |
+          pytest tests/ -v
