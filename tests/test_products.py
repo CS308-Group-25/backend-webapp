@@ -49,14 +49,17 @@ def test_create_product_success(client: TestClient, mock_product_manager):
         "category_id": 1
     }
     
-    # Mock DB session in router might be tricky, let's just test if the endpoint is called and returns 201
-    # assuming the implementation works (or we can mock the DB session too)
+    # Mock DB session in router might be tricky. Let's just test if the endpoint
+    # is called and returns 201, assuming the implementation works (or we can
+    # mock the DB session too).
     
-    # For now, let's see if we can just run it. We might need a database for a real test, 
-    # but since this is a unit test, we should mock the DB session.
+    # For now, let's see if we can just run it. We might need a database
+    # for a real test, but since this is a unit test, we should mock the
+    # DB session.
     
-    from core.database import get_db
     from datetime import datetime, timezone
+
+    from core.database import get_db
     mock_db = MagicMock()
     
     # Simulate DB setting id and created_at
