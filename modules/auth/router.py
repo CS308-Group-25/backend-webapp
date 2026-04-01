@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
 from core.database import get_db
 from modules.auth.repository import UserRepository
-from modules.auth.schema import RegisterRequest, UserPublicResponse
+from modules.auth.schema import LoginRequest, RegisterRequest, UserPublicResponse
 from modules.auth.service import AuthService
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
@@ -13,3 +13,16 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
     repo = UserRepository(db)
     service = AuthService(repo)
     return service.register(data)
+
+@router.post("/login", response_model=UserPublicResponse)
+def login(data: LoginRequest, response: Response, db: Session = Depends(get_db)):
+    repo = UserRepository(db)
+    service = AuthService(repo)
+    token, user = service.login(data)
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+    )
+    return user
