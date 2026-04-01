@@ -11,6 +11,11 @@ app = FastAPI(title="SUpplements Store")
 app.include_router(auth_router)
 app.include_router(cart_router)
 
+from modules.products.router import router as products_router
+
+app.include_router(products_router, prefix="/api/v1/admin")
+
+
 @app.get("/")
 def health_check():
     return {"status": "ok"}
