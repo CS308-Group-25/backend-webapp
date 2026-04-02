@@ -1,9 +1,12 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi import HTTPException
 
-from modules.auth.schema import RegisterRequest
+from core.database import get_db
+from main import app
+from modules.auth.model import User as UserModel
+from modules.auth.schema import LoginRequest, RegisterRequest
 from modules.auth.service import AuthService, pwd_context
 
 
@@ -104,3 +107,85 @@ def test_register_duplicate_email_raises_400(mock_repo):
 def test_register_missing_fields_returns_422(client):
     response = client.post("/api/v1/auth/register", json={})
     assert response.status_code == 422
+
+def test_login_success_returns_token_and_user(mock_repo):
+    mock_user = MagicMock()
+    mock_user.id = 1
+    mock_user.name = "Test User"
+    mock_user.email = "test@example.com"
+    mock_user.role = "customer"
+    mock_user.password_hash = pwd_context.hash("secret123")
+
+    mock_repo.get_by_email.return_value = mock_user
+
+    service = AuthService(repo=mock_repo)
+    data = LoginRequest(email="test@example.com", password="secret123")
+
+    token, user = service.login(data)
+
+    assert isinstance(token, str)
+    assert len(token) > 0
+    assert user.email == "test@example.com"
+
+def test_login_wrong_password_raises_401(mock_repo):
+    mock_user = MagicMock()
+    mock_user.id = 1
+    mock_user.name = "Test User"
+    mock_user.email = "test@example.com"
+    mock_user.role = "customer"
+    mock_user.password_hash = pwd_context.hash("secret123")
+
+    mock_repo.get_by_email.return_value = mock_user
+
+    service = AuthService(repo=mock_repo)
+    data = LoginRequest(email="test@example.com", password="wrong_password_input")
+
+    with pytest.raises(HTTPException) as exc:
+        service.login(data)
+
+    assert exc.value.status_code == 401
+
+def test_login_user_not_found_raises_401(mock_repo):
+    mock_repo.get_by_email.return_value = None
+
+    service = AuthService(repo=mock_repo)
+    data = LoginRequest(email="ghost@test.com", password="whatever_the_password_is")
+
+    with pytest.raises(HTTPException) as exc:
+        service.login(data)
+
+    assert exc.value.status_code == 401
+
+def test_login_sets_httponly_cookie(client):
+    mock_user = UserModel(
+        id=1,
+        name="Test User",
+        email="test@example.com",
+        password_hash=pwd_context.hash("secret123"),
+        role="customer",
+    )
+
+    mock_db = MagicMock()
+
+    # get_db normally opens a real PostgreSQL session via SQLAlchemy.
+    # We override it here so FastAPI injects a MagicMock instead,
+    # keeping this test fully in-memory with no database connection.
+    def override_get_db():
+        yield mock_db
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    with patch("modules.auth.router.UserRepository") as MockRepo:
+        mock_repo_instance = MagicMock()
+        mock_repo_instance.get_by_email.return_value = mock_user
+        MockRepo.return_value = mock_repo_instance
+
+        response = client.post(
+            "/api/v1/auth/login",
+            json={"email": "test@example.com", "password": "secret123"}
+        )
+
+    app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    assert "access_token" in response.cookies
