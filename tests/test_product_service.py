@@ -1,8 +1,11 @@
-import pytest
 from unittest.mock import MagicMock, patch
-from modules.products.service import ProductService
-from modules.products.schema import ProductCreate
+
+import pytest
+
 from modules.products.model import Product
+from modules.products.schema import ProductCreate
+from modules.products.service import ProductService
+
 
 @pytest.fixture
 def mock_db():

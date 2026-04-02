@@ -51,8 +51,9 @@ def test_create_product_success(client: TestClient, mock_product_manager):
     
     # Mock ProductService.create_product
     from datetime import datetime, timezone
-    from modules.products.service import ProductService
+
     from modules.products.model import Product
+    from modules.products.service import ProductService
     
     mock_product = Product(
         id=1, 
@@ -65,28 +66,26 @@ def test_create_product_success(client: TestClient, mock_product_manager):
     
     # We need to mock the service instantiation in the router
     # Since the router does: service = ProductService(db)
-    with MagicMock() as mock_db:
-        # Instead of mocking the DB, we can mock the ProductService class in the router module
-        import modules.products.router
-        with MagicMock() as mock_service_class:
-            mock_service_class.return_value = mock_service
+    # Instead of mocking the DB, we can mock ProductService in the router module
+    import modules.products.router
+    with MagicMock() as mock_service_class:
+        mock_service_class.return_value = mock_service
+        # Save original
+        original_service_class = modules.products.router.ProductService
+        modules.products.router.ProductService = mock_service_class
+        
+        try:
+            response = client.post("/api/v1/admin/products/", json=product_data)
             
-            # Save original
-            original_service_class = modules.products.router.ProductService
-            modules.products.router.ProductService = mock_service_class
+            assert response.status_code == 201
+            assert response.json()["name"] == "Whey Protein"
+            assert response.json()["id"] == 1
+            assert "created_at" in response.json()
             
-            try:
-                response = client.post("/api/v1/admin/products/", json=product_data)
-                
-                assert response.status_code == 201
-                assert response.json()["name"] == "Whey Protein"
-                assert response.json()["id"] == 1
-                assert "created_at" in response.json()
-                
-                mock_service.create_product.assert_called_once()
-            finally:
-                # Restore original
-                modules.products.router.ProductService = original_service_class
+            mock_service.create_product.assert_called_once()
+        finally:
+            # Restore original
+            modules.products.router.ProductService = original_service_class
 
     # Clean up overrides
     app.dependency_overrides.clear()

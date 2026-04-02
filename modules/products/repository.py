@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
+
 from modules.products.model import Product
+
 
 class ProductRepository:
     def __init__(self, db: Session):

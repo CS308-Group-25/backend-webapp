@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
+
+from modules.products.model import Product
 from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate
-from modules.products.model import Product
+
 
 class ProductService:
     def __init__(self, db: Session):
