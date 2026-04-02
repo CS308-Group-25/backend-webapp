@@ -1,12 +1,10 @@
-from sqlalchemy.orm import Session
-
 from modules.products.model import Product
 from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate
 
 
 class ProductService:
-    def _init_(self, repo: ProductRepository):
+    def __init__(self, repo: ProductRepository):
         self.repository = repo
 
     def create_product(self, product_in: ProductCreate) -> Product:

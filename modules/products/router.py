@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from core.dependencies import require_product_manager
+from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate, ProductRead
 from modules.products.service import ProductService
 
