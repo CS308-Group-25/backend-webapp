@@ -18,5 +18,7 @@ def create_product(
     """
     Create a new product. Accessible only by Product Managers.
     """
-    service = ProductService(db)
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+    
     return service.create_product(product_in)

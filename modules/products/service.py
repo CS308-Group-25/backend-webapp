@@ -6,8 +6,8 @@ from modules.products.schema import ProductCreate
 
 
 class ProductService:
-    def __init__(self, db: Session):
-        self.repository = ProductRepository(db)
+    def _init_(self, repo: ProductRepository):
+        self.repository = repo
 
     def create_product(self, product_in: ProductCreate) -> Product:
         product_data = product_in.model_dump()
