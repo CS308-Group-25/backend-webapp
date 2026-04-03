@@ -5,6 +5,12 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
+class CategoryResponse(BaseModel):
+    id: int
+    name: str
+
+    model_config = {"from_attributes": True}
+
 class ProductBase(BaseModel):
     name: str = Field(..., max_length=200)
     model: Optional[str] = Field(None, max_length=100)
@@ -20,16 +26,45 @@ class ProductBase(BaseModel):
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
 
-
 class ProductCreate(ProductBase):
     pass
-
 
 class ProductRead(ProductBase):
     id: int
     price: Optional[Decimal] = None
-    discount: Optional[int] = 0
     created_at: datetime
     updated_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class ProductListResponse(BaseModel):
+    id: int
+    name: str
+    price: float | None
+    stock: int
+    brand: str | None
+    flavor: str | None
+    form: str | None
+    goal_tags: str | None
+    category: CategoryResponse | None
+
+    model_config = {"from_attributes": True}
+
+class ProductDetailResponse(BaseModel):
+    id: int
+    name: str
+    model: str | None
+    serial_no: str | None
+    description: str | None
+    stock: int
+    price: float | None
+    warranty: str | None
+    distributor: str | None
+    brand: str | None
+    flavor: str | None
+    form: str | None
+    serving_size: str | None
+    goal_tags: str | None
+    category: CategoryResponse | None
+    
+    model_config = {"from_attributes": True}
