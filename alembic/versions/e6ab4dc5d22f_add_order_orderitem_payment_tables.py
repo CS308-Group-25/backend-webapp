@@ -7,9 +7,9 @@ Create Date: 2026-04-05 02:00:01.054805
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = 'e6ab4dc5d22f'
@@ -27,7 +27,10 @@ def upgrade() -> None:
     sa.Column('delivery_address', sa.String(length=500), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=False),
     sa.Column('total_price', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column(
+        'created_at', sa.DateTime(timezone=True),
+     server_default=sa.text('now()'), nullable=True
+     ),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['cart_id'], ['carts.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
@@ -46,15 +49,21 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_order_items_id'), 'order_items', ['id'], unique=False)
-    op.create_index(op.f('ix_order_items_order_id'), 'order_items', ['order_id'], unique=False)
-    op.create_index(op.f('ix_order_items_product_id'), 'order_items', ['product_id'], unique=False)
+    op.create_index(
+        op.f('ix_order_items_order_id'), 'order_items', ['order_id'], unique=False)
+    op.create_index(
+        op.f('ix_order_items_product_id'),
+         'order_items', ['product_id'], unique=False)
     op.create_table('payments',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('order_id', sa.Integer(), nullable=False),
     sa.Column('card_last4', sa.String(length=4), nullable=False),
     sa.Column('card_brand', sa.String(length=50), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=False),
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column(
+        'created_at', sa.DateTime(timezone=True),
+         server_default=sa.text('now()'), nullable=True
+        ),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('order_id')
