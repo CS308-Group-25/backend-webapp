@@ -48,5 +48,5 @@ class Payment(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    order = relationship("Order", back_populates="order")
+    order = relationship("Order", back_populates="payment")
 
