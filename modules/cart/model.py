@@ -30,9 +30,9 @@ class CartItem(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     cart_id = Column(Integer, ForeignKey("carts.id"), nullable=False, index=True)
-    # The ForeignKey to products.id is omitted for now because the products table
-    # isn't fully created yet in models.
-    product_id = Column(Integer, nullable=False, index=True)
+
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
     quantity = Column(Integer, nullable=False, default=1)
 
     cart = relationship("Cart", back_populates="items")
+    product = relationship("Product")
