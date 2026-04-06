@@ -2,6 +2,7 @@ from fastapi import HTTPException
 
 from core.payment import process_payment
 from modules.cart.repository import CartRepository
+from modules.orders.model import Order
 from modules.orders.repository import OrderRepository
 from modules.orders.schema import OrderItemResponse, OrderRequest, OrderResponse
 from modules.products.repository import ProductRepository
@@ -17,6 +18,42 @@ class OrderService:
         self.order_repo = order_repo
         self.cart_repo = cart_repo
         self.product_repo = product_repo
+
+    def _build_order_response(self, order: Order) -> OrderResponse:
+        """
+        Converts a SQLAlchemy Order object into an OrderResponse Pydantic schema.
+        Accepts an already-fetched Order instance — does not query the database.
+        Used by place_order(), get_order_by_id(), and get_user_orders() to avoid
+        duplicating the response construction logic.
+        """
+        return OrderResponse(
+            id=order.id,
+            status=order.status,
+            total=order.total,
+            invoice_id=None,        # TODO: wire in T-136
+            delivery_address=order.delivery_address,
+            created_at=order.created_at,
+            items=[
+                OrderItemResponse(
+                    product_id=order_item.product_id,
+                    name=order_item.product.name,
+                    quantity=order_item.quantity,
+                    price=order_item.price,
+                ) for order_item in order.items
+            ]
+        )
+
+    def get_order_by_id(self, order_id: int, user_id: int) -> OrderResponse:
+        order = self.order_repo.get_by_order_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        if order.user_id != user_id:
+            raise HTTPException(status_code=403, detail="Access forbidden")
+        return self._build_order_response(order)
+
+    def get_user_orders(self, user_id: int) -> list[OrderResponse]:
+        orders_list = self.order_repo.get_orders_by_user_id(user_id)
+        return [self._build_order_response(order) for order in orders_list]
 
     def place_order(self, user_id: int, data: OrderRequest) -> OrderResponse:
         cart = self.cart_repo.get(user_id)
@@ -87,19 +124,5 @@ class OrderService:
         for item in cart.items:
             self.cart_repo.remove_item(item.id)
 
-        return OrderResponse(
-            id=order.id,
-            status=order.status,
-            total=order.total,
-            invoice_id=None,     # TODO: wire in T-136 when InvoiceService is complete
-            delivery_address =order.delivery_address,
-            created_at=order.created_at,
-            items=[
-                OrderItemResponse(
-                    product_id=item.product_id,
-                    name=item.product.name,
-                    quantity=item.quantity,
-                    price=item.price
-                ) for item in order.items
-            ],
-        )
+        return self._build_order_response(order)
+

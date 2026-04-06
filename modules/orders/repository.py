@@ -12,6 +12,9 @@ class OrderRepository:
     def get_by_order_id(self, order_id: int) -> Order | None:
         return self.db.query(Order).filter(Order.id == order_id).first()
 
+    def get_orders_by_user_id(self, user_id: int) -> list[Order]:
+        return self.db.query(Order).filter(Order.user_id == user_id).all()
+
     def create_order(
         self,
         user_id: int,
@@ -67,3 +70,4 @@ class OrderRepository:
         self.db.commit()
         self.db.refresh(payment)
         return payment
+

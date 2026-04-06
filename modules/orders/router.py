@@ -23,3 +23,29 @@ def place_order(
     product_repo = ProductRepository(db)
     service = OrderService(order_repo, cart_repo, product_repo)
     return service.place_order(current_user.id, data)
+
+
+@router.get("/", response_model=list[OrderResponse], status_code=200)
+def get_user_orders(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    order_repo = OrderRepository(db)
+    cart_repo = CartRepository(db)
+    product_repo = ProductRepository(db)
+    service = OrderService(order_repo, cart_repo, product_repo)
+    return service.get_user_orders(current_user.id)
+
+
+@router.get("/{order_id}", response_model=OrderResponse, status_code=200)
+def get_order(
+    order_id: int, 
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
+    order_repo = OrderRepository(db)
+    cart_repo = CartRepository(db)
+    product_repo = ProductRepository(db)
+    service = OrderService(order_repo, cart_repo, product_repo)
+    return service.get_order_by_id(order_id, current_user.id)
+
