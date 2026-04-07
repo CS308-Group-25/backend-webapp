@@ -27,6 +27,16 @@ class CartService:
         cart = self.get_cart(user_id)
         return self.repo.add_item(cart.id, product.id, quantity)
 
+    def verify_item_ownership(self, cart_item_id: int, user_id: int) -> None:
+        cart_item = self.repo.get_item_by_id(cart_item_id)
+        if not cart_item:
+            raise HTTPException(status_code=404, detail="Cart item not found")
+        cart = self.repo.get(user_id)
+        if not cart or cart_item.cart_id != cart.id:
+            raise HTTPException(
+                status_code=403, detail="This cart item does not belong to you"
+            )
+
     def update_item(self, cart_item_id: int, quantity: int) -> CartItem | None:
         if quantity <= 0:
             self.repo.remove_item(cart_item_id)
@@ -35,3 +45,4 @@ class CartService:
 
     def remove_item(self, cart_item_id: int) -> bool:
         return self.repo.remove_item(cart_item_id)
+
