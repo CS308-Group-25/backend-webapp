@@ -13,13 +13,14 @@ class Order(Base):
     cart_id = Column(Integer, ForeignKey("carts.id"), nullable=True)
     delivery_address = Column(String(500), nullable=False)
     status = Column(String(20), nullable=False, default="pending")
-    total_price = Column(Numeric(10,2), nullable=False)
+    total = Column(Numeric(10, 2), nullable=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     items = relationship(
-        "OrderItem", back_populates="order", cascade="all, delete-orphan")
+        "OrderItem", back_populates="order", cascade="all, delete-orphan"
+    )
     payment = relationship("Payment", back_populates="order", uselist=False)
     user = relationship("User", backref="orders")
 
@@ -31,7 +32,7 @@ class OrderItem(Base):
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
     quantity = Column(Integer, nullable=False)
-    unit_price = Column(Numeric(10, 2), nullable=False)     # snapshot at order time
+    price = Column(Numeric(10, 2), nullable=False)  # snapshot at order time
 
     order = relationship("Order", back_populates="items")
     product = relationship("Product", backref="order_items")
@@ -49,4 +50,3 @@ class Payment(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     order = relationship("Order", back_populates="payment")
-

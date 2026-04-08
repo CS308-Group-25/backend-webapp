@@ -45,3 +45,7 @@ class ProductRepository:
         self.db.commit()
         self.db.refresh(db_product)
         return db_product
+    def update_stock(self, product_id: int, quantity: int) -> None:
+        product = self.get_by_id(product_id)
+        product.stock -= quantity
+        self.db.commit()
