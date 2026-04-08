@@ -29,6 +29,21 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     pass
 
+class ProductUpdate(BaseModel):
+    name: Optional[str] = Field(None, max_length=200)
+    model: Optional[str] = Field(None, max_length=100)
+    serial_no: Optional[str] = Field(None, max_length=100)
+    description: Optional[str] = None
+    stock: Optional[int] = Field(None, ge=0)
+    warranty: Optional[str] = Field(None, max_length=100)
+    distributor: Optional[str] = Field(None, max_length=200)
+    brand: Optional[str] = Field(None, max_length=100)
+    flavor: Optional[str] = Field(None, max_length=100)
+    form: Optional[str] = Field(None, max_length=50)
+    serving_size: Optional[str] = Field(None, max_length=50)
+    goal_tags: Optional[str] = Field(None, max_length=300)
+    category_id: Optional[int] = None
+
 class ProductRead(ProductBase):
     id: int
     price: Optional[Decimal] = None

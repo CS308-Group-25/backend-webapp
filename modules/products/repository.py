@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from modules.products.model import Product
@@ -29,6 +31,19 @@ class ProductRepository:
         
         return db_product
 
+    def update_product(self, db_product: Product, update_data: dict) -> Product:
+        for key, value in update_data.items():
+            setattr(db_product, key, value)
+        
+        self.db.commit()
+        self.db.refresh(db_product)
+        return db_product
+
+    def soft_delete_product(self, db_product: Product) -> Product:
+        db_product.deleted_at = datetime.now(timezone.utc)
+        self.db.commit()
+        self.db.refresh(db_product)
+        return db_product
     def update_stock(self, product_id: int, quantity: int) -> None:
         product = self.get_by_id(product_id)
         product.stock -= quantity

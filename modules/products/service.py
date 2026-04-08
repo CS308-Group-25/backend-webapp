@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from modules.products.model import Product
 from modules.products.repository import ProductRepository
-from modules.products.schema import ProductCreate
+from modules.products.schema import ProductCreate, ProductUpdate
 
 
 class ProductService:
@@ -23,3 +23,12 @@ class ProductService:
         product_data = product_in.model_dump()
         
         return self.repo.create_product(product_data)
+
+    def update_product(self, product_id: int, product_in: "ProductUpdate") -> Product:
+        product = self.get_product(product_id) # Raises 404 if not found
+        update_data = product_in.model_dump(exclude_unset=True)
+        return self.repo.update_product(product, update_data)
+
+    def delete_product(self, product_id: int) -> None:
+        product = self.get_product(product_id)
+        self.repo.soft_delete_product(product)
