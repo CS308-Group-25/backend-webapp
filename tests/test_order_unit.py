@@ -1,10 +1,11 @@
-from types import SimpleNamespace
-from unittest.mock import MagicMock, patch, call
 import pytest
+from types import SimpleNamespace
+from unittest.mock import MagicMock, patch
+ 
 from fastapi import HTTPException
-
-from modules.orders.service import OrderService
+ 
 from modules.orders.schema import OrderRequest
+from modules.orders.service import OrderService
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -44,7 +45,9 @@ def _make_cart_item(product_id: int = 100, quantity: int = 2):
     return SimpleNamespace(id=1, product_id=product_id, quantity=quantity)
 
 
-def _make_product(product_id: int = 100, stock: int = 10, price: float = 25.0, name: str = "Widget"):
+def _make_product(
+    product_id: int = 100, stock: int = 10, price: float = 25.0, name: str = "Widget"
+):
     return SimpleNamespace(id=product_id, stock=stock, price=price, name=name)
 
 
@@ -89,7 +92,9 @@ def test_place_order_success(mock_payment, service, repos, order_request):
 
 
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_out_of_stock_rejection(mock_payment, service, repos, order_request):
+def test_place_order_out_of_stock_rejection(
+    mock_payment, service, repos, order_request
+):
     """
     When a cart item quantity exceeds available stock, a 400 HTTPException
     should be raised and no order or payment should be created.
@@ -109,7 +114,9 @@ def test_place_order_out_of_stock_rejection(mock_payment, service, repos, order_
 
 
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_stock_decrements_correctly(mock_payment, service, repos, order_request):
+def test_place_order_stock_decrements_correctly(
+    mock_payment, service, repos, order_request
+):
     """
     After a successful order, product_repo.update_stock should be called with
     the correct product ID and exact quantity purchased.
