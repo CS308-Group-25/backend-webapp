@@ -86,3 +86,86 @@ def test_remove_item_success():
     # Assert
     assert result is True
     mock_cart_repo.remove_item.assert_called_once_with(200)
+
+
+def test_verify_item_ownership_success():
+    """Cart item belongs to the current user's cart — no exception raised."""
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    mock_cart_item = MagicMock(spec=CartItem)
+    mock_cart_item.cart_id = 50
+    mock_cart_repo.get_item_by_id.return_value = mock_cart_item
+
+    mock_cart = MagicMock(spec=Cart)
+    mock_cart.id = 50
+    mock_cart_repo.get.return_value = mock_cart
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    # Should not raise
+    service.verify_item_ownership(cart_item_id=200, user_id=1)
+
+    mock_cart_repo.get_item_by_id.assert_called_once_with(200)
+    mock_cart_repo.get.assert_called_once_with(1)
+
+
+def test_verify_item_ownership_item_not_found():
+    """Cart item does not exist — should raise 404."""
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    mock_cart_repo.get_item_by_id.return_value = None
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    with pytest.raises(HTTPException) as exc:
+        service.verify_item_ownership(cart_item_id=999, user_id=1)
+
+    assert exc.value.status_code == 404
+    assert exc.value.detail == "Cart item not found"
+
+
+def test_verify_item_ownership_wrong_user():
+    """Cart item belongs to a different user — should raise 403."""
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    # Cart item belongs to cart 50
+    mock_cart_item = MagicMock(spec=CartItem)
+    mock_cart_item.cart_id = 50
+    mock_cart_repo.get_item_by_id.return_value = mock_cart_item
+
+    # But user 2's cart has id 99
+    mock_cart = MagicMock(spec=Cart)
+    mock_cart.id = 99
+    mock_cart_repo.get.return_value = mock_cart
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    with pytest.raises(HTTPException) as exc:
+        service.verify_item_ownership(cart_item_id=200, user_id=2)
+
+    assert exc.value.status_code == 403
+    assert exc.value.detail == "This cart item does not belong to you"
+
+
+def test_verify_item_ownership_no_cart_for_user():
+    """User has no cart at all — should raise 403."""
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    mock_cart_item = MagicMock(spec=CartItem)
+    mock_cart_item.cart_id = 50
+    mock_cart_repo.get_item_by_id.return_value = mock_cart_item
+
+    # User has no cart
+    mock_cart_repo.get.return_value = None
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    with pytest.raises(HTTPException) as exc:
+        service.verify_item_ownership(cart_item_id=200, user_id=3)
+
+    assert exc.value.status_code == 403
+    assert exc.value.detail == "This cart item does not belong to you"
