@@ -1,12 +1,11 @@
-import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
- 
+
+import pytest
 from fastapi import HTTPException
- 
+
 from modules.orders.schema import OrderRequest
 from modules.orders.service import OrderService
-
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -61,7 +60,6 @@ def _make_order(order_id: int = 500, total: float = 50.0):
     order.user_id = 1
     order.items = []
     return order
-
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
