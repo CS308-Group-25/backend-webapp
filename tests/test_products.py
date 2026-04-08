@@ -105,3 +105,59 @@ def test_create_product_forbidden_for_customer(client: TestClient, mock_customer
     assert response.json()["detail"] == "Only product managers can perform this action"
     
     app.dependency_overrides.clear()
+
+
+def test_update_product_success(client: TestClient, mock_product_manager):
+    app.dependency_overrides[get_current_user] = lambda: mock_product_manager
+    
+    update_data = {"name": "Updated Name", "stock": 50}
+    
+    from datetime import datetime, timezone
+
+    from modules.products.model import Product
+    from modules.products.service import ProductService
+    
+    mock_product = Product(
+        id=1, name="Updated Name", stock=50, created_at=datetime.now(timezone.utc)
+    )
+    
+    mock_service = MagicMock(spec=ProductService)
+    mock_service.update_product.return_value = mock_product
+    
+    import modules.products.router
+    with MagicMock() as mock_service_class:
+        mock_service_class.return_value = mock_service
+        original_service_class = modules.products.router.ProductService
+        modules.products.router.ProductService = mock_service_class
+        
+        try:
+            response = client.patch("/api/v1/admin/products/1", json=update_data)
+            assert response.status_code == 200
+            assert response.json()["name"] == "Updated Name"
+            mock_service.update_product.assert_called_once()
+        finally:
+            modules.products.router.ProductService = original_service_class
+
+    app.dependency_overrides.clear()
+
+
+def test_delete_product_success(client: TestClient, mock_product_manager):
+    app.dependency_overrides[get_current_user] = lambda: mock_product_manager
+    
+    from modules.products.service import ProductService
+    mock_service = MagicMock(spec=ProductService)
+    
+    import modules.products.router
+    with MagicMock() as mock_service_class:
+        mock_service_class.return_value = mock_service
+        original_service_class = modules.products.router.ProductService
+        modules.products.router.ProductService = mock_service_class
+        
+        try:
+            response = client.delete("/api/v1/admin/products/1")
+            assert response.status_code == 204
+            mock_service.delete_product.assert_called_once_with(1)
+        finally:
+            modules.products.router.ProductService = original_service_class
+
+    app.dependency_overrides.clear()

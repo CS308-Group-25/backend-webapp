@@ -29,3 +29,19 @@ class ProductRepository:
         
         return db_product
 
+    def update_product(self, db_product: Product, update_data: dict) -> Product:
+        for key, value in update_data.items():
+            setattr(db_product, key, value)
+        
+        self.db.commit()
+        self.db.refresh(db_product)
+        return db_product
+
+    def soft_delete_product(self, db_product: Product) -> Product:
+        # Avoid circular import by using datetime locally or importing at the top.
+        # Actually func.now() will work best.
+        from sqlalchemy.sql import func
+        db_product.deleted_at = func.now()
+        self.db.commit()
+        self.db.refresh(db_product)
+        return db_product

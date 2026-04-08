@@ -9,6 +9,7 @@ from modules.products.schema import (
     ProductDetailResponse,
     ProductListResponse,
     ProductRead,
+    ProductUpdate,
 )
 from modules.products.service import ProductService
 
@@ -40,3 +41,26 @@ def create_product(
     service = ProductService(repo)
 
     return service.create_product(product_in)
+
+@admin_router.patch("/{product_id}", response_model=ProductRead)
+def update_product(
+    product_id: int,
+    product_in: ProductUpdate,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+
+    return service.update_product(product_id, product_in)
+
+@admin_router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+
+    service.delete_product(product_id)
