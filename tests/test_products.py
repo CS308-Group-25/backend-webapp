@@ -1,4 +1,5 @@
-from unittest.mock import MagicMock
+from datetime import datetime, timezone
+from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
@@ -30,6 +31,9 @@ def mock_customer():
 
 
 def test_create_product_success(client: TestClient, mock_product_manager):
+    from modules.products.model import Product
+    from modules.products.service import ProductService
+    
     # Override dependency to return mock product manager
     app.dependency_overrides[get_current_user] = lambda: mock_product_manager
     
@@ -50,11 +54,6 @@ def test_create_product_success(client: TestClient, mock_product_manager):
     }
     
     # Mock ProductService.create_product
-    from datetime import datetime, timezone
-
-    from modules.products.model import Product
-    from modules.products.service import ProductService
-    
     mock_product = Product(
         id=1, 
         created_at=datetime.now(timezone.utc),
@@ -64,28 +63,16 @@ def test_create_product_success(client: TestClient, mock_product_manager):
     mock_service = MagicMock(spec=ProductService)
     mock_service.create_product.return_value = mock_product
     
-    # We need to mock the service instantiation in the router
-    # Since the router does: service = ProductService(db)
-    # Instead of mocking the DB, we can mock ProductService in the router module
-    import modules.products.router
-    with MagicMock() as mock_service_class:
+    with patch("modules.products.router.ProductService") as mock_service_class:
         mock_service_class.return_value = mock_service
-        # Save original
-        original_service_class = modules.products.router.ProductService
-        modules.products.router.ProductService = mock_service_class
+        response = client.post("/api/v1/admin/products/", json=product_data)
         
-        try:
-            response = client.post("/api/v1/admin/products/", json=product_data)
-            
-            assert response.status_code == 201
-            assert response.json()["name"] == "Whey Protein"
-            assert response.json()["id"] == 1
-            assert "created_at" in response.json()
-            
-            mock_service.create_product.assert_called_once()
-        finally:
-            # Restore original
-            modules.products.router.ProductService = original_service_class
+        assert response.status_code == 201
+        assert response.json()["name"] == "Whey Protein"
+        assert response.json()["id"] == 1
+        assert "created_at" in response.json()
+        
+        mock_service.create_product.assert_called_once()
 
     # Clean up overrides
     app.dependency_overrides.clear()
@@ -112,8 +99,6 @@ def test_update_product_success(client: TestClient, mock_product_manager):
     
     update_data = {"name": "Updated Name", "stock": 50}
     
-    from datetime import datetime, timezone
-
     from modules.products.model import Product
     from modules.products.service import ProductService
     
@@ -124,19 +109,12 @@ def test_update_product_success(client: TestClient, mock_product_manager):
     mock_service = MagicMock(spec=ProductService)
     mock_service.update_product.return_value = mock_product
     
-    import modules.products.router
-    with MagicMock() as mock_service_class:
+    with patch("modules.products.router.ProductService") as mock_service_class:
         mock_service_class.return_value = mock_service
-        original_service_class = modules.products.router.ProductService
-        modules.products.router.ProductService = mock_service_class
-        
-        try:
-            response = client.patch("/api/v1/admin/products/1", json=update_data)
-            assert response.status_code == 200
-            assert response.json()["name"] == "Updated Name"
-            mock_service.update_product.assert_called_once()
-        finally:
-            modules.products.router.ProductService = original_service_class
+        response = client.patch("/api/v1/admin/products/1", json=update_data)
+        assert response.status_code == 200
+        assert response.json()["name"] == "Updated Name"
+        mock_service.update_product.assert_called_once()
 
     app.dependency_overrides.clear()
 
@@ -147,17 +125,10 @@ def test_delete_product_success(client: TestClient, mock_product_manager):
     from modules.products.service import ProductService
     mock_service = MagicMock(spec=ProductService)
     
-    import modules.products.router
-    with MagicMock() as mock_service_class:
+    with patch("modules.products.router.ProductService") as mock_service_class:
         mock_service_class.return_value = mock_service
-        original_service_class = modules.products.router.ProductService
-        modules.products.router.ProductService = mock_service_class
-        
-        try:
-            response = client.delete("/api/v1/admin/products/1")
-            assert response.status_code == 204
-            mock_service.delete_product.assert_called_once_with(1)
-        finally:
-            modules.products.router.ProductService = original_service_class
+        response = client.delete("/api/v1/admin/products/1")
+        assert response.status_code == 204
+        mock_service.delete_product.assert_called_once_with(1)
 
     app.dependency_overrides.clear()

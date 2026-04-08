@@ -23,9 +23,9 @@ def test_repo_soft_delete_sets_deleted_at():
     db_product = Product(id=1, name="Test")
     result = repo.soft_delete_product(db_product)
     
-    # deleted_at is updated with func.now() locally, which is a SQL function
-    # The requirement asks to ensure it sets deleted_at
-    assert result.deleted_at is not None
+    # We now use datetime.now(timezone.utc)
+    from datetime import datetime
+    assert isinstance(result.deleted_at, datetime)
     mock_db.commit.assert_called_once()
     mock_db.refresh.assert_called_once()
 
