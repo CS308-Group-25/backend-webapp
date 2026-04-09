@@ -9,8 +9,9 @@ class ProductService:
     def __init__(self, repo: ProductRepository):
         self.repo = repo
 
-    def list_products(self) -> list[Product]:
-        return self.repo.get_all()
+    def list_products(self, search: str | None = None, sort: str | None = None,
+                      ) -> list[Product]:
+                      return self.repo.get_all(search=search, sort=sort)   
 
     def get_product(self, product_id: int) -> Product:
         product = self.repo.get_by_id(product_id)

@@ -18,11 +18,12 @@ admin_router = APIRouter(prefix="/api/v1/admin/products", tags=["admin-products"
 
 
 @router.get("", response_model=list[ProductListResponse])
-def list_products(db: Session = Depends(get_db)):
+def list_products(search: str | None = None, sort: str | None = None, 
+                  db: Session = Depends(get_db),):
     repo = ProductRepository(db)
     service = ProductService(repo)
 
-    return service.list_products()
+    return service.list_products(search=search, sort=sort)
 
 @router.get("/{product_id}", response_model=ProductDetailResponse)
 def get_product(product_id: int, db: Session = Depends(get_db)):
