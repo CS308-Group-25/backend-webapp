@@ -9,12 +9,16 @@ class ProductRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self) -> list[Product]:
-        return (
-            self.db.query(Product)
-            .filter(Product.deleted_at.is_(None))
-            .all()
-        )
+    def get_all(self, search: str | None = None, sort: str | None = None,
+                ) -> list[Product]:
+        query = self.db.query(Product).filter(Product.deleted_at.is_(None))
+
+        if search:
+            term = f"%{search}%"
+            query = query.filter(
+                Product.name.ilike(term) | Product.description.ilike(term))
+
+        return query.all()
     
     def get_by_id(self, product_id: int) -> Product | None:
         return (
@@ -44,6 +48,7 @@ class ProductRepository:
         self.db.commit()
         self.db.refresh(db_product)
         return db_product
+    
     def update_stock(self, product_id: int, quantity: int) -> None:
         product = self.get_by_id(product_id)
         product.stock -= quantity
