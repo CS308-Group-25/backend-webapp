@@ -41,15 +41,28 @@ def test_service_create_product():
     assert result.name == "Whey Protein"
     mock_repo.create_product.assert_called_once_with(product_in.model_dump())
 
-def test_service_get_product():
+def test_list_returns_all_products():
     mock_repo = MagicMock()
     service = ProductService(mock_repo)
-    
-    expected_product = Product(id=1, name="Whey Protein")
-    mock_repo.get_by_id.return_value = expected_product
-    
-    result = service.get_product(1)
-    
-    assert result.id == 1
-    assert result.name == "Whey Protein"
-    mock_repo.get_by_id.assert_called_once_with(1)
+
+    expected = [Product(id=1, name="Whey"), Product(id=2, name="Creatine")]
+    mock_repo.get_all.return_value = expected
+
+    result = service.list_products()
+
+    assert result == expected
+    assert len(result) == 2
+    mock_repo.get_all.assert_called_once()
+
+def test_get_by_id_returns_correct_product():
+    mock_repo = MagicMock()
+    service = ProductService(mock_repo)
+
+    expected = Product(id=5, name="BCAA")
+    mock_repo.get_by_id.return_value = expected
+
+    result = service.get_product(5)
+
+    assert result.id == 5
+    assert result.name == "BCAA"
+    mock_repo.get_by_id.assert_called_once_with(5)
