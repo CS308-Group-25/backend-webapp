@@ -17,6 +17,15 @@ class ProductRepository:
             term = f"%{search}%"
             query = query.filter(
                 Product.name.ilike(term) | Product.description.ilike(term))
+        
+        if sort == "price_asc":
+            query = query.order_by(Product.price.asc())
+        elif sort == "price_desc":
+            query = query.order_by(Product.price.desc())
+        elif sort == "popularity_desc":
+            query = query.order_by(Product.stock.desc())
+        elif sort == "newest":
+            query = query.order_by(Product.created_at.desc())
 
         return query.all()
     
