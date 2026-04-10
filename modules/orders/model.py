@@ -23,6 +23,7 @@ class Order(Base):
     )
     payment = relationship("Payment", back_populates="order", uselist=False)
     user = relationship("User", backref="orders")
+    invoice = relationship("Invoice", back_populates="order", uselist=False)
 
 
 class OrderItem(Base):
