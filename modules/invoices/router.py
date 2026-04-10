@@ -9,10 +9,10 @@ from modules.invoices.schema import InvoiceResponse
 from modules.invoices.service import InvoiceService
 from modules.orders.repository import OrderRepository
 
-router = APIRouter(prefix="/api/v1/invoices", tags=["invoices"])
+router = APIRouter(prefix="/api/v1/orders", tags=["invoices"])
 
 @router.get(
-        "/orders/{order_id}/invoice", 
+        "/{order_id}/invoice", 
         response_model=InvoiceResponse, 
         status_code=status.HTTP_200_OK
 )
