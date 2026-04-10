@@ -13,6 +13,9 @@ class InvoiceService:
     def __init__(self, invoice_repo: InvoiceRepository):
         self.invoice_repo = invoice_repo
 
+    def get_by_order_id(self, order_id: int) -> Invoice | None:
+        return self.invoice_repo.get_by_order_id(order_id)
+
     def generate_invoice(self, order) -> Invoice:
         invoice_number = self._generate_invoice_number(order.id)
         pdf_bytes = self._build_pdf(order, invoice_number)
