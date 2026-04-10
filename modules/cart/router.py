@@ -40,7 +40,7 @@ def add_item_to_cart(
     return service.add_item(current_user.id, data.product_id, data.quantity)
 
 
-@router.patch("/{cart_item_id}", response_model=CartItemResponse | None)
+@router.patch("/{cart_item_id}", response_model=CartItemResponse)
 def update_cart_item(
     cart_item_id: int,
     data: CartItemUpdateRequest,
@@ -48,7 +48,12 @@ def update_cart_item(
     service: CartService = Depends(get_cart_service),
 ):
     service.verify_item_ownership(cart_item_id, current_user.id)
-    return service.update_item(cart_item_id, data.quantity)
+    updated_item = service.update_item(cart_item_id, data.quantity)
+    if updated_item is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found"
+        )
+    return updated_item
 
 
 @router.delete("/{cart_item_id}", status_code=status.HTTP_204_NO_CONTENT)
