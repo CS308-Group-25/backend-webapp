@@ -37,7 +37,7 @@ def _send_via_smtp(to_email: str, invoice_number: str, pdf_path: str) -> None:
     username = os.getenv("MAIL_USERNAME", "")
     password = os.getenv("MAIL_PASSWORD", "")
     
-    with smtplib.STMP(host, port) as server:
+    with smtplib.SMTP(host, port) as server:
         if username and password:
             server.starttls()
             server.login(username, password)
