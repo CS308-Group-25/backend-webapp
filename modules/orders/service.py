@@ -16,7 +16,7 @@ class OrderService:
         order_repo: OrderRepository,
         cart_repo: CartRepository,
         product_repo: ProductRepository,
-        invoice_service: InvoiceService,
+        invoice_service: InvoiceService | None = None,
     ):
         self.order_repo = order_repo
         self.cart_repo = cart_repo
@@ -60,6 +60,8 @@ class OrderService:
         return [self._build_order_response(order) for order in orders_list]
 
     def place_order(self, user_id: int, data: OrderRequest) -> OrderResponse:
+        if self.invoice_service is None:
+            raise RuntimeError("invoice_service requried for place_order")
         cart = self.cart_repo.get(user_id)
         if not cart or not cart.items:
             raise HTTPException(
