@@ -83,3 +83,9 @@ class ProductDetailResponse(BaseModel):
     category: CategoryResponse | None
     
     model_config = {"from_attributes": True}
+
+class PaginatedProductResponse(BaseModel):
+    items: list[ProductListResponse]
+    total: int
+    page: int
+    page_size: int
