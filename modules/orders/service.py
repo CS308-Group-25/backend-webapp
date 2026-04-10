@@ -1,7 +1,9 @@
 from fastapi import HTTPException
 
+from core.email import send_invoice_email
 from core.payment import process_payment
 from modules.cart.repository import CartRepository
+from modules.invoices.service import InvoiceService
 from modules.orders.model import Order
 from modules.orders.repository import OrderRepository
 from modules.orders.schema import OrderItemResponse, OrderRequest, OrderResponse
@@ -14,10 +16,12 @@ class OrderService:
         order_repo: OrderRepository,
         cart_repo: CartRepository,
         product_repo: ProductRepository,
+        invoice_service: InvoiceService,
     ):
         self.order_repo = order_repo
         self.cart_repo = cart_repo
         self.product_repo = product_repo
+        self.invoice_service = invoice_service
 
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
@@ -30,7 +34,7 @@ class OrderService:
             id=order.id,
             status=order.status,
             total=order.total,
-            invoice_id=None,        # TODO: wire in T-136
+            invoice_id=order.invoice.id if order.invoice else None,
             delivery_address=order.delivery_address,
             created_at=order.created_at,
             items=[
@@ -123,6 +127,13 @@ class OrderService:
 
         for item in cart.items:
             self.cart_repo.remove_item(item.id)
+
+        invoice = self.invoice_service.generate_invoice(order)
+        send_invoice_email(
+            to_email=order.user.email,
+            invoice_number=invoice.invoice_number,
+            pdf_path=invoice.pdf_path,
+        )
 
         return self._build_order_response(order)
 
