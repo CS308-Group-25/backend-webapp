@@ -14,7 +14,7 @@ from modules.products.repository import ProductRepository
 
 router = APIRouter(prefix="/api/v1/orders", tags=["orders"])
 
-@router.post("/", response_model=OrderResponse, status_code=201)
+@router.post("", response_model=OrderResponse, status_code=201)
 def place_order(
     data: OrderRequest, 
     current_user: User = Depends(get_current_user), 
@@ -29,7 +29,7 @@ def place_order(
     return service.place_order(current_user.id, data)
 
 
-@router.get("/", response_model=list[OrderResponse], status_code=200)
+@router.get("", response_model=list[OrderResponse], status_code=200)
 def get_user_orders(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
