@@ -9,15 +9,30 @@ class ProductRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self, search: str | None = None, sort: str | None = None,
-                ) -> list[Product]:
+    def get_all(
+        self, 
+        search: str | None = None, 
+        sort: str | None = None,
+        category_id: int | None = None,
+        brand: str | None = None,
+        page: int = 1,
+        page_size: int = 20,
+        ) -> tuple[list[Product], int]:
         query = self.db.query(Product).filter(Product.deleted_at.is_(None))
 
         if search:
             term = f"%{search}%"
             query = query.filter(
-                Product.name.ilike(term) | Product.description.ilike(term))
+                Product.name.ilike(term) | Product.description.ilike(term)
+                )
         
+        if category_id is not None:
+            query = query.filter(Product.category_id == category_id)
+        
+        if brand:
+            query = query.filter(Product.brand.ilike(f"%{brand}%"))
+
+
         if sort == "price_asc":
             query = query.order_by(Product.price.asc())
         elif sort == "price_desc":
@@ -27,7 +42,10 @@ class ProductRepository:
         elif sort == "newest":
             query = query.order_by(Product.created_at.desc())
 
-        return query.all()
+        total = query.count()
+        items = query.offset((page - 1) * page_size).limit(page_size).all()
+        
+        return items, total 
     
     def get_by_id(self, product_id: int) -> Product | None:
         return (

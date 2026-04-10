@@ -9,10 +9,25 @@ class ProductService:
     def __init__(self, repo: ProductRepository):
         self.repo = repo
 
-    def list_products(self, search: str | None = None, sort: str | None = None,
-                      ) -> list[Product]:
-                      return self.repo.get_all(search=search, sort=sort)   
-
+    def list_products(
+        self,
+        search: str | None = None,
+        sort: str | None = None,
+        category_id: int | None = None,
+        brand: str | None = None,
+        page: int = 1,
+        page_size: int = 20,
+        ) -> tuple[list[Product], int]:
+        
+        return self.repo.get_all(
+            search=search,
+            sort=sort,
+            category_id=category_id,
+            brand=brand,
+            page=page,
+            page_size=page_size,
+        )
+    
     def get_product(self, product_id: int) -> Product:
         product = self.repo.get_by_id(product_id)
         if product is None:
