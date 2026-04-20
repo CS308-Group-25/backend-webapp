@@ -94,3 +94,30 @@ def test_update_status_order_not_found_raises_404():
     assert exc_info.value.status_code == 404
     order_repo.update_order_status.assert_not_called()
 
+
+def test_update_status_same_status_no_update_called():
+    """T-212: Updating to the same status should not call the repository update."""
+    # Arrange
+    order_repo = MagicMock()
+    order = MagicMock(spec=Order)
+    order.id = 1
+    order.status = "processing"
+    order.total = 100.0
+    order.invoice = None
+    order.delivery_address = "Address"
+    from datetime import datetime, timezone
+    order.created_at = datetime.now(timezone.utc)
+    order.items = []
+    
+    order_repo.get_by_order_id.return_value = order
+    
+    service = _make_service(order_repo=order_repo)
+    
+    # Act
+    result = service.update_order_status(order_id=1, new_status="processing")
+    
+    # Assert
+    assert result.status == "processing"
+    # Ensure update_order_status was NEVER called because status didn't change
+    order_repo.update_order_status.assert_not_called()
+
