@@ -71,3 +71,10 @@ class OrderRepository:
         self.db.refresh(payment)
         return payment
 
+    def update_order_status(self, order_id: int, status: str) -> Order | None:
+        order = self.get_by_order_id(order_id)
+        if order:
+            order.status = status
+            self.db.commit()
+            self.db.refresh(order)
+        return order
