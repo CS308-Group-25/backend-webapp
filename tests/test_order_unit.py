@@ -121,3 +121,53 @@ def test_update_status_same_status_no_update_called():
     # Ensure update_order_status was NEVER called because status didn't change
     order_repo.update_order_status.assert_not_called()
 
+
+def test_update_status_processing_to_in_transit_valid():
+    """T-213: Valid status transition from processing to in_transit."""
+    # Arrange
+    order_repo = MagicMock()
+    order = MagicMock(spec=Order)
+    order.status = "processing"
+    order_repo.get_by_order_id.return_value = order
+    
+    updated_order = MagicMock(spec=Order)
+    updated_order.id = 1
+    updated_order.status = "in_transit"
+    updated_order.total = 100.0
+    updated_order.invoice = None
+    updated_order.delivery_address = "Address"
+    from datetime import datetime, timezone
+    updated_order.created_at = datetime.now(timezone.utc)
+    updated_order.items = []
+    
+    order_repo.update_order_status.return_value = updated_order
+    
+    service = _make_service(order_repo=order_repo)
+    
+    # Act
+    result = service.update_order_status(order_id=1, new_status="in_transit")
+    
+    # Assert
+    assert result.status == "in_transit"
+    order_repo.update_order_status.assert_called_once_with(1, "in_transit")
+
+
+def test_update_status_delivered_to_processing_invalid():
+    """T-213: Invalid status transition from delivered back to processing returns 400.
+    """
+    # Arrange
+    order_repo = MagicMock()
+    order = MagicMock(spec=Order)
+    order.status = "delivered"
+    order_repo.get_by_order_id.return_value = order
+    
+    service = _make_service(order_repo=order_repo)
+    
+    # Act & Assert
+    with pytest.raises(HTTPException) as exc_info:
+        service.update_order_status(order_id=1, new_status="processing")
+    
+    assert exc_info.value.status_code == 400
+    assert "Invalid status transition" in exc_info.value.detail
+    order_repo.update_order_status.assert_not_called()
+
