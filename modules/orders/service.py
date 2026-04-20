@@ -6,7 +6,12 @@ from modules.cart.repository import CartRepository
 from modules.invoices.service import InvoiceService
 from modules.orders.model import Order
 from modules.orders.repository import OrderRepository
-from modules.orders.schema import OrderItemResponse, OrderRequest, OrderResponse
+from modules.orders.schema import (
+    AdminOrderResponse,
+    OrderItemResponse,
+    OrderRequest,
+    OrderResponse,
+)
 from modules.products.repository import ProductRepository
 
 
@@ -169,5 +174,26 @@ class OrderService:
 
         updated_order = self.order_repo.update_order_status(order_id, new_status)
         return self._build_order_response(updated_order)
+
+    def get_admin_orders(self, status: str | None = None) -> list[AdminOrderResponse]:
+        orders = self.order_repo.get_all_orders(status)
+        results = []
+        for order in orders:
+            for item in order.items:
+                results.append(
+                    AdminOrderResponse(
+                        delivery_id=order.id,
+                        customer_id=order.user_id,
+                        customer_name=order.user.name,
+                        customer_email=order.user.email,
+                        product_id=item.product_id,
+                        quantity=item.quantity,
+                        total_price=order.total,
+                        delivery_address=order.delivery_address,
+                        status=order.status,
+                        completed=(order.status == "delivered"),
+                    )
+                )
+        return results
 
 

@@ -29,3 +29,17 @@ class OrderResponse(BaseModel):
     items: List[OrderItemResponse]
     delivery_address: str
     created_at: datetime
+
+
+class AdminOrderResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    delivery_id: int # matches order_id
+    customer_id: int
+    customer_name: str
+    customer_email: str
+    product_id: int
+    quantity: int
+    total_price: Decimal
+    delivery_address: str
+    status: str
+    completed: bool

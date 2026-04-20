@@ -171,3 +171,63 @@ def test_update_status_delivered_to_processing_invalid():
     assert "Invalid status transition" in exc_info.value.detail
     order_repo.update_order_status.assert_not_called()
 
+
+def test_get_admin_orders_flattening():
+    """T-207: Verify get_admin_orders flattens items and includes all required fields"""
+    # Arrange
+    order_repo = MagicMock()
+    
+    # Mock User
+    user = MagicMock()
+    user.id = 10
+    user.name = "Test Admin"
+    user.email = "admin@test.com"
+    
+    # Mock Order Items
+    item1 = MagicMock()
+    item1.product_id = 101
+    item1.quantity = 2
+    
+    item2 = MagicMock()
+    item2.product_id = 102
+    item2.quantity = 1
+    
+    # Mock Order
+    order = MagicMock(spec=Order)
+    order.id = 100
+    order.user_id = 10
+    order.user = user
+    order.items = [item1, item2]
+    order.total = 150.0
+    order.delivery_address = "Admin Address"
+    order.status = "processing"
+    
+    order_repo.get_all_orders.return_value = [order]
+    
+    service = _make_service(order_repo=order_repo)
+    
+    # Act
+    results = service.get_admin_orders(status="processing")
+    
+    # Assert
+    assert len(results) == 2
+    
+    # Verify first row (Item 1)
+    assert results[0].delivery_id == 100
+    assert results[0].customer_id == 10
+    assert results[0].customer_name == "Test Admin"
+    assert results[0].customer_email == "admin@test.com"
+    assert results[0].product_id == 101
+    assert results[0].quantity == 2
+    assert results[0].total_price == 150.0
+    assert results[0].delivery_address == "Admin Address"
+    assert results[0].status == "processing"
+    assert results[0].completed is False
+    
+    # Verify second row (Item 2)
+    assert results[1].delivery_id == 100
+    assert results[1].product_id == 102
+    assert results[1].quantity == 1
+    
+    order_repo.get_all_orders.assert_called_once_with("processing")
+

@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from modules.orders.model import Order, OrderItem, Payment
 
@@ -14,6 +14,15 @@ class OrderRepository:
 
     def get_orders_by_user_id(self, user_id: int) -> list[Order]:
         return self.db.query(Order).filter(Order.user_id == user_id).all()
+
+    def get_all_orders(self, status: str | None = None) -> list[Order]:
+        query = self.db.query(Order).options(
+            joinedload(Order.user),
+            joinedload(Order.items)
+        )
+        if status:
+            query = query.filter(Order.status == status)
+        return query.all()
 
     def create_order(
         self,
