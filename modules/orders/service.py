@@ -139,3 +139,35 @@ class OrderService:
 
         return self._build_order_response(order)
 
+    def update_order_status(self, order_id: int, new_status: str) -> OrderResponse:
+        order = self.order_repo.get_by_order_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+
+        valid_transitions = {
+            "confirmed": ["processing"],
+            "processing": ["in_transit"],
+            "in_transit": ["delivered"],
+        }
+
+        current_status = order.status
+        
+        # If trying to transition to the same status, we can just return (idempotent)
+        if current_status == new_status:
+            return self._build_order_response(order)
+
+        allowed = valid_transitions.get(current_status, [])
+        if new_status not in allowed:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Invalid status transition from "
+                    f"{current_status} to {new_status}"
+                ),
+            )
+
+
+        updated_order = self.order_repo.update_order_status(order_id, new_status)
+        return self._build_order_response(updated_order)
+
+
