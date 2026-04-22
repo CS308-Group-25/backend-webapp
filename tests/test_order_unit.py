@@ -171,3 +171,54 @@ def test_update_status_delivered_to_processing_invalid():
     assert "Invalid status transition" in exc_info.value.detail
     order_repo.update_order_status.assert_not_called()
 
+
+def test_get_admin_orders_nested_items():
+    """T-207: Verify get_admin_orders returns one object per order with nested items"""
+    order_repo = MagicMock()
+
+    user = MagicMock()
+    user.name = "Test Admin"
+    user.email = "admin@test.com"
+
+    item1 = MagicMock()
+    item1.product_id = 101
+    item1.quantity = 2
+    item1.price = 50.0
+    item1.product = MagicMock()
+    item1.product.name = "Product A"
+
+    item2 = MagicMock()
+    item2.product_id = 102
+    item2.quantity = 1
+    item2.price = 50.0
+    item2.product = MagicMock()
+    item2.product.name = "Product B"
+
+    order = MagicMock(spec=Order)
+    order.id = 100
+    order.user_id = 10
+    order.user = user
+    order.items = [item1, item2]
+    order.total = 150.0
+    order.delivery_address = "Admin Address"
+    order.status = "processing"
+
+    order_repo.get_all_orders.return_value = [order]
+
+    service = _make_service(order_repo=order_repo)
+
+    results = service.get_admin_orders(status="processing")
+
+    assert len(results) == 1
+    assert results[0].order_id == 100
+    assert results[0].customer_id == 10
+    assert results[0].total == 150.0
+    assert len(results[0].items) == 2
+    assert results[0].items[0].product_id == 101
+    assert results[0].items[0].quantity == 2
+    assert results[0].delivery_address == "Admin Address"
+    assert results[0].status == "processing"
+    assert results[0].completed is False
+    assert results[0].customer_name == "Test Admin"
+    assert results[0].customer_email == "admin@test.com"
+
