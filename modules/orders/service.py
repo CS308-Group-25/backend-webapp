@@ -179,21 +179,26 @@ class OrderService:
         orders = self.order_repo.get_all_orders(status)
         results = []
         for order in orders:
-            for item in order.items:
-                results.append(
-                    AdminOrderResponse(
-                        delivery_id=order.id,
-                        customer_id=order.user_id,
-                        customer_name=order.user.name,
-                        customer_email=order.user.email,
-                        product_id=item.product_id,
-                        quantity=item.quantity,
-                        total_price=order.total,
-                        delivery_address=order.delivery_address,
-                        status=order.status,
-                        completed=(order.status == "delivered"),
-                    )
+            results.append(
+                AdminOrderResponse(
+                    order_id=order.id,
+                    customer_id=order.user_id,
+                    total=order.total,
+                    items=[
+                        OrderItemResponse(
+                            product_id=item.product_id,
+                            name=item.product.name,
+                            quantity=item.quantity,
+                            price=item.price,
+                        ) for item in order.items
+                    ],
+                    delivery_address=order.delivery_address,
+                    status=order.status,
+                    completed=(order.status == "delivered"),
+                    customer_name=order.user.name,
+                    customer_email=order.user.email,
                 )
+            )
         return results
 
 
