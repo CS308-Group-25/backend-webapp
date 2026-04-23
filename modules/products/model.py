@@ -1,4 +1,6 @@
 from sqlalchemy import (
+    JSON,
+    Boolean,
     Column,
     DateTime,
     ForeignKey,
@@ -6,8 +8,6 @@ from sqlalchemy import (
     Numeric,  # noqa: E402, F401
     String,
     Text,
-    Boolean,
-    JSON,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -45,10 +45,10 @@ class Product(Base):
     images          = Column(JSON, nullable=True)
     tags_json       = Column(JSON, nullable=True)     # detailed tags list
     flavors_json    = Column(JSON, nullable=True)     # [{id, name, color}]
-    sizes_json      = Column(JSON, nullable=True)     # [{id, label, servings, price, originalPrice}]
+    sizes_json      = Column(JSON, nullable=True)     # list of size objects
     features        = Column(JSON, nullable=True)     # ["Feature 1", "Feature 2"]
-    ingredients     = Column(Text, nullable=True)     # Overwrite if exists, wait it's not defined before yet. No wait, description is Text!
-    nutrition_facts = Column(JSON, nullable=True)     # [{label, perServing, per100g}]
+    ingredients     = Column(Text, nullable=True)     # Detailed ingredients
+    nutrition_facts = Column(JSON, nullable=True)     # [{label, perServing, ...}]
     usage_info      = Column(Text, nullable=True)
 
     # --- Relations ---

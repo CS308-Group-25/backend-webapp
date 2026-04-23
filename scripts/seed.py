@@ -26,7 +26,10 @@ CATEGORY_FILTERS = {
     "vitamin": ["Multivitamin", "B12", "D3", "C Vitamini", "Omega-3"],
 }
 
-BRANDS = ["Optimum Nutrition", "MyProtein", "BSN", "Supplements", "Weider", "Hardline", "Big Joy"]
+BRANDS = [
+    "Optimum Nutrition", "MyProtein", "BSN", "Supplements", 
+    "Weider", "Hardline", "Big Joy"
+]
 
 FLAVORS_POOL = [
     {"id": "choc", "name": "Çikolata", "color": "#5C3317"},
@@ -40,7 +43,9 @@ FLAVORS_POOL = [
 ]
 
 TAGS_POOL = ["Vegan", "Glutensiz", "Vejetaryen", "Şeker İlavesiz", "Organik", "Helal"]
-IMAGES_POOL = ["/products/bcaa.png", "/products/creatine.png", "/products/protein-bar.png"]
+IMAGES_POOL = [
+    "/products/bcaa.png", "/products/creatine.png", "/products/protein-bar.png"
+]
 
 
 def seed_db():
@@ -55,7 +60,7 @@ def seed_db():
             # If reviews get created later, theoretically good to clear them if table exists
             try:
                 db.execute(text("DELETE FROM reviews"))
-            except:
+            except Exception:
                 pass
         
         db.query(Product).delete()
@@ -64,9 +69,18 @@ def seed_db():
 
         print("Seeding categories...")
 
-        cat1 = Category(name="Proteins", description="Premium protein powders and supplements")
-        cat2 = Category(name="Vitamins", description="Essential vitamins and daily health minerals")
-        cat3 = Category(name="Pre-Workouts", description="Energy boosters and pre-workout formulas")
+        cat1 = Category(
+            name="Proteins", 
+            description="Premium protein powders and supplements"
+        )
+        cat2 = Category(
+            name="Vitamins", 
+            description="Essential vitamins and daily health minerals"
+        )
+        cat3 = Category(
+            name="Pre-Workouts", 
+            description="Energy boosters and pre-workout formulas"
+        )
 
         db.add_all([cat1, cat2, cat3])
         db.commit()
@@ -94,7 +108,10 @@ def seed_db():
             # Pricing logic
             price = round(random.uniform(99, 1499), 2)
             has_discount = random.choice([True, False, False]) # 33% indirimli
-            original_price = round(price * random.uniform(1.2, 1.5), 2) if has_discount else None
+            original_price = (
+                round(price * random.uniform(1.2, 1.5), 2) 
+                if has_discount else None
+            )
             
             # Stock logic
             stock = random.randint(0, 300)
@@ -121,10 +138,26 @@ def seed_db():
             ]
             
             nutrition_facts = [
-                {"label": "Enerji", "perServing": f"{random.randint(0,150)} kcal", "per100g": f"{random.randint(200,400)} kcal"},
-                {"label": "Protein", "perServing": f"{random.randint(0,30)}g", "per100g": f"{random.randint(10,90)}g"},
-                {"label": "Karbonhidrat", "perServing": f"{random.randint(0,50)}g", "per100g": f"{random.randint(0,100)}g"},
-                {"label": "Yağ", "perServing": f"{random.uniform(0.1, 5.0):.1f}g", "per100g": f"{random.uniform(1.0, 15.0):.1f}g"}
+                {
+                    "label": "Enerji", 
+                    "perServing": f"{random.randint(0,150)} kcal", 
+                    "per100g": f"{random.randint(200,400)} kcal"
+                },
+                {
+                    "label": "Protein", 
+                    "perServing": f"{random.randint(0,30)}g", 
+                    "per100g": f"{random.randint(10,90)}g"
+                },
+                {
+                    "label": "Karbonhidrat", 
+                    "perServing": f"{random.randint(0,50)}g", 
+                    "per100g": f"{random.randint(0,100)}g"
+                },
+                {
+                    "label": "Yağ", 
+                    "perServing": f"{random.uniform(0.1, 5.0):.1f}g", 
+                    "per100g": f"{random.uniform(1.0, 15.0):.1f}g"
+                }
             ]
             
             features = [
@@ -158,7 +191,9 @@ def seed_db():
 
         db.add_all(products)
         db.commit()
-        print(f"Successfully seeded the database with 3 categories and {len(products)} products!")
+        print(
+            f"Successfully seeded DB with 3 categories and {len(products)} products!"
+        )
 
     except Exception as e:
         print(f"Error seeding database: {e}")
