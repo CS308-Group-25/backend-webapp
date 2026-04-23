@@ -10,11 +10,13 @@ from modules.auth.service import AuthService
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
+
 @router.post("/register", response_model=UserPublicResponse, status_code=201)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     repo = UserRepository(db)
     service = AuthService(repo)
     return service.register(data)
+
 
 @router.post("/login", response_model=UserPublicResponse)
 def login(data: LoginRequest, response: Response, db: Session = Depends(get_db)):
@@ -29,9 +31,11 @@ def login(data: LoginRequest, response: Response, db: Session = Depends(get_db))
     )
     return user
 
+
 @router.post("/logout", status_code=204)
 def logout(response: Response):
     response.delete_cookie(key="access_token")
+
 
 @router.get("/me", response_model=UserPublicResponse)
 def me(current_user: User = Depends(get_current_user)):

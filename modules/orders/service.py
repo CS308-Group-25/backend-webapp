@@ -1,10 +1,17 @@
 from fastapi import HTTPException
 
+from core.email import send_invoice_email
 from core.payment import process_payment
 from modules.cart.repository import CartRepository
+from modules.invoices.service import InvoiceService
 from modules.orders.model import Order
 from modules.orders.repository import OrderRepository
-from modules.orders.schema import OrderItemResponse, OrderRequest, OrderResponse
+from modules.orders.schema import (
+    AdminOrderResponse,
+    OrderItemResponse,
+    OrderRequest,
+    OrderResponse,
+)
 from modules.products.repository import ProductRepository
 
 
@@ -14,10 +21,12 @@ class OrderService:
         order_repo: OrderRepository,
         cart_repo: CartRepository,
         product_repo: ProductRepository,
+        invoice_service: InvoiceService | None = None,
     ):
         self.order_repo = order_repo
         self.cart_repo = cart_repo
         self.product_repo = product_repo
+        self.invoice_service = invoice_service
 
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
@@ -30,7 +39,7 @@ class OrderService:
             id=order.id,
             status=order.status,
             total=order.total,
-            invoice_id=None,        # TODO: wire in T-136
+            invoice_id=order.invoice.id if order.invoice else None,
             delivery_address=order.delivery_address,
             created_at=order.created_at,
             items=[
@@ -39,8 +48,9 @@ class OrderService:
                     name=order_item.product.name,
                     quantity=order_item.quantity,
                     price=order_item.price,
-                ) for order_item in order.items
-            ]
+                )
+                for order_item in order.items
+            ],
         )
 
     def get_order_by_id(self, order_id: int, user_id: int) -> OrderResponse:
@@ -56,6 +66,8 @@ class OrderService:
         return [self._build_order_response(order) for order in orders_list]
 
     def place_order(self, user_id: int, data: OrderRequest) -> OrderResponse:
+        if self.invoice_service is None:
+            raise RuntimeError("invoice_service requried for place_order")
         cart = self.cart_repo.get(user_id)
         if not cart or not cart.items:
             raise HTTPException(
@@ -124,5 +136,88 @@ class OrderService:
         for item in cart.items:
             self.cart_repo.remove_item(item.id)
 
+        invoice = self.invoice_service.generate_invoice(order)
+        send_invoice_email(
+            to_email=order.user.email,
+            invoice_number=invoice.invoice_number,
+            pdf_path=invoice.pdf_path,
+        )
+
         return self._build_order_response(order)
+
+    def update_order_status(self, order_id: int, new_status: str) -> OrderResponse:
+        order = self.order_repo.get_by_order_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+
+        valid_transitions = {
+            "confirmed": ["processing"],
+            "processing": ["in_transit"],
+            "in_transit": ["delivered"],
+        }
+
+        current_status = order.status
+
+        # If trying to transition to the same status, we can just return (idempotent)
+        if current_status == new_status:
+            return self._build_order_response(order)
+
+        allowed = valid_transitions.get(current_status, [])
+        if new_status not in allowed:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Invalid status transition from {current_status} to {new_status}"
+                ),
+            )
+
+        updated_order = self.order_repo.update_order_status(order_id, new_status)
+        return self._build_order_response(updated_order)
+
+    def get_admin_orders(self, status: str | None = None) -> list[AdminOrderResponse]:
+        orders = self.order_repo.get_all_orders(status)
+        results = []
+        for order in orders:
+            results.append(
+                AdminOrderResponse(
+                    order_id=order.id,
+                    customer_id=order.user_id,
+                    total=order.total,
+                    items=[
+                        OrderItemResponse(
+                            product_id=item.product_id,
+                            name=item.product.name,
+                            quantity=item.quantity,
+                            price=item.price,
+                        )
+                        for item in order.items
+                    ],
+                    delivery_address=order.delivery_address,
+                    status=order.status,
+                    completed=(order.status == "delivered"),
+                    customer_name=order.user.name,
+                    customer_email=order.user.email,
+                )
+            )
+        return results
+    
+    def cancel_order(self, order_id: int, user_id: int) -> OrderResponse:
+        order = self.order_repo.get_by_order_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found.")
+        if order.user_id != user_id:
+            raise HTTPException(status_code=403, detail="Access forbidden.")
+        
+        CANCALLABLE_STATUSES = {"pending", "confirmed"}
+        if order.status not in CANCALLABLE_STATUSES:
+            raise HTTPException(
+                status_code=400,
+                detail="Order cannot be cancelled once it is being procesed.",
+            )
+        
+        updated_order = self.order_repo.update_order_status(order_id, "cancelled")
+        return self._build_order_response(updated_order)
+    
+        
+
 

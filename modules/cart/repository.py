@@ -18,11 +18,7 @@ class CartRepository:
         return cart
 
     def get_item_by_id(self, cart_item_id: int) -> CartItem | None:
-        return (
-            self.db.query(CartItem)
-            .filter(CartItem.id == cart_item_id)
-            .first()
-        )
+        return self.db.query(CartItem).filter(CartItem.id == cart_item_id).first()
 
     def add_item(self, cart_id: int, product_id: int, quantity: int = 1) -> CartItem:
         cart_item = (
@@ -57,3 +53,36 @@ class CartRepository:
             self.db.commit()
             return True
         return False
+
+    def bulk_add_items(self, cart_id: int, items: list[dict]) -> list[CartItem]:
+        result = []
+
+        for item in items:
+            product_id = item["product_id"]
+            quantity = item["quantity"]
+
+            existing = (
+                self.db.query(CartItem).filter(
+                    CartItem.cart_id == cart_id, 
+                    CartItem.product_id == product_id,).first()
+            )
+
+            if existing:
+                existing.quantity += quantity
+                result.append(existing)
+            else:
+                new_item = CartItem(
+                    cart_id=cart_id,
+                    product_id=product_id,
+                    quantity=quantity,
+                )
+                self.db.add(new_item)
+                result.append(new_item)
+
+        self.db.commit()
+        for item in result:
+            self.db.refresh(item)
+
+        return result
+                
+
