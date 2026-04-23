@@ -75,8 +75,9 @@ def _make_service(order_repo=None, cart_repo=None, product_repo=None, invoice_se
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
+@patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_success(mock_payment, service, repos, order_request):
+def test_place_order_success(mock_payment, mock_email, service, repos, order_request):
     """
     Happy path: a valid cart with sufficient stock should create an order,
     process payment, decrement stock, and clear the cart.
@@ -123,9 +124,10 @@ def test_place_order_out_of_stock_rejection(
     mock_payment.assert_not_called()
 
 
+@patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)
 def test_place_order_stock_decrements_correctly(
-    mock_payment, service, repos, order_request
+    mock_payment, mock_email, service, repos, order_request
 ):
     """
     After a successful order, product_repo.update_stock should be called with
@@ -148,8 +150,9 @@ def test_place_order_stock_decrements_correctly(
     product_repo.update_stock.assert_called_with(100, 3)
 
 
+@patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_card_number_not_persisted(mock_payment, service, repos):
+def test_place_order_card_number_not_persisted(mock_payment, mock_email, service, repos):
     """
     The full card number must never reach create_payment.
     Only card_last4 and card_brand are safe to persist.
