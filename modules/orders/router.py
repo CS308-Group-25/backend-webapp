@@ -82,7 +82,7 @@ def update_order_status(
 ):
     # TODO: Add require_product_manager before production
     order_repo = OrderRepository(db)
-    updated_order = order_repo.update_order_status(order_id, data.status)
+    updated_order = service.update_order_status(order_id, data.status)
     if not updated_order:
         raise HTTPException(status_code=404, detail="Order not found")
 
