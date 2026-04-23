@@ -6,6 +6,8 @@ from core.dependencies import get_current_user
 from modules.auth.model import User
 from modules.cart.repository import CartRepository
 from modules.cart.schema import (
+    BulkCartAddRequest,
+    BulkCartAddResponse,
     CartItemAddRequest,
     CartItemResponse,
     CartItemUpdateRequest,
@@ -69,3 +71,17 @@ def remove_cart_item(
             status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found"
         )
     return None
+
+
+@router.post("/bulk", response_model=BulkCartAddResponse, 
+             status_code=status.HTTP_200_OK)
+def bulk_add_items(
+    data: BulkCartAddRequest,
+    current_user: User = Depends(get_current_user),
+    service: CartService = Depends(get_cart_service)
+):
+    result = service.bulk_add_items(
+        current_user.id,
+        [{"product_id": i.product_id, "quantity": i.quantity} for i in data.items],
+    )
+    return result
