@@ -66,3 +66,15 @@ def get_admin_orders(
     product_repo = ProductRepository(db)
     service = OrderService(order_repo, cart_repo, product_repo)
     return service.get_admin_orders(status)
+
+@router.patch("/{order_id}", response_model=OrderResponse, status_code=200)
+def cancel_order(
+    order_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    order_repo = OrderRepository(db)
+    cart_repo = CartRepository(db)
+    product_repo = ProductRepository(db)
+    service = OrderService(order_repo, cart_repo, product_repo)
+    return service.cancel_order(order_id=order_id, user_id=current_user.id)
