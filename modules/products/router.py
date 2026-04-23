@@ -12,6 +12,8 @@ from modules.products.schema import (
     ProductUpdate,
 )
 from modules.products.service import ProductService
+from modules.wishlist.notification_service import WishlistNotificationService
+from modules.wishlist.repository import WishlistRepository
 
 router = APIRouter(prefix="/api/v1/products", tags=["products"])
 admin_router = APIRouter(prefix="/api/v1/admin/products", tags=["admin-products"])
@@ -75,7 +77,9 @@ def update_product(
     _: None = Depends(require_product_manager),
 ):
     repo = ProductRepository(db)
-    service = ProductService(repo)
+    # Build the notification service so price-drop emails are sent automatically
+    notification_service = WishlistNotificationService(WishlistRepository(db))
+    service = ProductService(repo, notification_service)
 
     return service.update_product(product_id, product_in)
 

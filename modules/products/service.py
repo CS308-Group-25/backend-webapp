@@ -3,11 +3,18 @@ from fastapi import HTTPException
 from modules.products.model import Product
 from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate, ProductUpdate
+from modules.wishlist.notification_service import WishlistNotificationService
 
 
 class ProductService:
-    def __init__(self, repo: ProductRepository):
+    def __init__(
+        self,
+        repo: ProductRepository,
+        notification_service: WishlistNotificationService | None = None,
+    ):
         self.repo = repo
+        # Optional: fires wishlist price-drop emails when a price update is detected
+        self.notification_service = notification_service
 
     def list_products(
         self,
@@ -42,8 +49,28 @@ class ProductService:
 
     def update_product(self, product_id: int, product_in: "ProductUpdate") -> Product:
         product = self.get_product(product_id)  # Raises 404 if not found
+
+        # Capture old price before applying changes (needed for notification)
+        old_price = float(product.price) if product.price is not None else None
+
         update_data = product_in.model_dump(exclude_unset=True)
-        return self.repo.update_product(product, update_data)
+        updated = self.repo.update_product(product, update_data)
+
+        # Trigger wishlist email notifications if the price dropped
+        new_price_raw = update_data.get("price")
+        if (
+            self.notification_service is not None
+            and old_price is not None
+            and new_price_raw is not None
+        ):
+            self.notification_service.notify_price_drop(
+                product_id=product_id,
+                product_name=updated.name,
+                old_price=old_price,
+                new_price=float(new_price_raw),
+            )
+
+        return updated
 
     def delete_product(self, product_id: int) -> None:
         product = self.get_product(product_id)
