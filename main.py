@@ -12,6 +12,7 @@ from modules.orders.router import admin_router as orders_admin_router  # noqa: E
 from modules.orders.router import router as orders_router  # noqa: E402
 from modules.products.router import admin_router as products_admin_router  # noqa: E402
 from modules.products.router import router as products_router  # noqa: E402
+from modules.wishlist.router import router as wishlist_router  # noqa: E402
 
 app = FastAPI(title="SUpplements Store")
 app.include_router(auth_router)
@@ -22,6 +23,7 @@ app.include_router(orders_admin_router)
 app.include_router(categories_router)
 app.include_router(orders_router)
 app.include_router(invoices_router)
+app.include_router(wishlist_router)
 
 
 @app.get("/")
