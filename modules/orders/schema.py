@@ -42,3 +42,7 @@ class AdminOrderResponse(BaseModel):
     completed: bool
     customer_name: str
     customer_email: str
+
+
+class StatusUpdateRequest(BaseModel):
+    status: str
