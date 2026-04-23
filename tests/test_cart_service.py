@@ -169,3 +169,74 @@ def test_verify_item_ownership_no_cart_for_user():
 
     assert exc.value.status_code == 403
     assert exc.value.detail == "This cart item does not belong to you"
+
+
+def test_bulk_add_items_success():
+    # Arrange
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    mock_product = MagicMock(spec=Product)
+    mock_product.id = 1
+    mock_product.stock = 10
+    mock_product_repo.get_by_id.return_value = mock_product
+
+    mock_cart = MagicMock(spec=Cart)
+    mock_cart.id = 50
+    mock_cart_repo.get.return_value = mock_cart
+
+    mock_cart_item = MagicMock(spec=CartItem)
+    mock_cart_repo.bulk_add_items.return_value = [mock_cart_item]
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    # Act
+    result = service.bulk_add_items(user_id=1, items=[{"product_id": 1, "quantity": 2}])
+
+    # Assert
+    assert len(result["added"]) == 1
+    assert len(result["rejected"]) == 0
+    mock_cart_repo.bulk_add_items.assert_called_once_with(
+        50, [{"product_id": 1, "quantity": 2}])
+
+
+def test_bulk_add_items_partial_out_of_stock_rejection():
+    # Arrange
+    mock_cart_repo = MagicMock()
+    mock_product_repo = MagicMock()
+
+    mock_cart = MagicMock(spec=Cart)
+    mock_cart.id = 50
+    mock_cart_repo.get.return_value = mock_cart
+
+    # product 1 — yeterli stok
+    mock_product_1 = MagicMock(spec=Product)
+    mock_product_1.id = 1
+    mock_product_1.stock = 10
+
+    # product 2 — stok yetersiz
+    mock_product_2 = MagicMock(spec=Product)
+    mock_product_2.id = 2
+    mock_product_2.stock = 1
+
+    mock_product_repo.get_by_id.side_effect = [mock_product_1, mock_product_2]
+
+    mock_cart_item = MagicMock(spec=CartItem)
+    mock_cart_repo.bulk_add_items.return_value = [mock_cart_item]
+
+    service = CartService(repo=mock_cart_repo, product_repo=mock_product_repo)
+
+    # Act
+    result = service.bulk_add_items(
+        user_id=1,
+        items=[
+            {"product_id": 1, "quantity": 2},
+            {"product_id": 2, "quantity": 5},
+        ],
+    )
+
+    # Assert
+    assert len(result["added"]) == 1
+    assert len(result["rejected"]) == 1
+    assert result["rejected"][0]["product_id"] == 2
+    assert result["rejected"][0]["reason"] == "Not enough stock"
