@@ -23,7 +23,7 @@ class WishlistService:
             404 if the product does not exist.
             409 if the product is already in the wishlist.
         """
-        # Ensure the product exists before adding it 
+        # Ensure the product exists before adding it
         product = self.product_repo.get_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
