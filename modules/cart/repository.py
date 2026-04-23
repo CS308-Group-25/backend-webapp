@@ -57,3 +57,36 @@ class CartRepository:
             self.db.commit()
             return True
         return False
+
+    def bulk_add_items(self, cart_id: int, items: list[dict]) -> list[CartItem]:
+        result = []
+
+        for item in items:
+            product_id = item["product_id"]
+            quantity = item["quantity"]
+
+            existing = (
+                self.db.query(CartItem).filter(
+                    CartItem.cart_id == cart_id, 
+                    CartItem.product_id == product_id,).first()
+            )
+
+            if existing:
+                existing.quantity += quantity
+                result.append(existing)
+            else:
+                new_item = CartItem(
+                    cart_id=cart_id,
+                    product_id=product_id,
+                    quantity=quantity,
+                )
+                self.db.add(new_item)
+                result.append(new_item)
+
+        self.db.commit()
+        for item in result:
+            self.db.refresh(item)
+
+        return result
+                
+
