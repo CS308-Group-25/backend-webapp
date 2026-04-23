@@ -200,5 +200,24 @@ class OrderService:
                 )
             )
         return results
+    
+    def cancel_order(self, order_id: int, user_id: int) -> OrderResponse:
+        order = self.order_repo.get_by_order_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found.")
+        if order.user_id != user_id:
+            raise HTTPException(status_code=403, detail="Access forbidden.")
+        
+        CANCALLABLE_STATUSES = {"pending", "confirmed"}
+        if order.status not in CANCALLABLE_STATUSES:
+            raise HTTPException(
+                status_code=400,
+                detail="Order cannot be cancelled once it is being procesed.",
+            )
+        
+        updated_order = self.order_repo.update_order_status(order_id, "cancelled")
+        return self._build_order_response(updated_order)
+    
+        
 
 
