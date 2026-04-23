@@ -65,7 +65,9 @@ def _make_order(order_id: int = 500, total: float = 50.0):
     return order
 
 
-def _make_service(order_repo=None, cart_repo=None, product_repo=None, invoice_service=None):
+def _make_service(
+    order_repo=None, cart_repo=None, product_repo=None, invoice_service=None
+):
     return OrderService(
         order_repo=order_repo or MagicMock(),
         cart_repo=cart_repo or MagicMock(),
@@ -152,7 +154,7 @@ def test_place_order_stock_decrements_correctly(
 
 @patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_card_number_not_persisted(mock_payment, mock_email, service, repos):
+def test_place_order_card_number_not_persisted(mock_payment, _email, service, repos):
     """
     The full card number must never reach create_payment.
     Only card_last4 and card_brand are safe to persist.
