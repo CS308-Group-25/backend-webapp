@@ -57,7 +57,8 @@ def seed_db():
         db.execute(text("DELETE FROM cart_items"))
         db.execute(text("DELETE FROM order_items"))
         if "Review" in sys.modules: 
-            # If reviews get created later, theoretically good to clear them if table exists
+            # Clear reviews table if it exists in the future
+            # to prevent integrity errors.
             try:
                 db.execute(text("DELETE FROM reviews"))
             except Exception:
@@ -177,7 +178,8 @@ def seed_db():
                 rating=round(random.uniform(4.0, 5.0), 1) if stock > 0 else 0, # ratings
                 review_count=random.randint(0, 2500) if stock > 0 else 0,
                 stock_status=stock_status,
-                is_new=random.choice([True, False, False, False]), # 25% chance of being new
+                # 25% chance of being new
+                is_new=random.choice([True, False, False, False]),
                 images=images,
                 tags_json=tags,
                 flavors_json=flavors,
