@@ -19,10 +19,12 @@ def repos():
 @pytest.fixture
 def service(repos):
     order_repo, cart_repo, product_repo = repos
+    invoice_service = MagicMock()
     return OrderService(
         order_repo=order_repo,
         cart_repo=cart_repo,
         product_repo=product_repo,
+        invoice_service=invoice_service,
     )
 
 
@@ -63,11 +65,12 @@ def _make_order(order_id: int = 500, total: float = 50.0):
     return order
 
 
-def _make_service(order_repo=None, cart_repo=None, product_repo=None):
+def _make_service(order_repo=None, cart_repo=None, product_repo=None, invoice_service=None):
     return OrderService(
         order_repo=order_repo or MagicMock(),
         cart_repo=cart_repo or MagicMock(),
         product_repo=product_repo or MagicMock(),
+        invoice_service=invoice_service or MagicMock(),
     )
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
