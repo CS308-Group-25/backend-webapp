@@ -155,7 +155,7 @@ def test_update_status_processing_to_in_transit_valid():
 
 
 def test_update_status_delivered_to_processing_invalid():
-    """T-213: Invalid status transition from delivered back to processing returns 400."""
+    """T-213: Invalid status transition from delivered back to processing returns 400."""  # noqa: E501
     # Arrange
     order_repo = MagicMock()
     order = MagicMock(spec=Order)
