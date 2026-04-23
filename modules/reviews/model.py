@@ -1,6 +1,17 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, CheckConstraint
+
+from sqlalchemy import (
+  CheckConstraint,
+  Column,
+  DateTime,
+  ForeignKey,
+  Integer,
+  String,
+  Text,
+)
+
 from core.database import Base
+
 
 class Review(Base):
   __tablename__ ="reviews"
