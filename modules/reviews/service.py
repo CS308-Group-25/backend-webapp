@@ -8,6 +8,9 @@ class ReviewService:
     def __init__(self, repo: ReviewRepository):
         self.repo = repo
 
+    def get_approved_reviews(self, product_id: int) -> list[Review]:
+        return self.repo.get_approved_by_product(product_id)
+
     def submit_review(
         self, user_id: int, product_id: int, rating: int, comment: str | None
     ) -> Review:
