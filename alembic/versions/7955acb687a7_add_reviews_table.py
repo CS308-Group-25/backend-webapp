@@ -7,9 +7,9 @@ Create Date: 2026-04-24 01:34:11.529763
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '7955acb687a7'
@@ -34,7 +34,9 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_reviews_id'), 'reviews', ['id'], unique=False)
-    op.create_index(op.f('ix_reviews_product_id'), 'reviews', ['product_id'], unique=False)
+    op.create_index(
+        op.f('ix_reviews_product_id'), 'reviews', ['product_id'], unique=False
+    )
     op.create_index(op.f('ix_reviews_user_id'), 'reviews', ['user_id'], unique=False)
     # ### end Alembic commands ###
 
