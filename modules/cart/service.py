@@ -45,3 +45,28 @@ class CartService:
 
     def remove_item(self, cart_item_id: int) -> bool:
         return self.repo.remove_item(cart_item_id)
+
+    def bulk_add_items(self, user_id: int, items: list[dict]) -> dict:
+        cart = self.get_cart(user_id)
+        
+        valid_items = []
+        rejected = []
+
+        for item in items:
+            product = self.product_repo.get_by_id(item["product_id"])
+
+            if not product:
+                rejected.append(
+                    {"product_id": item["product_id"], "reason": "Product not found"})
+                continue
+
+            if product.stock < item["quantity"]:
+                rejected.append(
+                    {"product_id": item["product_id"], "reason": "Not enough stock"})
+                continue
+
+            valid_items.append(item)
+            
+        added = self.repo.bulk_add_items(cart.id, valid_items)
+
+        return {"added": added, "rejected": rejected}
