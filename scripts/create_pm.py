@@ -1,9 +1,7 @@
 import os
 import sys
 
-sys.path.append(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.database import SessionLocal
 from modules.auth.model import User
@@ -24,8 +22,8 @@ def create_pm():
             email=email,
             password_hash=pwd_context.hash("pm_password"),
             role="product_manager",
-            tax_id="1234567890", # Added dummy tax_id to satisfy DB constraint
-            address="PM Office" # Added dummy address
+            tax_id="1234567890",  # Added dummy tax_id to satisfy DB constraint
+            address="PM Office",  # Added dummy address
         )
         db.add(pm)
         db.commit()
@@ -35,6 +33,7 @@ def create_pm():
         db.rollback()
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     create_pm()

@@ -35,10 +35,7 @@ def test_card_number_not_in_any_response_schema():
             with open(filepath) as f:
                 tree = ast.parse(f.read())
             for node in ast.walk(tree):
-                is_response = (
-                    isinstance(node, ast.ClassDef)
-                    and "Response" in node.name
-                )
+                is_response = isinstance(node, ast.ClassDef) and "Response" in node.name
                 if not is_response:
                     continue
                 for item in node.body:

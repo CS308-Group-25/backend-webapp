@@ -17,4 +17,3 @@ class User(Base):
     address = Column(String, nullable=True)
     role = Column(String, nullable=False, default="customer")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-

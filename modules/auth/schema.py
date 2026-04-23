@@ -5,8 +5,8 @@ class RegisterRequest(BaseModel):
     name: str
     email: EmailStr
     password: str
-    tax_id: str | None = None       # means it is not required
-    address: str | None = None      # not required
+    tax_id: str | None = None  # means it is not required
+    address: str | None = None  # not required
 
 
 class UserPublicResponse(BaseModel):
@@ -19,5 +19,5 @@ class UserPublicResponse(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email:EmailStr
+    email: EmailStr
     password: str

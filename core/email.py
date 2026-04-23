@@ -18,7 +18,7 @@ def _build_message(to_email: str, invoice_number: str, pdf_path: str) -> MIMEMul
     msg.attach(
         MIMEText(f"Please find your invoice {invoice_number} attached.", "plain")
     )
-    
+
     with open(pdf_path, "rb") as f:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(f.read())
@@ -30,18 +30,16 @@ def _build_message(to_email: str, invoice_number: str, pdf_path: str) -> MIMEMul
 
     return msg
 
+
 def _send_via_smtp(to_email: str, invoice_number: str, pdf_path: str) -> None:
-    msg = _build_message(to_email,invoice_number, pdf_path)
+    msg = _build_message(to_email, invoice_number, pdf_path)
     host = os.getenv("MAIL_SERVER", "localhost")
     port = int(os.getenv("MAIL_PORT", "1025"))
     username = os.getenv("MAIL_USERNAME", "")
     password = os.getenv("MAIL_PASSWORD", "")
-    
+
     with smtplib.SMTP(host, port) as server:
         if username and password:
             server.starttls()
             server.login(username, password)
         server.sendmail(msg["From"], to_email, msg.as_string())
-
-
-

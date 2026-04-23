@@ -45,4 +45,3 @@ class CartService:
 
     def remove_item(self, cart_item_id: int) -> bool:
         return self.repo.remove_item(cart_item_id)
-

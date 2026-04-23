@@ -16,28 +16,28 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
         )
-    
+
     payload = decode_access_token(access_token)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token",
         )
-    
+
     user_id = payload.get("user_id")
     if user_id is None:
         raise HTTPException(
-            status_code = status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token payload",
         )
-    
+
     user = UserRepository(db).get_by_id(user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
         )
-    
+
     return user
 
 
@@ -57,4 +57,3 @@ def require_product_manager(current_user: User = Depends(get_current_user)) -> U
             detail="Only product managers can perform this action",
         )
     return current_user
-    

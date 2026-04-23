@@ -28,12 +28,11 @@ class InvoiceService:
             pdf_path=pdf_path,
         )
 
-
     def _generate_invoice_number(self, order_id: int) -> str:
         year = datetime.now().year
         return f"INV-{year}-{order_id:05d}"
-    
-    def _build_pdf(self, order, invoice_number:str) -> bytes:
+
+    def _build_pdf(self, order, invoice_number: str) -> bytes:
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=A4)
         # title
@@ -52,8 +51,9 @@ class InvoiceService:
         y -= 20
         c.setFont("Helvetica", 11)
         for item in order.items:
-            line = ( f" {item.product.name} x{item.quantity}"
-                    f" @ {item.price} = {item.quantity * item.price}" 
+            line = (
+                f" {item.product.name} x{item.quantity}"
+                f" @ {item.price} = {item.quantity * item.price}"
             )
             c.drawString(50, y, line)
             y -= 18

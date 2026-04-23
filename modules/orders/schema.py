@@ -25,7 +25,7 @@ class OrderResponse(BaseModel):
     id: int
     status: str
     total: Decimal
-    invoice_id: int | None = None # Made nullable until invoice tasks are done
+    invoice_id: int | None = None  # Made nullable until invoice tasks are done
     items: List[OrderItemResponse]
     delivery_address: str
     created_at: datetime

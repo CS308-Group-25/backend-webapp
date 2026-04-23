@@ -6,6 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 load_dotenv()
 
+
 class Base(DeclarativeBase):
     pass
 

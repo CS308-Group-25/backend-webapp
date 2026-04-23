@@ -48,8 +48,9 @@ class OrderService:
                     name=order_item.product.name,
                     quantity=order_item.quantity,
                     price=order_item.price,
-                ) for order_item in order.items
-            ]
+                )
+                for order_item in order.items
+            ],
         )
 
     def get_order_by_id(self, order_id: int, user_id: int) -> OrderResponse:
@@ -156,7 +157,7 @@ class OrderService:
         }
 
         current_status = order.status
-        
+
         # If trying to transition to the same status, we can just return (idempotent)
         if current_status == new_status:
             return self._build_order_response(order)
@@ -166,11 +167,9 @@ class OrderService:
             raise HTTPException(
                 status_code=400,
                 detail=(
-                    f"Invalid status transition from "
-                    f"{current_status} to {new_status}"
+                    f"Invalid status transition from {current_status} to {new_status}"
                 ),
             )
-
 
         updated_order = self.order_repo.update_order_status(order_id, new_status)
         return self._build_order_response(updated_order)
@@ -190,7 +189,8 @@ class OrderService:
                             name=item.product.name,
                             quantity=item.quantity,
                             price=item.price,
-                        ) for item in order.items
+                        )
+                        for item in order.items
                     ],
                     delivery_address=order.delivery_address,
                     status=order.status,

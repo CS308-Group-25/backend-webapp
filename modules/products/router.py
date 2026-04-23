@@ -19,14 +19,14 @@ admin_router = APIRouter(prefix="/api/v1/admin/products", tags=["admin-products"
 
 @router.get("", response_model=list[PaginatedProductResponse])
 def list_products(
-    search: str | None = None, 
-    sort: str | None = None, 
+    search: str | None = None,
+    sort: str | None = None,
     category_id: int | None = None,
     brand: str | None = None,
     page: int = 1,
     page_size: int = 20,
     db: Session = Depends(get_db),
-    ):
+):
 
     repo = ProductRepository(db)
     service = ProductService(repo)
@@ -46,12 +46,14 @@ def list_products(
         page_size=page_size,
     )
 
+
 @router.get("/{product_id}", response_model=ProductDetailResponse)
 def get_product(product_id: int, db: Session = Depends(get_db)):
     repo = ProductRepository(db)
     service = ProductService(repo)
 
     return service.get_product(product_id)
+
 
 @admin_router.post("", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
 def create_product(
@@ -64,6 +66,7 @@ def create_product(
 
     return service.create_product(product_in)
 
+
 @admin_router.patch("/{product_id}", response_model=ProductRead)
 def update_product(
     product_id: int,
@@ -75,6 +78,7 @@ def update_product(
     service = ProductService(repo)
 
     return service.update_product(product_id, product_in)
+
 
 @admin_router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(

@@ -11,6 +11,7 @@ class CategoryResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
 class ProductBase(BaseModel):
     name: str = Field(..., max_length=200)
     model: Optional[str] = Field(None, max_length=100)
@@ -26,8 +27,10 @@ class ProductBase(BaseModel):
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
 
+
 class ProductCreate(ProductBase):
     pass
+
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = Field(None, max_length=200)
@@ -44,6 +47,7 @@ class ProductUpdate(BaseModel):
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
 
+
 class ProductRead(ProductBase):
     id: int
     price: Optional[Decimal] = None
@@ -51,6 +55,7 @@ class ProductRead(ProductBase):
     updated_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
 
 class ProductListResponse(BaseModel):
     id: int
@@ -64,6 +69,7 @@ class ProductListResponse(BaseModel):
     category: CategoryResponse | None
 
     model_config = {"from_attributes": True}
+
 
 class ProductDetailResponse(BaseModel):
     id: int
@@ -81,8 +87,9 @@ class ProductDetailResponse(BaseModel):
     serving_size: str | None
     goal_tags: str | None
     category: CategoryResponse | None
-    
+
     model_config = {"from_attributes": True}
+
 
 class PaginatedProductResponse(BaseModel):
     items: list[ProductListResponse]
