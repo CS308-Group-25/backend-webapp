@@ -17,8 +17,7 @@ class OrderRepository:
 
     def get_all_orders(self, status: str | None = None) -> list[Order]:
         query = self.db.query(Order).options(
-            joinedload(Order.user),
-            joinedload(Order.items)
+            joinedload(Order.user), joinedload(Order.items)
         )
         if status:
             query = query.filter(Order.status == status)

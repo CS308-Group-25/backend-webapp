@@ -18,11 +18,7 @@ class CartRepository:
         return cart
 
     def get_item_by_id(self, cart_item_id: int) -> CartItem | None:
-        return (
-            self.db.query(CartItem)
-            .filter(CartItem.id == cart_item_id)
-            .first()
-        )
+        return self.db.query(CartItem).filter(CartItem.id == cart_item_id).first()
 
     def add_item(self, cart_id: int, product_id: int, quantity: int = 1) -> CartItem:
         cart_item = (

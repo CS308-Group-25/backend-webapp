@@ -14,7 +14,7 @@ def test_register_hashes_password_never_plain_text():
     # Arrange
     mock_repo = MagicMock()
     mock_repo.get_by_email.return_value = None  # Ensure user doesn't already exist
-    
+
     # Setup dummy user to be returned when the mock repository creates a user
     mock_user = MagicMock()
     mock_user.id = 1
@@ -25,14 +25,14 @@ def test_register_hashes_password_never_plain_text():
 
     service = AuthService(repo=mock_repo)
     plain_password = "super_secret_password"
-    
+
     # Create the request that simulates user registration
     req = RegisterRequest(
         name="Test User",
         email="test@example.com",
         password=plain_password,
         tax_id="123456789",
-        address="123 Example St"
+        address="123 Example St",
     )
 
     # Act
@@ -41,10 +41,9 @@ def test_register_hashes_password_never_plain_text():
     # Assert
     # Obtain the arguments that were passed into the repository's `create_user` method
     _, kwargs = mock_repo.create_user.call_args
-    
+
     stored_hash = kwargs.get("password_hash")
-    
-    
+
     # 1. Confirm the password is never stored as plain text
     assert stored_hash is not None, (
         "A password hash should be provided to the repository."
@@ -53,9 +52,10 @@ def test_register_hashes_password_never_plain_text():
     assert stored_hash != plain_password, (
         "The stored password MUST NOT match the plain text!"
     )
-    
+
     # 2. Confirm it was correctly hashed using our passlib configuration
     assert pwd_context.verify(plain_password, stored_hash) is True
+
 
 def test_register_success(mock_repo):
     mock_user = MagicMock()
@@ -81,6 +81,7 @@ def test_register_success(mock_repo):
     assert result.email == "test@example.com"
     assert result.role == "customer"
 
+
 def test_register_duplicate_email_raises_400(mock_repo):
     mock_user = MagicMock()
     mock_user.id = 1
@@ -88,7 +89,7 @@ def test_register_duplicate_email_raises_400(mock_repo):
     mock_user.email = "test@example.com"
     mock_user.role = "customer"
 
-    mock_repo.get_by_email.return_value = mock_user    
+    mock_repo.get_by_email.return_value = mock_user
 
     service = AuthService(repo=mock_repo)
     data = RegisterRequest(
@@ -104,9 +105,11 @@ def test_register_duplicate_email_raises_400(mock_repo):
 
     assert exc.value.status_code == 400
 
+
 def test_register_missing_fields_returns_422(client):
     response = client.post("/api/v1/auth/register", json={})
     assert response.status_code == 422
+
 
 def test_login_success_returns_token_and_user(mock_repo):
     mock_user = MagicMock()
@@ -127,6 +130,7 @@ def test_login_success_returns_token_and_user(mock_repo):
     assert len(token) > 0
     assert user.email == "test@example.com"
 
+
 def test_login_wrong_password_raises_401(mock_repo):
     mock_user = MagicMock()
     mock_user.id = 1
@@ -145,6 +149,7 @@ def test_login_wrong_password_raises_401(mock_repo):
 
     assert exc.value.status_code == 401
 
+
 def test_login_user_not_found_raises_401(mock_repo):
     mock_repo.get_by_email.return_value = None
 
@@ -155,6 +160,7 @@ def test_login_user_not_found_raises_401(mock_repo):
         service.login(data)
 
     assert exc.value.status_code == 401
+
 
 def test_login_sets_httponly_cookie(client):
     mock_user = UserModel(
@@ -182,7 +188,7 @@ def test_login_sets_httponly_cookie(client):
 
         response = client.post(
             "/api/v1/auth/login",
-            json={"email": "test@example.com", "password": "secret123"}
+            json={"email": "test@example.com", "password": "secret123"},
         )
 
     app.dependency_overrides.clear()

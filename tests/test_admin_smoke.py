@@ -11,6 +11,7 @@ def _override_get_db():
     # keeping this test fully in-memory with no database connection.
     yield MagicMock()
 
+
 def test_admin_products_with_customer_token_returns_403(client):
     customer_token = create_access_token({"user_id": 1, "role": "customer"})
 
@@ -29,6 +30,7 @@ def test_admin_products_with_customer_token_returns_403(client):
     app.dependency_overrides.clear()
 
     assert response.status_code == 403
+
 
 def test_admin_products_with_no_token_returns_401(client):
     app.dependency_overrides[get_db] = _override_get_db

@@ -28,11 +28,11 @@ class AuthService:
         )
 
         return UserPublicResponse.model_validate(user)
-    
+
     def login(self, data: LoginRequest) -> tuple[str, UserPublicResponse]:
         user = self.repo.get_by_email(data.email)
         if not user or not pwd_context.verify(data.password, user.password_hash):
             raise HTTPException(status_code=401, detail="Invalid credentials")
-        
+
         token = create_access_token({"user_id": user.id, "role": user.role})
         return token, UserPublicResponse.model_validate(user)

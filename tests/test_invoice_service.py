@@ -12,6 +12,7 @@ from modules.invoices.service import InvoiceService
 def _override_get_db():
     yield MagicMock()
 
+
 def test_get_invoice_by_order_id_success():
     # Arrange
     mock_invoice_repo = MagicMock()
@@ -30,6 +31,7 @@ def test_get_invoice_by_order_id_success():
     assert result.order_id == 10
     mock_invoice_repo.get_by_order_id.assert_called_once_with(10)
 
+
 def test_get_invoice_wrong_user_returns_403(client):
     customer_token = create_access_token({"user_id": 1, "role": "customer"})
 
@@ -37,7 +39,7 @@ def test_get_invoice_wrong_user_returns_403(client):
 
     with patch("modules.invoices.router.OrderRepository") as MockOrderRepo:
         mock_order = MagicMock()
-        mock_order.user_id = 2      # different user
+        mock_order.user_id = 2  # different user
         MockOrderRepo.return_value.get_by_order_id.return_value = mock_order
 
         client.cookies.set("access_token", customer_token)

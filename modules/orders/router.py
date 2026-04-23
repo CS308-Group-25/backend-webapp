@@ -15,11 +15,12 @@ from modules.products.repository import ProductRepository
 router = APIRouter(prefix="/api/v1/orders", tags=["orders"])
 admin_router = APIRouter(prefix="/api/v1/admin/orders", tags=["admin-orders"])
 
+
 @router.post("", response_model=OrderResponse, status_code=201)
 def place_order(
-    data: OrderRequest, 
-    current_user: User = Depends(get_current_user), 
-    db: Session = Depends(get_db)
+    data: OrderRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
@@ -32,8 +33,7 @@ def place_order(
 
 @router.get("", response_model=list[OrderResponse], status_code=200)
 def get_user_orders(
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ):
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
@@ -44,9 +44,9 @@ def get_user_orders(
 
 @router.get("/{order_id}", response_model=OrderResponse, status_code=200)
 def get_order(
-    order_id: int, 
-    current_user: User = Depends(get_current_user), 
-    db: Session = Depends(get_db)
+    order_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
@@ -59,11 +59,10 @@ def get_order(
 def get_admin_orders(
     status: str | None = None,
     current_user: User = Depends(require_product_manager),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
     product_repo = ProductRepository(db)
     service = OrderService(order_repo, cart_repo, product_repo)
     return service.get_admin_orders(status)
-
