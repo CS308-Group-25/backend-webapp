@@ -78,4 +78,4 @@ class ProductRepository:
     def update_stock(self, product_id: int, quantity: int) -> None:
         product = self.get_by_id(product_id)
         product.stock -= quantity
-        self.db.commit()
+        # commit in calling service

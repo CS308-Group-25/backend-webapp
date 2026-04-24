@@ -28,6 +28,7 @@ class OrderService:
         self.product_repo = product_repo
         self.invoice_service = invoice_service
 
+
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
         Converts a SQLAlchemy Order object into an OrderResponse Pydantic schema.
@@ -52,6 +53,7 @@ class OrderService:
                 for order_item in order.items
             ],
         )
+    
 
     def get_order_by_id(self, order_id: int, user_id: int) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
@@ -60,19 +62,21 @@ class OrderService:
         if order.user_id != user_id:
             raise HTTPException(status_code=403, detail="Access forbidden")
         return self._build_order_response(order)
+    
 
     def get_user_orders(self, user_id: int) -> list[OrderResponse]:
         orders_list = self.order_repo.get_orders_by_user_id(user_id)
         return [self._build_order_response(order) for order in orders_list]
 
+
     def place_order(self, user_id: int, data: OrderRequest) -> OrderResponse:
         if self.invoice_service is None:
-            raise RuntimeError("invoice_service requried for place_order")
+            raise RuntimeError("invoice_service required for place_order")
+        
         cart = self.cart_repo.get(user_id)
         if not cart or not cart.items:
             raise HTTPException(
-                status_code=400, detail="Cart is empty, cannot place order."
-            )
+                status_code=400, detail="Cart is empty, cannot place order.")
 
         # Stock checks and total price calculation
         total = 0
@@ -80,18 +84,17 @@ class OrderService:
             product = self.product_repo.get_by_id(item.product_id)
             if not product:
                 raise HTTPException(
-                    status_code=404, detail=f"Product {item.product_id} not found"
-                )
+                    status_code=404, detail=f"Product {item.product_id} not found")
+            
             if product.stock == 0:
                 raise HTTPException(
-                    status_code=400, detail=f"Product {product.name} is out of stock"
-                )
+                    status_code=400, detail=f"Product {product.name} is out of stock")
+            
             elif product.stock < item.quantity:
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Insufficient stock for {product.name} request",
-                )
-
+                    detail=f"Insufficient stock for {product.name} request",)
+            
             total += item.quantity * product.price
 
         # Try to process payment
@@ -103,36 +106,47 @@ class OrderService:
         )
         if not payment_success:
             raise HTTPException(status_code=400, detail="Payment failed")
-
-        # Process order
-        order = self.order_repo.create_order(
-            user_id=user_id,
-            cart_id=cart.id,
-            delivery_address=data.delivery_address,
-            status="confirmed",
-            total=total,
-        )
-
-        # Decrease stock and write to product repo
-        for item in cart.items:
-            product = self.product_repo.get_by_id(item.product_id)
-            self.order_repo.create_order_item(
-                order_id=order.id,
-                product_id=product.id,
-                quantity=item.quantity,
-                price=product.price,
+        
+        # Atomic block: order creation, stock decrement, and payment recording
+        # are flushed together and committed in one transaction.
+        # If any step fails, 
+        # rollback ensures no partial state is written to the database.
+        try:
+            order = self.order_repo.create_order(
+                user_id=user_id,
+                cart_id=cart.id,
+                delivery_address=data.delivery_address,
+                status="confirmed",
+                total=total,
             )
-            self.product_repo.update_stock(product.id, item.quantity)
 
-        # Create payment but since payment variable will not be used it is not written
-        # TODO: Will update variable name once Invoice tasks are done
-        _ = self.order_repo.create_payment(
-            order_id=order.id,
-            card_last4=data.card_last4,
-            card_brand=data.card_brand,
-            status="success",
-        )
+            for item in cart.items:
+                product = self.product_repo.get_by_id(item.product_id)
+                self.order_repo.create_order_item(
+                    order_id=order.id,
+                    product_id=product.id,
+                    quantity=item.quantity,
+                    price=product.price,
+                )
+                self.product_repo.update_stock(product.id, item.quantity)
+            
+            _ = self.order_repo.create_payment(
+                order_id=order.id,
+                card_last4=data.card_last4,
+                card_brand=data.card_brand,
+                status="success",
+            )
 
+            # all in one commit - assure atomicity
+            self.order_repo.db.commit()
+            self.order_repo.db.refresh(order)
+
+        except Exception:
+            self.order_repo.db.rollback()
+            raise HTTPException(
+                status_code=500, 
+                detail="Order could not be completed. Please try again.")
+        
         for item in cart.items:
             self.cart_repo.remove_item(item.id)
 
@@ -144,6 +158,7 @@ class OrderService:
         )
 
         return self._build_order_response(order)
+
 
     def update_order_status(self, order_id: int, new_status: str) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
@@ -173,6 +188,7 @@ class OrderService:
 
         updated_order = self.order_repo.update_order_status(order_id, new_status)
         return self._build_order_response(updated_order)
+    
 
     def get_admin_orders(self, status: str | None = None) -> list[AdminOrderResponse]:
         orders = self.order_repo.get_all_orders(status)
@@ -201,6 +217,7 @@ class OrderService:
             )
         return results
     
+
     def cancel_order(self, order_id: int, user_id: int) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
         if not order:
