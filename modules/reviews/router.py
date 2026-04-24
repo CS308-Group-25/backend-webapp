@@ -5,7 +5,12 @@ from core.database import get_db
 from core.dependencies import get_current_user, require_product_manager
 from modules.auth.model import User
 from modules.reviews.repository import ReviewRepository
-from modules.reviews.schema import ReviewCreate, ReviewModerationRequest, ReviewResponse, ReviewAdminResponse
+from modules.reviews.schema import (
+    ReviewAdminResponse,
+    ReviewCreate,
+    ReviewModerationRequest,
+    ReviewResponse,
+)
 from modules.reviews.service import ReviewService
 
 router = APIRouter(prefix="/api/v1/products", tags=["reviews"])
