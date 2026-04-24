@@ -28,6 +28,12 @@ class ReviewRepository:
           .filter(Review.approval_status == "approved")
           .all()
         )
+
+  def get_all_by_status(self, status: str | None = None) -> list[Review]:
+    query = self.db.query(Review)
+    if status:
+      query = query.filter(Review.approval_status == status)
+    return query.order_by(Review.created_at.desc()).all()
   
   def approve(self, review_id: int) -> Review | None:
     review = self.db.query(Review).filter(Review.id==review_id).first()
