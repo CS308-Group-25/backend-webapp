@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -19,7 +20,6 @@ class ReviewResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
-from typing import Literal
 
 class ReviewModerationRequest(BaseModel):
     approval_status: Literal["approved", "rejected"]

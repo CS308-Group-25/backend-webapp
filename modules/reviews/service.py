@@ -34,3 +34,8 @@ class ReviewService:
             raise HTTPException(status_code=404, detail="Review not found")
         return review
 
+    def delete_review(self, review_id: int) -> None:
+        deleted = self.repo.delete(review_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Review not found")
+
