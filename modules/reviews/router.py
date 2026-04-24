@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from core.dependencies import get_current_user
+from core.dependencies import require_product_manager
+from modules.reviews.schema import ReviewModerationRequest
 from modules.auth.model import User
 from modules.reviews.repository import ReviewRepository
 from modules.reviews.schema import ReviewCreate, ReviewResponse
