@@ -5,7 +5,7 @@ from core.database import get_db
 from core.dependencies import get_current_user, require_product_manager
 from modules.auth.model import User
 from modules.reviews.repository import ReviewRepository
-from modules.reviews.schema import ReviewCreate, ReviewModerationRequest, ReviewResponse
+from modules.reviews.schema import ReviewCreate, ReviewModerationRequest, ReviewResponse, ReviewAdminResponse
 from modules.reviews.service import ReviewService
 
 router = APIRouter(prefix="/api/v1/products", tags=["reviews"])
@@ -44,7 +44,16 @@ def get_approved_reviews(
 admin_router = APIRouter(prefix="/api/v1/admin/reviews", tags=["admin-reviews"])
 
 
-@admin_router.patch("/{review_id}", response_model=ReviewResponse)
+@admin_router.get("", response_model=list[ReviewAdminResponse])
+def list_reviews(
+    status: str | None = None,
+    current_user: User = Depends(require_product_manager),
+    service: ReviewService = Depends(get_review_service),
+):
+    return service.list_reviews(status)
+
+
+@admin_router.patch("/{review_id}", response_model=ReviewAdminResponse)
 def moderate_review(
     review_id: int,
     data: ReviewModerationRequest,

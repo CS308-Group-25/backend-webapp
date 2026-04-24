@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -17,6 +17,21 @@ class ReviewResponse(BaseModel):
     comment: str | None
     approval_status: str
     created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ReviewAdminResponse(BaseModel):
+    id: int
+    product_id: int
+    user_id: int
+    rating: int
+    comment: str | None
+    approval_status: str
+    created_at: datetime
+    product_name: Optional[str] = None
+    customer_name: Optional[str] = None
+    customer_email: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
