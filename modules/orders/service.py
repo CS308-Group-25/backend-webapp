@@ -81,7 +81,7 @@ class OrderService:
         # Stock checks and total price calculation
         total = 0
         for item in cart.items:
-            product = self.product_repo.get_by_id(item.product_id)
+            product = self.product_repo.get_by_id_for_update(item.product_id)
             if not product:
                 raise HTTPException(
                     status_code=404, detail=f"Product {item.product_id} not found")

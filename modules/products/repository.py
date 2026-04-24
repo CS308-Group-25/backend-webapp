@@ -52,6 +52,14 @@ class ProductRepository:
             .filter(Product.id == product_id, Product.deleted_at.is_(None))
             .first()
         )
+    
+    def get_by_id_for_update(self, product_id: int) -> Product | None:
+        return (
+            self.db.query(Product)
+            .filter(Product.id == product_id, Product.deleted_at.is_(None))
+            .with_for_update()
+            .first()
+        )
 
     def create_product(self, product_data: dict) -> Product:
         db_product = Product(**product_data)
