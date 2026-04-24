@@ -54,3 +54,31 @@ def test_get_approved_reviews_returns_only_approved():
     assert len(results) == 1
     assert results[0].approval_status == "approved"
     mock_repo.get_approved_by_product.assert_called_once_with(10)
+
+
+def test_approve_review_makes_it_visible():
+    mock_repo = MagicMock()
+
+    mock_review = MagicMock(spec=Review)
+    mock_review.approval_status = "approved"
+    mock_repo.approve.return_value = mock_review
+
+    service = ReviewService(mock_repo)
+    result = service.moderate_review(review_id=1, approval_status="approved")
+
+    assert result.approval_status == "approved"
+    mock_repo.approve.assert_called_once_with(1)
+
+
+def test_reject_review_keeps_it_hidden():
+    mock_repo = MagicMock()
+
+    mock_review = MagicMock(spec=Review)
+    mock_review.approval_status = "rejected"
+    mock_repo.reject.return_value = mock_review
+
+    service = ReviewService(mock_repo)
+    result = service.moderate_review(review_id=1, approval_status="rejected")
+
+    assert result.approval_status == "rejected"
+    mock_repo.reject.assert_called_once_with(1)

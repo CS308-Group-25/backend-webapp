@@ -24,3 +24,18 @@ class ReviewService:
             rating=rating,
             comment=comment,
         )
+    
+    def moderate_review(self, review_id: int, approval_status: str) -> Review:
+        if approval_status == "approved":
+            review = self.repo.approve(review_id)
+        else:
+            review = self.repo.reject(review_id)
+        if review is None:
+            raise HTTPException(status_code=404, detail="Review not found")
+        return review
+
+    def delete_review(self, review_id: int) -> None:
+        deleted = self.repo.delete(review_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Review not found")
+

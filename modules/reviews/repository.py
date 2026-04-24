@@ -46,3 +46,11 @@ class ReviewRepository:
     self.db.commit()
     self.db.refresh(review)
     return review
+
+  def delete(self, review_id: int) -> bool:
+    review = self.db.query(Review).filter(Review.id == review_id).first()
+    if review is None:
+      return False
+    self.db.delete(review)
+    self.db.commit()
+    return True

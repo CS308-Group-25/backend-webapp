@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from core.database import get_db
-from core.dependencies import get_current_user
+from core.dependencies import get_current_user, require_product_manager
 from modules.auth.model import User
 from modules.reviews.repository import ReviewRepository
-from modules.reviews.schema import ReviewCreate, ReviewResponse
+from modules.reviews.schema import ReviewCreate, ReviewModerationRequest, ReviewResponse
 from modules.reviews.service import ReviewService
 
 router = APIRouter(prefix="/api/v1/products", tags=["reviews"])
@@ -40,3 +40,24 @@ def get_approved_reviews(
     service: ReviewService = Depends(get_review_service),
 ):
     return service.get_approved_reviews(product_id)
+
+admin_router = APIRouter(prefix="/api/v1/admin/reviews", tags=["admin-reviews"])
+
+
+@admin_router.patch("/{review_id}", response_model=ReviewResponse)
+def moderate_review(
+    review_id: int,
+    data: ReviewModerationRequest,
+    current_user: User = Depends(require_product_manager),
+    service: ReviewService = Depends(get_review_service),
+):
+    return service.moderate_review(review_id, data.approval_status)
+
+
+@admin_router.delete("/{review_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_review(
+    review_id: int,
+    current_user: User = Depends(require_product_manager),
+    service: ReviewService = Depends(get_review_service),
+):
+    service.delete_review(review_id)
