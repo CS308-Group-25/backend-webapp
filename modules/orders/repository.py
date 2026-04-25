@@ -39,8 +39,7 @@ class OrderRepository:
             total=total,
         )
         self.db.add(order)
-        self.db.commit()
-        self.db.refresh(order)
+        self.db.flush()
         return order
 
     def create_order_item(
@@ -57,8 +56,7 @@ class OrderRepository:
             price=price,
         )
         self.db.add(order_item)
-        self.db.commit()
-        self.db.refresh(order_item)
+        self.db.flush()
         return order_item
 
     def create_payment(
@@ -75,8 +73,7 @@ class OrderRepository:
             status=status,
         )
         self.db.add(payment)
-        self.db.commit()
-        self.db.refresh(payment)
+        self.db.flush()
         return payment
 
     def update_order_status(self, order_id: int, status: str) -> Order | None:

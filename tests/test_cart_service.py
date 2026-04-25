@@ -209,12 +209,12 @@ def test_bulk_add_items_partial_out_of_stock_rejection():
     mock_cart.id = 50
     mock_cart_repo.get.return_value = mock_cart
 
-    # product 1 — yeterli stok
+    # product 1 - enough stock
     mock_product_1 = MagicMock(spec=Product)
     mock_product_1.id = 1
     mock_product_1.stock = 10
 
-    # product 2 — stok yetersiz
+    # product 2 — out of stock
     mock_product_2 = MagicMock(spec=Product)
     mock_product_2.id = 2
     mock_product_2.stock = 1
