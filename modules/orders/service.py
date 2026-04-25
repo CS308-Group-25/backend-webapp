@@ -81,7 +81,7 @@ class OrderService:
         # Stock checks and total price calculation
         total = 0
         for item in cart.items:
-            product = self.product_repo.get_by_id_for_update(item.product_id)
+            product = self.product_repo.get_by_id(item.product_id)
             if not product:
                 raise HTTPException(
                     status_code=404, detail=f"Product {item.product_id} not found")
@@ -112,6 +112,13 @@ class OrderService:
         # If any step fails, 
         # rollback ensures no partial state is written to the database.
         try:
+            # Acquire SELECT FOR UPDATE lock on each product row.
+            # Preventing concurrent checkouts from reading stale stock values.
+            locked_products: dict[int, object] = {}
+            for item in cart.items:
+                product = self.product_repo.get_by_id_for_update(item.product_id)
+                locked_products[item.product_id] = product
+
             order = self.order_repo.create_order(
                 user_id=user_id,
                 cart_id=cart.id,
@@ -121,7 +128,7 @@ class OrderService:
             )
 
             for item in cart.items:
-                product = self.product_repo.get_by_id(item.product_id)
+                product = locked_products[item.product_id]
                 self.order_repo.create_order_item(
                     order_id=order.id,
                     product_id=product.id,
@@ -137,10 +144,13 @@ class OrderService:
                 status="success",
             )
 
-            # all in one commit - assure atomicity
-            self.order_repo.db.commit()
+            self.order_repo.db.commit()     # all in one commit - assure atomicity
             self.order_repo.db.refresh(order)
 
+        except HTTPException:
+            self.order_repo.db.rollback()
+            raise 
+        
         except Exception:
             self.order_repo.db.rollback()
             raise HTTPException(
