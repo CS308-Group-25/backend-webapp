@@ -10,5 +10,6 @@ from modules.categories.model import Category  # noqa: F401
 from modules.invoices.model import Invoice  # noqa: F401
 from modules.orders.model import Order, OrderItem, Payment  # noqa: E402, F401
 from modules.products.model import Product  # noqa: F401
+from modules.refunds.model import RefundRequest  # noqa: F401
 from modules.reviews.model import Review  # noqa: F401
 from modules.wishlist.model import WishlistItem  # noqa: F401
