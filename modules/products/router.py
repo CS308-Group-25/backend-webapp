@@ -19,7 +19,7 @@ router = APIRouter(prefix="/api/v1/products", tags=["products"])
 admin_router = APIRouter(prefix="/api/v1/admin/products", tags=["admin-products"])
 
 
-@router.get("", response_model=list[PaginatedProductResponse])
+@router.get("", response_model=PaginatedProductResponse)
 def list_products(
     search: str | None = None,
     sort: str | None = None,

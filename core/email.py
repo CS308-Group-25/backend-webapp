@@ -1,3 +1,4 @@
+import logging
 import os
 import smtplib
 from email import encoders
@@ -5,9 +6,21 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+logger = logging.getLogger(__name__)
+
 
 def send_invoice_email(to_email: str, invoice_number: str, pdf_path: str) -> None:
-    _send_via_smtp(to_email, invoice_number, pdf_path)
+    """Send invoice email. Fails silently if SMTP is not configured."""
+    try:
+        _send_via_smtp(to_email, invoice_number, pdf_path)
+        logger.info(f"Invoice email sent to {to_email} for invoice {invoice_number}")
+    except Exception as exc:
+        # Email delivery is non-critical — log a warning and continue.
+        # The order has already been placed successfully.
+        logger.warning(
+            f"Failed to send invoice email to {to_email} "
+            f"(invoice {invoice_number}): {exc}"
+        )
 
 
 def _build_message(to_email: str, invoice_number: str, pdf_path: str) -> MIMEMultipart:
@@ -32,14 +45,19 @@ def _build_message(to_email: str, invoice_number: str, pdf_path: str) -> MIMEMul
 
 
 def _send_via_smtp(to_email: str, invoice_number: str, pdf_path: str) -> None:
-    msg = _build_message(to_email, invoice_number, pdf_path)
-    host = os.getenv("MAIL_SERVER", "localhost")
-    port = int(os.getenv("MAIL_PORT", "1025"))
+    host = os.getenv("MAIL_SERVER", "")
+    if not host:
+        raise ValueError("MAIL_SERVER environment variable is not set")
+
+    port = int(os.getenv("MAIL_PORT", "587"))
     username = os.getenv("MAIL_USERNAME", "")
     password = os.getenv("MAIL_PASSWORD", "")
+
+    msg = _build_message(to_email, invoice_number, pdf_path)
 
     with smtplib.SMTP(host, port) as server:
         if username and password:
             server.starttls()
             server.login(username, password)
         server.sendmail(msg["From"], to_email, msg.as_string())
+
