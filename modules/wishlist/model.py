@@ -1,7 +1,6 @@
-from datetime import datetime, timezone
-
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from core.database import Base
 
@@ -16,7 +15,7 @@ class WishlistItem(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     # FK to the saved product
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Allows wishlist_item.product to load the full Product object
     product = relationship("Product")

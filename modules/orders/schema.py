@@ -4,6 +4,8 @@ from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
+from modules.refunds.schema import RefundRequestSummary
+
 
 class OrderRequest(BaseModel):
     delivery_address: str
@@ -18,6 +20,7 @@ class OrderItemResponse(BaseModel):
     name: str
     quantity: int
     price: Decimal
+    refund_request: RefundRequestSummary | None = None
 
 
 class OrderResponse(BaseModel):

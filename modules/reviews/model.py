@@ -1,5 +1,3 @@
-from datetime import datetime, timezone
-
 from sqlalchemy import (
   CheckConstraint,
   Column,
@@ -9,6 +7,7 @@ from sqlalchemy import (
   String,
   Text,
 )
+from sqlalchemy.sql import func
 
 from core.database import Base
 
@@ -21,7 +20,7 @@ class Review(Base):
   rating = Column(Integer, nullable= False)
   comment = Column(Text, nullable=True)
   approval_status = Column(String(20), nullable=False, default="pending")
-  created_at = Column(DateTime, default=lambda : datetime.now(timezone.utc))
+  created_at = Column(DateTime(timezone=True), server_default=func.now())
   __table_args__ = (
     CheckConstraint("rating >= 1 AND rating <= 5", name="ck_review_rating"),
   )
