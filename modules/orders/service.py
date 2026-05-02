@@ -13,6 +13,7 @@ from modules.orders.schema import (
     OrderResponse,
 )
 from modules.products.repository import ProductRepository
+from modules.refunds.repository import RefundRepository
 
 
 class OrderService:
@@ -22,11 +23,13 @@ class OrderService:
         cart_repo: CartRepository,
         product_repo: ProductRepository,
         invoice_service: InvoiceService | None = None,
+        refund_repo: RefundRepository | None = None,
     ):
         self.order_repo = order_repo
         self.cart_repo = cart_repo
         self.product_repo = product_repo
         self.invoice_service = invoice_service
+        self.refund_repo = refund_repo
 
 
     def _build_order_response(self, order: Order) -> OrderResponse:
@@ -49,6 +52,11 @@ class OrderService:
                     name=order_item.product.name,
                     quantity=order_item.quantity,
                     price=order_item.price,
+                    refund_request=(
+                        self.refund_repo.get_by_order_item(order_item.id)
+                        if self.refund_repo
+                        else None
+                    ),
                 )
                 for order_item in order.items
             ],

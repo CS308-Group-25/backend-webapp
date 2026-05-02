@@ -17,6 +17,7 @@ from modules.orders.schema import (
 )
 from modules.orders.service import OrderService
 from modules.products.repository import ProductRepository
+from modules.refunds.repository import RefundRepository
 
 router = APIRouter(prefix="/api/v1/orders", tags=["orders"])
 admin_router = APIRouter(prefix="/api/v1/admin/orders", tags=["admin-orders"])
@@ -44,7 +45,8 @@ def get_user_orders(
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
     product_repo = ProductRepository(db)
-    service = OrderService(order_repo, cart_repo, product_repo)
+    refund_repo = RefundRepository(db)
+    service = OrderService(order_repo, cart_repo, product_repo, refund_repo=refund_repo)
     return service.get_user_orders(current_user.id)
 
 
@@ -57,7 +59,8 @@ def get_order(
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
     product_repo = ProductRepository(db)
-    service = OrderService(order_repo, cart_repo, product_repo)
+    refund_repo = RefundRepository(db)
+    service = OrderService(order_repo, cart_repo, product_repo, refund_repo=refund_repo)
     return service.get_order_by_id(order_id, current_user.id)
 
 
