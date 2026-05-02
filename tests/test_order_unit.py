@@ -45,7 +45,7 @@ def _make_cart(items: list, cart_id: int = 10):
 
 
 def _make_cart_item(product_id: int = 100, quantity: int = 2):
-    return SimpleNamespace(id=1, product_id=product_id, quantity=quantity)
+    return SimpleNamespace(id=1, product_id=product_id, quantity=quantity, variant_name=None)
 
 
 def _make_product(

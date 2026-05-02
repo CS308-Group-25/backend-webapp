@@ -42,7 +42,7 @@ def test_add_item_success():
     assert result.quantity == 2
     mock_product_repo.get_by_id.assert_called_once_with(100)
     mock_cart_repo.get.assert_called_once_with(1)
-    mock_cart_repo.add_item.assert_called_once_with(50, 100, 2)
+    mock_cart_repo.add_item.assert_called_once_with(50, 100, 2, None)
 
 
 def test_add_item_out_of_stock_raises_400():
