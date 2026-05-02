@@ -116,15 +116,24 @@ class OrderService:
             raise HTTPException(status_code=400, detail="Payment failed")
         
         # Atomic block: order creation, stock decrement, and payment recording
-        # are flushed together and committed in one transaction.
-        # If any step fails, 
-        # rollback ensures no partial state is written to the database.
+        # are committed together — rollback on any failure ensures no partial state.
         try:
-            # Acquire SELECT FOR UPDATE lock on each product row.
-            # Preventing concurrent checkouts from reading stale stock values.
+            # Lock each product row and re-validate stock under the lock.
             locked_products: dict[int, object] = {}
             for item in cart.items:
                 product = self.product_repo.get_by_id_for_update(item.product_id)
+                
+                if not product:
+                    raise HTTPException(
+                        status_code=404, detail=f"Product {item.product_id} not found"
+                    )
+                if product.stock < item.quantity:
+                    raise HTTPException(
+                        status_code=409,
+                        detail=f"Insufficient stock for {product.name}: "
+                        f"requested {item.quantity}, available {product.stock}",
+                    )
+    
                 locked_products[item.product_id] = product
 
             order = self.order_repo.create_order(
