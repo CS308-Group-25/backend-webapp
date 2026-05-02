@@ -10,6 +10,7 @@ from modules.orders.service import OrderService
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
+
 @pytest.fixture
 def repos():
     """Return (order_repo, cart_repo, product_repo) as mocks."""
@@ -75,7 +76,9 @@ def _make_service(
         invoice_service=invoice_service or MagicMock(),
     )
 
+
 # ── Tests ─────────────────────────────────────────────────────────────────────
+
 
 @patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)

@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class CartItemAddRequest(BaseModel):
     product_id: int
     quantity: int = 1
+    variant_name: str | None = None
 
 
 class CartItemUpdateRequest(BaseModel):
@@ -15,6 +16,7 @@ class CartItemResponse(BaseModel):
     cart_id: int
     product_id: int
     quantity: int
+    variant_name: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -29,7 +31,8 @@ class CartResponse(BaseModel):
 
 class BulkCartItemRequest(BaseModel):
     product_id: int
-    quantity: int = 1 
+    quantity: int = 1
+    variant_name: str | None = None
 
 
 class BulkCartAddRequest(BaseModel):

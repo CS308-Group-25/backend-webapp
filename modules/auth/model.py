@@ -15,4 +15,3 @@ class User(Base):
     address = Column(String, nullable=True)
     role = Column(String, nullable=False, default="customer")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-

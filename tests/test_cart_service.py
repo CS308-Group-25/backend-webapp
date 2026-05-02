@@ -197,7 +197,8 @@ def test_bulk_add_items_success():
     assert len(result["added"]) == 1
     assert len(result["rejected"]) == 0
     mock_cart_repo.bulk_add_items.assert_called_once_with(
-        50, [{"product_id": 1, "quantity": 2}])
+        50, [{"product_id": 1, "quantity": 2}]
+    )
 
 
 def test_bulk_add_items_partial_out_of_stock_rejection():

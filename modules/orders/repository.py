@@ -48,12 +48,14 @@ class OrderRepository:
         product_id: int,
         quantity: int,
         price: Decimal,
+        variant_name: str | None = None,
     ) -> OrderItem:
         order_item = OrderItem(
             order_id=order_id,
             product_id=product_id,
             quantity=quantity,
             price=price,
+            variant_name=variant_name,
         )
         self.db.add(order_item)
         self.db.flush()

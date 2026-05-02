@@ -31,9 +31,7 @@ class WishlistService:
         # Prevent duplicate entries (DB UniqueConstraint is the last line of defence)
         existing = self.repo.get_item(user_id, product_id)
         if existing:
-            raise HTTPException(
-                status_code=409, detail="Product already in wishlist"
-            )
+            raise HTTPException(status_code=409, detail="Product already in wishlist")
 
         return self.repo.add(user_id, product_id)
 
@@ -45,6 +43,8 @@ class WishlistService:
         """
         removed = self.repo.remove(user_id, product_id)
         if not removed:
-            raise HTTPException(
-                status_code=404, detail="Product not found in wishlist"
-            )
+            raise HTTPException(status_code=404, detail="Product not found in wishlist")
+
+    def clear(self, user_id: int) -> int:
+        """Clear all items from the user's wishlist."""
+        return self.repo.remove_all(user_id)
