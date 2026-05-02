@@ -91,6 +91,7 @@ def test_place_order_success(mock_payment, mock_email, service, repos, order_req
 
     product = _make_product(stock=10, price=25.0)
     product_repo.get_by_id.return_value = product
+    product_repo.get_by_id_for_update.return_value = product
 
     order = _make_order(order_id=500, total=50.0)
     order_repo.create_order.return_value = order
@@ -116,6 +117,7 @@ def test_place_order_out_of_stock_rejection(
 
     cart_repo.get.return_value = _make_cart([_make_cart_item(quantity=5)])
     product_repo.get_by_id.return_value = _make_product(stock=2)  # insufficient
+    product_repo.get_by_id_for_update.return_value = _make_product(stock=2)
 
     with pytest.raises(HTTPException, match="(?i)(stock|insufficient)") as exc:
         service.place_order(user_id=1, data=order_request)
@@ -142,6 +144,7 @@ def test_place_order_stock_decrements_correctly(
 
     product = _make_product(product_id=100, stock=10)
     product_repo.get_by_id.return_value = product
+    product_repo.get_by_id_for_update.return_value = product
 
     order_repo.create_order.return_value = _make_order()
 
@@ -172,6 +175,7 @@ def test_place_order_card_number_not_persisted(mock_payment, _email, service, re
     cart_item = _make_cart_item(quantity=1)
     cart_repo.get.return_value = _make_cart([cart_item])
     product_repo.get_by_id.return_value = _make_product(stock=10, price=25.0)
+    product_repo.get_by_id_for_update.return_value = _make_product(stock=10, price=25.0)
     order_repo.create_order.return_value = _make_order()
 
     service.place_order(user_id=1, data=order_request)

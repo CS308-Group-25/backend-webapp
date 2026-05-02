@@ -52,6 +52,18 @@ class ProductRepository:
             .filter(Product.id == product_id, Product.deleted_at.is_(None))
             .first()
         )
+    
+    def get_by_id_for_update(self, product_id: int) -> Product | None:
+        """
+        Fetches a product and locks the row with SELECT FOR UPDATE.
+        Use during order placement to prevent concurrent stock modifications.
+        """
+        return (
+            self.db.query(Product)
+            .filter(Product.id == product_id, Product.deleted_at.is_(None))
+            .with_for_update()
+            .first()
+        )
 
     def create_product(self, product_data: dict) -> Product:
         db_product = Product(**product_data)
@@ -76,6 +88,8 @@ class ProductRepository:
         return db_product
 
     def update_stock(self, product_id: int, quantity: int) -> None:
+        # Caller must hold a SELECT FOR UPDATE lock on this product 
+        # (via get_by_id_for_update) before calling this.
         product = self.get_by_id(product_id)
         product.stock -= quantity
-        self.db.commit()
+        # commit in calling service
