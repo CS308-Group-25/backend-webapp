@@ -1,6 +1,7 @@
 import enum
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from core.database import Base
@@ -28,3 +29,6 @@ class RefundRequest(Base):
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
+
+    order = relationship("Order", backref="refund_requests")
+    order_item = relationship("OrderItem", backref="refund_requests")

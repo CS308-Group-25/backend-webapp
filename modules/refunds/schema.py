@@ -25,3 +25,14 @@ class RefundRequestSummary(BaseModel):
     refund_amount: Decimal
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
+
+
+class AdminRefundRequestResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    customer_name: str
+    product_name: str
+    order_date: datetime
+    refund_amount: Decimal
+    reason: str | None
+    status: str

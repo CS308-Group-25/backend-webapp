@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from modules.orders.repository import OrderRepository
 from modules.refunds.model import RefundRequest
 from modules.refunds.repository import RefundRepository
+from modules.refunds.schema import AdminRefundRequestResponse
 
 
 class RefundService:
@@ -50,3 +51,20 @@ class RefundService:
 
         refund_amount = order_item.price * order_item.quantity
         return self.refund_repo.create(order_id, order_item_id, reason, refund_amount)
+
+    def get_admin_refund_requests(
+        self, status: str | None = None
+    ) -> list[AdminRefundRequestResponse]:
+        requests = self.refund_repo.get_all(status)
+        return [
+            AdminRefundRequestResponse(
+                id=r.id,
+                customer_name=r.order.user.name,
+                product_name=r.order_item.product.name,
+                order_date=r.order.created_at,
+                refund_amount=r.refund_amount,
+                reason=r.reason,
+                status=r.status,
+            )
+            for r in requests
+        ]
