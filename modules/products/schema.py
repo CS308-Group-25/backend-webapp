@@ -1,6 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -60,12 +60,20 @@ class ProductRead(ProductBase):
 class ProductListResponse(BaseModel):
     id: int
     name: str
+    description: str | None
     price: float | None
+    original_price: float | None
     stock: int
+    stock_status: str | None
+    is_new: bool | None
+    rating: float | None
+    review_count: int | None
     brand: str | None
     flavor: str | None
     form: str | None
     goal_tags: str | None
+    images: list[str] | None
+    tags_json: list[str] | None
     category: CategoryResponse | None
 
     model_config = {"from_attributes": True}
@@ -79,6 +87,11 @@ class ProductDetailResponse(BaseModel):
     description: str | None
     stock: int
     price: float | None
+    original_price: float | None
+    rating: float | None
+    review_count: int | None
+    stock_status: str | None
+    is_new: bool | None
     warranty: str | None
     distributor: str | None
     brand: str | None
@@ -86,6 +99,14 @@ class ProductDetailResponse(BaseModel):
     form: str | None
     serving_size: str | None
     goal_tags: str | None
+    images: list[str] | None
+    tags_json: list[str] | None
+    flavors_json: list[Any] | None
+    sizes_json: list[Any] | None
+    features: list[str] | None
+    ingredients: str | None
+    nutrition_facts: list[Any] | None
+    usage_info: str | None
     category: CategoryResponse | None
 
     model_config = {"from_attributes": True}
