@@ -1,6 +1,5 @@
-from datetime import datetime, timezone
-
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.sql import func
 
 from core.database import Base
 
@@ -15,5 +14,5 @@ class User(Base):
     tax_id = Column(String, nullable=True)
     address = Column(String, nullable=True)
     role = Column(String, nullable=False, default="customer")
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
