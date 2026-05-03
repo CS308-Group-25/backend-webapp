@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from fastapi import HTTPException
 
 from modules.products.model import Product
@@ -75,3 +77,8 @@ class ProductService:
     def delete_product(self, product_id: int) -> None:
         product = self.get_product(product_id)
         self.repo.soft_delete_product(product)
+
+
+    def set_price(self, product_id: int, price: Decimal) -> Product:
+        product = self.get_product(product_id)
+        return self.repo.update_product(product, {"price": price})

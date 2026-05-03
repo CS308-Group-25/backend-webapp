@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from decimal import Decimal
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -7,6 +8,8 @@ from fastapi.testclient import TestClient
 from core.dependencies import get_current_user
 from main import app
 from modules.auth.model import User
+from modules.products.model import Product
+from modules.products.service import ProductService
 
 
 # Mock user for testing
@@ -23,9 +26,6 @@ def mock_customer():
 
 
 def test_create_product_success(client: TestClient, mock_product_manager):
-    from modules.products.model import Product
-    from modules.products.service import ProductService
-
     # Override dependency to return mock product manager
     app.dependency_overrides[get_current_user] = lambda: mock_product_manager
 
@@ -84,9 +84,6 @@ def test_update_product_success(client: TestClient, mock_product_manager):
 
     update_data = {"name": "Updated Name", "stock": 50}
 
-    from modules.products.model import Product
-    from modules.products.service import ProductService
-
     mock_product = Product(
         id=1, name="Updated Name", stock=50, created_at=datetime.now(timezone.utc)
     )
@@ -107,8 +104,6 @@ def test_update_product_success(client: TestClient, mock_product_manager):
 def test_delete_product_success(client: TestClient, mock_product_manager):
     app.dependency_overrides[get_current_user] = lambda: mock_product_manager
 
-    from modules.products.service import ProductService
-
     mock_service = MagicMock(spec=ProductService)
 
     with patch("modules.products.router.ProductService") as mock_service_class:
@@ -116,5 +111,51 @@ def test_delete_product_success(client: TestClient, mock_product_manager):
         response = client.delete("/api/v1/admin/products/1")
         assert response.status_code == 204
         mock_service.delete_product.assert_called_once_with(1)
+
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def mock_sales_manager():
+    return User(
+        id=3, name="Sales Manager", email="sm@example.com", role="sales_manager"
+    )
+
+
+def test_set_product_price_success(client: TestClient, mock_sales_manager):
+    app.dependency_overrides[get_current_user] = lambda: mock_sales_manager
+
+    mock_product = Product(
+        id=1, 
+        name="Whey Protein", 
+        price=Decimal("49.99"),
+        stock=0, 
+        created_at=datetime.now(timezone.utc)
+    )
+    mock_service = MagicMock(spec=ProductService)
+    mock_service.set_price.return_value = mock_product
+
+    with patch(
+        "modules.products.router.ProductService") as mock_service_class:
+        mock_service_class.return_value = mock_service
+        response = client.patch(
+            "/api/v1/admin/products/1/price", json={"price": "49.99"}
+            )
+
+        assert response.status_code == 200
+        mock_service.set_price.assert_called_once_with(1, Decimal("49.99"))
+
+    app.dependency_overrides.clear()
+
+
+def test_set_product_price_forbidden_for_product_manager(
+        client: TestClient, mock_product_manager):
+    
+    app.dependency_overrides[get_current_user] = lambda: mock_product_manager
+
+    response = client.patch("/api/v1/admin/products/1/price", json={"price": "49.99"})
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Only sales managers can perform this action"
 
     app.dependency_overrides.clear()

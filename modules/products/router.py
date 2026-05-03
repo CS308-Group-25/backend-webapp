@@ -2,12 +2,16 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from core.database import get_db
-from core.dependencies import require_product_manager
+from core.dependencies import (
+    require_product_manager,
+    require_sales_manager,
+)
 from modules.products.repository import ProductRepository
 from modules.products.schema import (
     PaginatedProductResponse,
     ProductCreate,
     ProductDetailResponse,
+    ProductPriceUpdate,
     ProductRead,
     ProductUpdate,
 )
@@ -94,3 +98,16 @@ def delete_product(
     service = ProductService(repo)
 
     service.delete_product(product_id)
+
+
+@admin_router.patch("/{product_id}/price", response_model=ProductRead)
+def set_product_price(
+    product_id: int,
+    price_in: ProductPriceUpdate,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_sales_manager),
+):
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+    
+    return service.set_price(product_id, price_in.price)
