@@ -16,3 +16,7 @@ class DiscountRepository:
 
     def get_by_id(self, discount_id: int) -> Discount | None:
         return self.db.query(Discount).filter(Discount.id == discount_id).first()
+
+    def delete_discount(self, discount: Discount) -> None:
+        self.db.delete(discount)
+        self.db.commit()

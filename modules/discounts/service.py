@@ -50,3 +50,17 @@ class DiscountService:
             self.product_repo.update_product(product, {"price": new_price})
 
         return discount
+
+    def remove_discount(self, discount_id: int) -> None:
+        discount = self.discount_repo.get_by_id(discount_id)
+        if discount is None:
+            raise HTTPException(status_code=404, detail="Discount not found")
+
+        # Restore original prices before deleting the record
+        for str_pid, str_price in discount.original_prices.items():
+            product = self.product_repo.get_by_id(int(str_pid))
+            if product is None:
+                continue  # product was soft-deleted; nothing to restore
+            self.product_repo.update_product(product, {"price": Decimal(str_price)})
+
+        self.discount_repo.delete_discount(discount)
