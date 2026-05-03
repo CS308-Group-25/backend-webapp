@@ -117,3 +117,7 @@ class PaginatedProductResponse(BaseModel):
     total: int
     page: int
     page_size: int
+
+
+class ProductPriceUpdate(BaseModel):
+    price: Decimal = Field(..., gt=0)
