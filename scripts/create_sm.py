@@ -11,7 +11,7 @@ from modules.auth.service import pwd_context
 def create_sm():
     db = SessionLocal()
     try:
-        email = "sales@example.com"
+        email = os.getenv("SM_EMAIL", "sales@example.com")
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             print("Sales manager user already exists.")
@@ -20,10 +20,10 @@ def create_sm():
         sm = User(
             name="Sales Manager",
             email=email,
-            password_hash=pwd_context.hash("sales_password"),
+            password_hash=pwd_context.hash(os.getenv("SM_PASSWORD", "sales_password")),
             role="sales_manager",
-            tax_id="0000000000",
-            address="Sales Office",
+            tax_id=os.getenv("SM_TAX_ID", "0000000000"),
+            address=os.getenv("SM_ADDRESS", "Sales Office"),
         )
         db.add(sm)
         db.commit()

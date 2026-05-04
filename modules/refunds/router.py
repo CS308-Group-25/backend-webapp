@@ -5,6 +5,7 @@ from core.database import get_db
 from core.dependencies import get_current_user, require_sales_manager
 from modules.auth.model import User
 from modules.orders.repository import OrderRepository
+from modules.refunds.model import RefundStatus
 from modules.refunds.repository import RefundRepository
 from modules.refunds.schema import (
     AdminRefundRequestResponse,
@@ -44,7 +45,7 @@ def request_refund(
     "", response_model=list[AdminRefundRequestResponse], status_code=200
 )
 def get_admin_refund_requests(
-    status: str | None = None,
+    status: RefundStatus | None = None,
     current_user: User = Depends(require_sales_manager),
     db: Session = Depends(get_db),
 ):
