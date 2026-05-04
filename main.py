@@ -7,6 +7,9 @@ load_dotenv()
 import core.models  # noqa: E402, F401
 from modules.auth.router import router as auth_router  # noqa: E402
 from modules.cart.router import router as cart_router  # noqa: E402
+from modules.categories.router import (  # noqa: E402
+    admin_router as categories_admin_router,
+)
 from modules.categories.router import router as categories_router  # noqa: E402
 from modules.discounts.router import router as discounts_router  # noqa: E402
 from modules.invoices.router import router as invoices_router  # noqa: E402
@@ -35,6 +38,7 @@ app.include_router(products_router)
 app.include_router(products_admin_router)
 app.include_router(orders_admin_router)
 app.include_router(categories_router)
+app.include_router(categories_admin_router)
 app.include_router(discounts_router)
 app.include_router(orders_router)
 app.include_router(invoices_router)
