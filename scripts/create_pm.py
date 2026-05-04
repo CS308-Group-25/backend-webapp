@@ -11,7 +11,7 @@ from modules.auth.service import pwd_context
 def create_pm():
     db = SessionLocal()
     try:
-        email = "pm@example.com"
+        email = os.getenv("PM_EMAIL", "pm@example.com")
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             print("PM user already exists.")
@@ -20,10 +20,10 @@ def create_pm():
         pm = User(
             name="Product Manager",
             email=email,
-            password_hash=pwd_context.hash("pm_password"),
+            password_hash=pwd_context.hash(os.getenv("PM_PASSWORD", "pm_password")),
             role="product_manager",
-            tax_id="1234567890",  # Added dummy tax_id to satisfy DB constraint
-            address="PM Office",  # Added dummy address
+            tax_id=os.getenv("PM_TAX_ID", "1234567890"),
+            address=os.getenv("PM_ADDRESS", "PM Office"),
         )
         db.add(pm)
         db.commit()
