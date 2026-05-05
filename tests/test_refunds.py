@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi import HTTPException
 
+from modules.refunds.model import RefundStatus
 from modules.refunds.service import RefundService
 
 
@@ -27,19 +28,23 @@ def _make_order(order_id=10, user_id=1, status="delivered", days_ago=29):
     return order
 
 
-def _make_service(order=None, active_request=None):
+def _make_service(order=None, active_request=None, product_repo=None, mock_refund=None):
     refund_repo = MagicMock()
     refund_repo.get_active_request_for_item.return_value = active_request
 
-    mock_refund = MagicMock()
-    mock_refund.status = "requested"
-    mock_refund.refund_amount = Decimal("200.00")
+    if mock_refund is None:
+        mock_refund = MagicMock()
+        mock_refund.status = "requested"
+        mock_refund.refund_amount = Decimal("200.00")
     refund_repo.create.return_value = mock_refund
+    refund_repo.get_by_id.return_value = mock_refund
 
     order_repo = MagicMock()
     order_repo.get_by_order_id.return_value = order
 
-    service = RefundService(refund_repo=refund_repo, order_repo=order_repo)
+    service = RefundService(
+        refund_repo=refund_repo, order_repo=order_repo, product_repo=product_repo
+    )
     return service, refund_repo, order_repo
 
 
@@ -87,3 +92,97 @@ def test_request_refund_duplicate_returns_400():
         service.request_refund(user_id=1, order_id=10, order_item_id=1, reason=None)
 
     assert exc_info.value.status_code == 400
+
+
+def test_valid_state_transitions_succeed():
+    mock_refund = MagicMock()
+    mock_refund.status = "requested"
+    mock_refund.refund_amount = Decimal("200.00")
+    mock_refund.order.user.name = "Test User"
+    mock_refund.order_item.product.name = "Test Product"
+    mock_refund.order.created_at = datetime.now(timezone.utc)
+    mock_refund.reason = None
+    mock_refund.id = 1
+    service, refund_repo, _ = _make_service(mock_refund=mock_refund)
+
+    service.process_refund_request(1, RefundStatus.approved_waiting_return)
+
+    refund_repo.update_status.assert_called_once_with(
+        mock_refund, RefundStatus.approved_waiting_return
+    )
+    refund_repo.db.commit.assert_called_once()
+
+
+def test_invalid_state_transition_raises_400():
+    mock_refund = MagicMock()
+    mock_refund.status = "requested"
+    mock_refund.refund_amount = Decimal("200.00")
+    service, _, _ = _make_service(mock_refund=mock_refund)
+
+    with pytest.raises(HTTPException) as exc_info:
+        service.process_refund_request(1, RefundStatus.refunded)
+
+    assert exc_info.value.status_code == 400
+
+
+def test_stock_and_credit_restored_on_refunded():
+    mock_refund = MagicMock()
+    mock_refund.status = "returned_received"
+    mock_refund.refund_amount = Decimal("150.00")
+    mock_refund.order_item.product_id = 42
+    mock_refund.order_item.quantity = 3
+    mock_refund.order.user.name = "Test User"
+    mock_refund.order_item.product.name = "Test Product"
+    mock_refund.order.created_at = datetime.now(timezone.utc)
+    mock_refund.reason = None
+    mock_refund.id = 1
+
+    mock_user = MagicMock()
+    mock_user.name = "Test User"
+    mock_user.store_credit = Decimal("50.00")
+    mock_refund.order.user = mock_user
+
+    mock_product = MagicMock()
+    mock_product.id = 42
+    mock_product.stock = 10
+    product_repo = MagicMock()
+    product_repo.get_by_id_for_update.return_value = mock_product
+
+    service, refund_repo, _ = _make_service(
+        mock_refund=mock_refund, product_repo=product_repo
+    )
+
+    service.process_refund_request(1, RefundStatus.refunded)
+
+    product_repo.get_by_id_for_update.assert_called_once_with(42)
+    product_repo.update_stock.assert_called_once_with(
+        mock_product, -mock_refund.order_item.quantity
+    )
+    assert mock_user.store_credit == Decimal("200.00")
+    refund_repo.update_status.assert_called_once_with(
+        mock_refund, RefundStatus.refunded
+    )
+    refund_repo.db.commit.assert_called_once()
+
+
+    # Technically not every state but the document doesn't specify and rejecting 
+    # a refund after certain states would make no sense
+
+@pytest.mark.parametrize("initial_status", ["requested", "approved_waiting_return"])
+def test_reject_at_any_stage(initial_status):
+    mock_refund = MagicMock()
+    mock_refund.status = initial_status
+    mock_refund.refund_amount = Decimal("200.00")
+    mock_refund.order.user.name = "Test User"
+    mock_refund.order_item.product.name = "Test Product"
+    mock_refund.order.created_at = datetime.now(timezone.utc)
+    mock_refund.reason = None
+    mock_refund.id = 1
+    service, refund_repo, _ = _make_service(mock_refund=mock_refund)
+
+    service.process_refund_request(1, RefundStatus.rejected)
+
+    refund_repo.update_status.assert_called_once_with(
+        mock_refund, RefundStatus.rejected
+    )
+    refund_repo.db.commit.assert_called_once()
