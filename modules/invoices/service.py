@@ -27,7 +27,12 @@ class InvoiceService:
         page: int,
         page_size: int,
     ) -> tuple[list[AdminInvoiceListItem], int]:
-        invoices, total = self.invoice_repo.list_admin(from_date, to_date, page, page_size)
+        invoices, total = self.invoice_repo.list_admin(
+            from_date, 
+            to_date, 
+            page, 
+            page_size
+        )
         items = [
             AdminInvoiceListItem(
                 id=inv.id,

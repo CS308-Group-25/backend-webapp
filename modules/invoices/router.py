@@ -52,7 +52,7 @@ def list_invoices(
     invoice_repo = InvoiceRepository(db)
     invoice_service = InvoiceService(invoice_repo)
     items, total = invoice_service.list_admin(from_date, to_date, page, page_size)
-    return PaginatedInvoiceResponse(items=items, total=total, page=page, page_size=page_size)
+    return PaginatedInvoiceResponse(items, total, page, page_size)
 
 
 @admin_router.get("/{invoice_id}/pdf")
