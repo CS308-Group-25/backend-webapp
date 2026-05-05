@@ -1,12 +1,13 @@
 import io
 import os
-from datetime import datetime
+from datetime import date, datetime
 
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
 from modules.invoices.model import Invoice
 from modules.invoices.repository import InvoiceRepository
+from modules.invoices.schema import AdminInvoiceListItem
 
 
 class InvoiceService:
@@ -15,6 +16,29 @@ class InvoiceService:
 
     def get_by_order_id(self, order_id: int) -> Invoice | None:
         return self.invoice_repo.get_by_order_id(order_id)
+
+    def get_by_id(self, invoice_id: int) -> Invoice | None:
+        return self.invoice_repo.get_by_id(invoice_id)
+
+    def list_admin(
+        self,
+        from_date: date | None,
+        to_date: date | None,
+        page: int,
+        page_size: int,
+    ) -> tuple[list[AdminInvoiceListItem], int]:
+        invoices, total = self.invoice_repo.list_admin(from_date, to_date, page, page_size)
+        items = [
+            AdminInvoiceListItem(
+                id=inv.id,
+                invoice_number=inv.invoice_number,
+                customer_name=inv.order.user.name,
+                total=inv.total,
+                created_at=inv.created_at,
+            )
+            for inv in invoices
+        ]
+        return items, total
 
     def generate_invoice(self, order) -> Invoice:
         invoice_number = self._generate_invoice_number(order.id)
