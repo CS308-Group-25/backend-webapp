@@ -152,7 +152,7 @@ class OrderService:
                     quantity=item.quantity,
                     price=product.price,
                 )
-                self.product_repo.update_stock(product.id, item.quantity)
+                self.product_repo.update_stock(product, item.quantity)
             
             _ = self.order_repo.create_payment(
                 order_id=order.id,

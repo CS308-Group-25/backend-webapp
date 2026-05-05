@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, Numeric, String
 from sqlalchemy.sql import func
 
 from core.database import Base
@@ -14,5 +14,6 @@ class User(Base):
     tax_id = Column(String, nullable=True)
     address = Column(String, nullable=True)
     role = Column(String, nullable=False, default="customer")
+    store_credit = Column(Numeric(10, 2), nullable=False, default=0.00)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

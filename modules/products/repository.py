@@ -87,9 +87,5 @@ class ProductRepository:
         self.db.refresh(db_product)
         return db_product
 
-    def update_stock(self, product_id: int, quantity: int) -> None:
-        # Caller must hold a SELECT FOR UPDATE lock on this product 
-        # (via get_by_id_for_update) before calling this.
-        product = self.get_by_id(product_id)
-        product.stock -= quantity
-        # commit in calling service
+    def update_stock(self, product: Product, quantity_delta: int) -> None:
+        product.stock -= quantity_delta

@@ -152,7 +152,7 @@ def test_place_order_stock_decrements_correctly(
 
     # update_stock is called twice: once in stock-check loop, once in order-item loop.
     # We assert at least one call carries the right args.
-    product_repo.update_stock.assert_called_with(100, 3)
+    product_repo.update_stock.assert_called_with(product, 3)
 
 
 @patch("modules.orders.service.send_invoice_email")

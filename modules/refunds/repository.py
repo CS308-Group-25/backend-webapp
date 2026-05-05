@@ -58,3 +58,20 @@ class RefundRepository:
         if status:
             query = query.filter(RefundRequest.status == status)
         return query.all()
+
+    def get_by_id(self, refund_id: int) -> RefundRequest | None:
+        return (
+            self.db.query(RefundRequest)
+            .options(
+                joinedload(RefundRequest.order).joinedload(Order.user),
+                joinedload(RefundRequest.order_item).joinedload(OrderItem.product),
+            )
+            .filter(RefundRequest.id == refund_id)
+            .first()
+        )
+
+    def update_status(
+        self, refund: RefundRequest, new_status: RefundStatus
+    ) -> RefundRequest:
+        refund.status = new_status
+        return refund
