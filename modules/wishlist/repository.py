@@ -12,11 +12,7 @@ class WishlistRepository:
 
     def get_by_user(self, user_id: int) -> list[WishlistItem]:
         """Return all wishlist items belonging to the given user."""
-        return (
-            self.db.query(WishlistItem)
-            .filter(WishlistItem.user_id == user_id)
-            .all()
-        )
+        return self.db.query(WishlistItem).filter(WishlistItem.user_id == user_id).all()
 
     def get_item(self, user_id: int, product_id: int) -> WishlistItem | None:
         """Return a specific wishlist item, or None if it doesn't exist.
@@ -60,3 +56,16 @@ class WishlistRepository:
             self.db.commit()
             return True
         return False
+
+    def remove_all(self, user_id: int) -> int:
+        """Delete all wishlist items for the given user.
+        
+        Returns count of deleted items.
+        """
+        deleted_count = (
+            self.db.query(WishlistItem)
+            .filter(WishlistItem.user_id == user_id)
+            .delete(synchronize_session=False)
+        )
+        self.db.commit()
+        return deleted_count

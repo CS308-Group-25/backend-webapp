@@ -46,6 +46,7 @@ def get_approved_reviews(
 ):
     return service.get_approved_reviews(product_id)
 
+
 admin_router = APIRouter(prefix="/api/v1/admin/reviews", tags=["admin-reviews"])
 
 

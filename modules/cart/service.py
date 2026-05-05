@@ -16,7 +16,13 @@ class CartService:
             cart = self.repo.create(user_id)
         return cart
 
-    def add_item(self, user_id: int, product_id: int, quantity: int = 1) -> CartItem:
+    def add_item(
+        self,
+        user_id: int,
+        product_id: int,
+        quantity: int = 1,
+        variant_name: str | None = None,
+    ) -> CartItem:
         product = self.product_repo.get_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
@@ -25,7 +31,7 @@ class CartService:
             raise HTTPException(status_code=400, detail="Not enough stock")
 
         cart = self.get_cart(user_id)
-        return self.repo.add_item(cart.id, product.id, quantity)
+        return self.repo.add_item(cart.id, product.id, quantity, variant_name)
 
     def verify_item_ownership(self, cart_item_id: int, user_id: int) -> None:
         cart_item = self.repo.get_item_by_id(cart_item_id)
@@ -48,7 +54,7 @@ class CartService:
 
     def bulk_add_items(self, user_id: int, items: list[dict]) -> dict:
         cart = self.get_cart(user_id)
-        
+
         valid_items = []
         rejected = []
 
@@ -57,16 +63,18 @@ class CartService:
 
             if not product:
                 rejected.append(
-                    {"product_id": item["product_id"], "reason": "Product not found"})
+                    {"product_id": item["product_id"], "reason": "Product not found"}
+                )
                 continue
 
             if product.stock < item["quantity"]:
                 rejected.append(
-                    {"product_id": item["product_id"], "reason": "Not enough stock"})
+                    {"product_id": item["product_id"], "reason": "Not enough stock"}
+                )
                 continue
 
             valid_items.append(item)
-            
+
         added = self.repo.bulk_add_items(cart.id, valid_items)
 
         return {"added": added, "rejected": rejected}

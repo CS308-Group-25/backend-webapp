@@ -20,17 +20,31 @@ class CartRepository:
     def get_item_by_id(self, cart_item_id: int) -> CartItem | None:
         return self.db.query(CartItem).filter(CartItem.id == cart_item_id).first()
 
-    def add_item(self, cart_id: int, product_id: int, quantity: int = 1) -> CartItem:
+    def add_item(
+        self,
+        cart_id: int,
+        product_id: int,
+        quantity: int = 1,
+        variant_name: str | None = None,
+    ) -> CartItem:
+        # Check for existing item with same product AND same variant
         cart_item = (
             self.db.query(CartItem)
-            .filter(CartItem.cart_id == cart_id, CartItem.product_id == product_id)
+            .filter(
+                CartItem.cart_id == cart_id,
+                CartItem.product_id == product_id,
+                CartItem.variant_name == variant_name,
+            )
             .first()
         )
         if cart_item:
             cart_item.quantity += quantity
         else:
             cart_item = CartItem(
-                cart_id=cart_id, product_id=product_id, quantity=quantity
+                cart_id=cart_id,
+                product_id=product_id,
+                quantity=quantity,
+                variant_name=variant_name,
             )
             self.db.add(cart_item)
 
@@ -60,11 +74,16 @@ class CartRepository:
         for item in items:
             product_id = item["product_id"]
             quantity = item["quantity"]
+            variant_name = item.get("variant_name")
 
             existing = (
-                self.db.query(CartItem).filter(
-                    CartItem.cart_id == cart_id, 
-                    CartItem.product_id == product_id,).first()
+                self.db.query(CartItem)
+                .filter(
+                    CartItem.cart_id == cart_id,
+                    CartItem.product_id == product_id,
+                    CartItem.variant_name == variant_name,
+                )
+                .first()
             )
 
             if existing:
@@ -75,6 +94,7 @@ class CartRepository:
                     cart_id=cart_id,
                     product_id=product_id,
                     quantity=quantity,
+                    variant_name=variant_name,
                 )
                 self.db.add(new_item)
                 result.append(new_item)
@@ -84,5 +104,3 @@ class CartRepository:
             self.db.refresh(item)
 
         return result
-                
-

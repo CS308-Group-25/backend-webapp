@@ -51,3 +51,13 @@ def remove_from_wishlist(
     """Remove a product from the authenticated user's wishlist."""
     service.remove(current_user.id, product_id)
     return None
+
+
+@router.delete("", status_code=status.HTTP_204_NO_CONTENT)
+def clear_wishlist(
+    current_user: User = Depends(get_current_user),
+    service: WishlistService = Depends(get_wishlist_service),
+):
+    """Clear all items from the authenticated user's wishlist."""
+    service.clear(current_user.id)
+    return None

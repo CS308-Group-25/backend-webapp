@@ -31,7 +31,6 @@ class OrderService:
         self.invoice_service = invoice_service
         self.refund_repo = refund_repo
 
-
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
         Converts a SQLAlchemy Order object into an OrderResponse Pydantic schema.
@@ -52,6 +51,7 @@ class OrderService:
                     name=order_item.product.name,
                     quantity=order_item.quantity,
                     price=order_item.price,
+                    variant_name=order_item.variant_name,
                     refund_request=(
                         self.refund_repo.get_by_order_item(order_item.id)
                         if self.refund_repo
@@ -61,7 +61,6 @@ class OrderService:
                 for order_item in order.items
             ],
         )
-    
 
     def get_order_by_id(self, order_id: int, user_id: int) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
@@ -70,21 +69,20 @@ class OrderService:
         if order.user_id != user_id:
             raise HTTPException(status_code=403, detail="Access forbidden")
         return self._build_order_response(order)
-    
 
     def get_user_orders(self, user_id: int) -> list[OrderResponse]:
         orders_list = self.order_repo.get_orders_by_user_id(user_id)
         return [self._build_order_response(order) for order in orders_list]
 
-
     def place_order(self, user_id: int, data: OrderRequest) -> OrderResponse:
         if self.invoice_service is None:
             raise RuntimeError("invoice_service required for place_order")
-        
+
         cart = self.cart_repo.get(user_id)
         if not cart or not cart.items:
             raise HTTPException(
-                status_code=400, detail="Cart is empty, cannot place order.")
+                status_code=400, detail="Cart is empty, cannot place order."
+            )
 
         # Stock checks and total price calculation
         total = 0
@@ -92,17 +90,20 @@ class OrderService:
             product = self.product_repo.get_by_id(item.product_id)
             if not product:
                 raise HTTPException(
-                    status_code=404, detail=f"Product {item.product_id} not found")
-            
+                    status_code=404, detail=f"Product {item.product_id} not found"
+                )
+
             if product.stock == 0:
                 raise HTTPException(
-                    status_code=400, detail=f"Product {product.name} is out of stock")
-            
+                    status_code=400, detail=f"Product {product.name} is out of stock"
+                )
+
             elif product.stock < item.quantity:
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Insufficient stock for {product.name} request",)
-            
+                    detail=f"Insufficient stock for {product.name} request",
+                )
+
             total += item.quantity * product.price
 
         # Try to process payment
@@ -114,7 +115,7 @@ class OrderService:
         )
         if not payment_success:
             raise HTTPException(status_code=400, detail="Payment failed")
-        
+
         # Atomic block: order creation, stock decrement, and payment recording
         # are committed together — rollback on any failure ensures no partial state.
         try:
@@ -122,7 +123,7 @@ class OrderService:
             locked_products: dict[int, object] = {}
             for item in cart.items:
                 product = self.product_repo.get_by_id_for_update(item.product_id)
-                
+
                 if not product:
                     raise HTTPException(
                         status_code=404, detail=f"Product {item.product_id} not found"
@@ -133,7 +134,7 @@ class OrderService:
                         detail=f"Insufficient stock for {product.name}: "
                         f"requested {item.quantity}, available {product.stock}",
                     )
-    
+
                 locked_products[item.product_id] = product
 
             order = self.order_repo.create_order(
@@ -151,9 +152,10 @@ class OrderService:
                     product_id=product.id,
                     quantity=item.quantity,
                     price=product.price,
+                    variant_name=item.variant_name,
                 )
                 self.product_repo.update_stock(product.id, item.quantity)
-            
+
             _ = self.order_repo.create_payment(
                 order_id=order.id,
                 card_last4=data.card_last4,
@@ -161,19 +163,20 @@ class OrderService:
                 status="success",
             )
 
-            self.order_repo.db.commit()     # all in one commit - assure atomicity
+            self.order_repo.db.commit()  # all in one commit - assure atomicity
             self.order_repo.db.refresh(order)
 
         except HTTPException:
             self.order_repo.db.rollback()
-            raise 
-        
+            raise
+
         except Exception:
             self.order_repo.db.rollback()
             raise HTTPException(
-                status_code=500, 
-                detail="Order could not be completed. Please try again.")
-        
+                status_code=500,
+                detail="Order could not be completed. Please try again.",
+            )
+
         for item in cart.items:
             self.cart_repo.remove_item(item.id)
 
@@ -185,7 +188,6 @@ class OrderService:
         )
 
         return self._build_order_response(order)
-
 
     def update_order_status(self, order_id: int, new_status: str) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
@@ -215,7 +217,6 @@ class OrderService:
 
         updated_order = self.order_repo.update_order_status(order_id, new_status)
         return self._build_order_response(updated_order)
-    
 
     def get_admin_orders(self, status: str | None = None) -> list[AdminOrderResponse]:
         orders = self.order_repo.get_all_orders(status)
@@ -243,7 +244,6 @@ class OrderService:
                 )
             )
         return results
-    
 
     def cancel_order(self, order_id: int, user_id: int) -> OrderResponse:
         order = self.order_repo.get_by_order_id(order_id)
@@ -251,17 +251,20 @@ class OrderService:
             raise HTTPException(status_code=404, detail="Order not found.")
         if order.user_id != user_id:
             raise HTTPException(status_code=403, detail="Access forbidden.")
-        
+
         CANCALLABLE_STATUSES = {"pending", "confirmed"}
         if order.status not in CANCALLABLE_STATUSES:
             raise HTTPException(
                 status_code=400,
                 detail="Order cannot be cancelled once it is being procesed.",
             )
-        
+
         updated_order = self.order_repo.update_order_status(order_id, "cancelled")
+
+        # Restore stock for each item in the cancelled order
+        for item in order.items:
+            self.product_repo.increment_stock(item.product_id, item.quantity)
+
+        self.order_repo.db.commit()
+
         return self._build_order_response(updated_order)
-    
-        
-
-

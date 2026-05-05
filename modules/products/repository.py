@@ -52,7 +52,7 @@ class ProductRepository:
             .filter(Product.id == product_id, Product.deleted_at.is_(None))
             .first()
         )
-    
+
     def get_by_id_for_update(self, product_id: int) -> Product | None:
         """
         Fetches a product and locks the row with SELECT FOR UPDATE.
@@ -88,8 +88,24 @@ class ProductRepository:
         return db_product
 
     def update_stock(self, product_id: int, quantity: int) -> None:
-        # Caller must hold a SELECT FOR UPDATE lock on this product 
-        # (via get_by_id_for_update) before calling this.
-        product = self.get_by_id(product_id)
-        product.stock -= quantity
+        # Use a direct SQL UPDATE to guarantee the change is written to the DB row.
+        # GREATEST(..., 0) is a safety net to prevent stock from going negative.
+        from sqlalchemy import text
+
+        self.db.execute(
+            text(
+                "UPDATE products SET stock = GREATEST(stock - :qty, 0) WHERE id = :pid"
+            ),
+            {"qty": quantity, "pid": product_id},
+        )
+        # commit in calling service
+
+    def increment_stock(self, product_id: int, quantity: int) -> None:
+        # Inverse of update_stock (decrement). Used for refunds/cancellations.
+        from sqlalchemy import text
+
+        self.db.execute(
+            text("UPDATE products SET stock = stock + :qty WHERE id = :pid"),
+            {"qty": quantity, "pid": product_id},
+        )
         # commit in calling service

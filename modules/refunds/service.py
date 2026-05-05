@@ -39,9 +39,7 @@ class RefundService:
             raise HTTPException(status_code=404, detail="Order item not found")
 
         if (datetime.now(timezone.utc) - order.created_at).days > 30:
-            raise HTTPException(
-                status_code=400, detail="30-day refund window expired"
-            )
+            raise HTTPException(status_code=400, detail="30-day refund window expired")
 
         if self.refund_repo.get_active_request_for_item(order_item_id):
             raise HTTPException(

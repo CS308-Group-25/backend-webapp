@@ -34,6 +34,7 @@ class OrderItem(Base):
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
     quantity = Column(Integer, nullable=False)
     price = Column(Numeric(10, 2), nullable=False)  # snapshot at order time
+    variant_name = Column(String(255), nullable=True)
 
     order = relationship("Order", back_populates="items")
     product = relationship("Product", backref="order_items")
