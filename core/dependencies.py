@@ -58,10 +58,8 @@ def require_product_manager(current_user: User = Depends(get_current_user)) -> U
         )
     return current_user
 
-def require_sales_manager(
-        current_user: User = Depends(get_current_user)
-) -> User:     
 
+def require_sales_manager(current_user: User = Depends(get_current_user)) -> User:
     if current_user.role != "sales_manager":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

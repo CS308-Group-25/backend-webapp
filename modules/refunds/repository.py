@@ -1,7 +1,9 @@
 from decimal import Decimal
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
+from modules.auth.model import User  # noqa: F401
+from modules.orders.model import Order, OrderItem
 from modules.refunds.model import RefundRequest, RefundStatus
 
 
@@ -45,3 +47,14 @@ class RefundRepository:
             .order_by(RefundRequest.created_at.desc())
             .first()
         )
+
+    def get_all(self, status: str | None = None) -> list[RefundRequest]:
+        # TODO: Add skip/limit pagination before production — this currently
+        # returns all rows in the table with no limit.
+        query = self.db.query(RefundRequest).options(
+            joinedload(RefundRequest.order).joinedload(Order.user),
+            joinedload(RefundRequest.order_item).joinedload(OrderItem.product),
+        )
+        if status:
+            query = query.filter(RefundRequest.status == status)
+        return query.all()
