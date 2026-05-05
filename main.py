@@ -12,6 +12,7 @@ from modules.categories.router import (  # noqa: E402
 )
 from modules.categories.router import router as categories_router  # noqa: E402
 from modules.discounts.router import router as discounts_router  # noqa: E402
+from modules.invoices.router import admin_router as invoices_admin_router  # noqa: E402
 from modules.invoices.router import router as invoices_router  # noqa: E402
 from modules.orders.router import admin_router as orders_admin_router  # noqa: E402
 from modules.orders.router import router as orders_router  # noqa: E402
@@ -43,6 +44,7 @@ app.include_router(categories_admin_router)
 app.include_router(discounts_router)
 app.include_router(orders_router)
 app.include_router(invoices_router)
+app.include_router(invoices_admin_router)
 app.include_router(reviews_router)
 app.include_router(reviews_admin_router)
 app.include_router(refunds_router)
