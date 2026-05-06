@@ -210,3 +210,6 @@ __marimo__/
 CLAUDE.md
 my_tasks.md
 .claude/
+
+# Runtime generated files
+storage/
