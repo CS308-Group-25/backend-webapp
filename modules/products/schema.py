@@ -62,8 +62,12 @@ class ProductRead(ProductBase):
 class ProductListResponse(BaseModel):
     id: int
     name: str
+    model: str | None
+    serial_no: str | None
     description: str | None
     price: float | None
+    warranty: str | None
+    distributor: str | None
     original_price: float | None
     stock: int
     stock_status: str | None
