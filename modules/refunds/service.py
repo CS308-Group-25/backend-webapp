@@ -20,12 +20,15 @@ class RefundService:
         self.order_repo = order_repo
         self.product_repo = product_repo
 
-    VALID_TRANSITIONS: dict[str, list[str]] = {
-        "requested": ["approved_waiting_return", "rejected"],
-        "approved_waiting_return": ["returned_received", "rejected"],
-        "returned_received": ["refunded", "rejected"],
-        "rejected": [],
-        "refunded": [],
+    VALID_TRANSITIONS: dict[RefundStatus, list[RefundStatus]] = {
+        RefundStatus.requested: [RefundStatus.approved_waiting_return, 
+                                 RefundStatus.rejected],
+        RefundStatus.approved_waiting_return: [RefundStatus.returned_received, 
+                                               RefundStatus.rejected],
+        RefundStatus.returned_received: [RefundStatus.refunded, 
+                                         RefundStatus.rejected],
+        RefundStatus.rejected: [],
+        RefundStatus.refunded: [],
     }
 
     def request_refund(
@@ -89,8 +92,9 @@ class RefundService:
         if not refund:
             raise HTTPException(status_code=404, detail="Refund request not found")
 
-        allowed = self.VALID_TRANSITIONS.get(refund.status, [])
-        if new_status.value not in allowed:
+        current_status = refund.status
+        allowed = self.VALID_TRANSITIONS.get(current_status, [])
+        if new_status not in allowed:
             raise HTTPException(
                 status_code=400,
                 detail=(

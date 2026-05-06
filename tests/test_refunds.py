@@ -113,6 +113,27 @@ def test_valid_state_transitions_succeed():
     refund_repo.db.commit.assert_called_once()
 
 
+def test_state_transition_with_enum_status_succeeds():
+    """T-325: Verify transitions work when refund.status is an enum member."""
+    mock_refund = MagicMock()
+    mock_refund.status = RefundStatus.requested  # Enum member, not string
+    mock_refund.refund_amount = Decimal("200.00")
+    mock_refund.order.user.name = "Test User"
+    mock_refund.order_item.product.name = "Test Product"
+    mock_refund.order.created_at = datetime.now(timezone.utc)
+    mock_refund.reason = None
+    mock_refund.id = 1
+
+    service, refund_repo, _ = _make_service(mock_refund=mock_refund)
+
+    service.process_refund_request(1, RefundStatus.approved_waiting_return)
+
+    refund_repo.update_status.assert_called_once_with(
+        mock_refund, RefundStatus.approved_waiting_return
+    )
+    refund_repo.db.commit.assert_called_once()
+
+
 def test_invalid_state_transition_raises_400():
     mock_refund = MagicMock()
     mock_refund.status = "requested"
@@ -168,7 +189,9 @@ def test_stock_and_credit_restored_on_refunded():
     # Technically not every state but the document doesn't specify and rejecting 
     # a refund after certain states would make no sense
 
-@pytest.mark.parametrize("initial_status", ["requested", "approved_waiting_return", "returned_received"])
+@pytest.mark.parametrize("initial_status", ["requested", 
+                                            "approved_waiting_return", 
+                                            "returned_received"])
 def test_reject_at_any_stage(initial_status):
     mock_refund = MagicMock()
     mock_refund.status = initial_status
