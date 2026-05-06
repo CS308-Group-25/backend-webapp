@@ -7,9 +7,9 @@ Create Date: 2026-05-06 14:06:43.575664
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '1ac64de81ea7'
@@ -21,7 +21,8 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.add_column(
         'users',
-        sa.Column('store_credit', sa.Numeric(precision=10, scale=2), nullable=False, server_default=sa.text("0.00"))
+        sa.Column('store_credit', sa.Numeric(precision=10, scale=2), 
+                  nullable=False, server_default=sa.text("0.00"))
     )
 
 
