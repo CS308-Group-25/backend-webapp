@@ -156,7 +156,6 @@ class OrderService:
                     variant_name=item.variant_name,
                 )
                 self.product_repo.update_stock(product.id, item.quantity)
-
             _ = self.order_repo.create_payment(
                 order_id=order.id,
                 card_last4=data.card_last4,
