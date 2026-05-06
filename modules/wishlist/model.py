@@ -15,7 +15,9 @@ class WishlistItem(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     # FK to the saved product
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(
+        DateTime(timezone=True), default=func.now(), server_default=func.now()
+    )
 
     # Allows wishlist_item.product to load the full Product object
     product = relationship("Product")

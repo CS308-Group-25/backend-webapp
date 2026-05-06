@@ -54,9 +54,7 @@ class RefundService:
             raise HTTPException(status_code=404, detail="Order item not found")
 
         if (datetime.now(timezone.utc) - order.created_at).days > 30:
-            raise HTTPException(
-                status_code=400, detail="30-day refund window expired"
-            )
+            raise HTTPException(status_code=400, detail="30-day refund window expired")
 
         if self.refund_repo.get_active_request_for_item(order_item_id):
             raise HTTPException(
@@ -118,7 +116,7 @@ class RefundService:
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        self.product_repo.update_stock(product, -refund.order_item.quantity)
+        self.product_repo.update_stock(product.id, -refund.order_item.quantity)
 
         user = refund.order.user
         user.store_credit = user.store_credit + refund.refund_amount

@@ -60,4 +60,3 @@ def _send_via_smtp(to_email: str, invoice_number: str, pdf_path: str) -> None:
             server.starttls()
             server.login(username, password)
         server.sendmail(msg["From"], to_email, msg.as_string())
-

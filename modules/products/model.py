@@ -30,6 +30,7 @@ class Product(Base):
 
     # --- Supplement-specific & Rich UI fields ---
     brand = Column(String(100), nullable=True)
+    sub_type = Column(String(100), nullable=True)
     flavor = Column(String(100), nullable=True)  # legacy, keep for simple cases
     form = Column(String(50), nullable=True)  # powder / capsule / tablet
     serving_size = Column(String(50), nullable=True)  # legacy

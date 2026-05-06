@@ -16,4 +16,3 @@ class User(Base):
     role = Column(String, nullable=False, default="customer")
     store_credit = Column(Numeric(10, 2), nullable=False, default=0.00)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-

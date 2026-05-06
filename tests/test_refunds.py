@@ -156,7 +156,7 @@ def test_stock_and_credit_restored_on_refunded():
 
     product_repo.get_by_id_for_update.assert_called_once_with(42)
     product_repo.update_stock.assert_called_once_with(
-        mock_product, -mock_refund.order_item.quantity
+        42, -mock_refund.order_item.quantity
     )
     assert mock_user.store_credit == Decimal("200.00")
     refund_repo.update_status.assert_called_once_with(

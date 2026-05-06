@@ -17,6 +17,7 @@ from modules.wishlist.notification_service import WishlistNotificationService
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_user(user_id: int, name: str, email: str) -> User:
     user = User()
     user.id = user_id
@@ -28,6 +29,7 @@ def _make_user(user_id: int, name: str, email: str) -> User:
 # ---------------------------------------------------------------------------
 # WishlistNotificationService tests
 # ---------------------------------------------------------------------------
+
 
 class TestWishlistNotificationService:
     """Tests for WishlistNotificationService.notify_price_drop."""
@@ -142,6 +144,7 @@ class TestWishlistNotificationService:
 # ---------------------------------------------------------------------------
 # send_wishlist_discount_email integration (SMTP mocked)
 # ---------------------------------------------------------------------------
+
 
 class TestSendWishlistDiscountEmail:
     """Tests for the email builder / SMTP sender."""

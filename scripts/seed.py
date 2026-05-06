@@ -1,6 +1,10 @@
+# isort: skip_file
+
+import json
 import os
 import random
 import sys
+from pathlib import Path
 
 from sqlalchemy import text
 
@@ -10,261 +14,328 @@ from core.database import SessionLocal
 from modules.categories.model import Category
 from modules.products.model import Product
 
-random.seed(42)  # For reproducible seeding
 
-# ---------------------------------------------------------------------------
-# Lookup Tables for Mocks
-# ---------------------------------------------------------------------------
+random.seed(42)
 
-CATEGORY_FILTERS = {
-    "protein": ["Whey", "Vegan Protein", "Kazein", "İzolat", "Protein Bar"],
-    "spor": ["Pre-Workout", "Kreatin", "BCAA", "Gainer", "Enerji Jeli"],
-    "vitamin": ["Multivitamin", "B12", "D3", "C Vitamini", "Omega-3"],
-    "amino": ["BCAA", "Glutamin", "L-Karnitin", "EAA", "Beta Alanin"],
-    "sağlık": ["Probiyotik", "Kolajen", "Çinko", "Magnezyum", "Balık Yağı"],
-    "bar": ["Protein Bar", "Enerji Bar", "Granola Bar", "Fıstık Ezmeli", "Brownie"],
-    "aksesuar": ["Shaker", "Eldiven", "Kemer", "Çanta", "Bileklik"],
-}
 
-CATEGORY_DESCRIPTIONS = {
-    "protein": "Kas gelişimi için premium protein tozları.",
-    "spor": "Antrenman performansını artıran sporcu gıdaları.",
-    "vitamin": "Günlük sağlık ve zindelik için esansiyel vitaminler.",
-    "amino": "Hızlı onarım sağlayan saf amino asit formülleri.",
-    "sağlık": "Genel vücut sağlığını destekleyen gıda takviyeleri.",
-    "bar": "Gün içinde atıştırabileceğiniz protein ve enerji barları.",
-    "aksesuar": "Spor salonunda hayatınızı kolaylaştıracak ekipman ve giysiler.",
-}
+# -----------------------------------------------------------------------------
+# Config
+# -----------------------------------------------------------------------------
 
-BRANDS = [
-    "Optimum Nutrition",
-    "MyProtein",
-    "BSN",
-    "Supplements",
-    "Weider",
-    "Hardline",
-    "Big Joy",
-    "GymWear",  # For accessories
-    "ProGear",  # For accessories
-]
 
-FLAVORS_POOL = [
-    {"id": "choc", "name": "Çikolata", "color": "#5C3317"},
-    {"id": "van", "name": "Vanilya", "color": "#F3E5AB"},
-    {"id": "straw", "name": "Çilek", "color": "#E8474C"},
-    {"id": "biscuit", "name": "Bisküvi", "color": "#D2A679"},
-    {"id": "banana", "name": "Muz", "color": "#FFE135"},
-    {"id": "caramel", "name": "Salted Caramel", "color": "#C68E4E"},
-    {"id": "unflavored", "name": "Aromasız", "color": "#E5E7EB"},
-    {"id": "mango", "name": "Mango", "color": "#F59E0B"},
-]
+# Seed data is stored outside the scripts folder to keep scripts clean.
+# Example:
+# backend-webapp/seed_data/supplement_store_110_products.json
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent
 
-COLORS_POOL = [
-    {"id": "black", "name": "Siyah", "color": "#000000"},
-    {"id": "white", "name": "Beyaz", "color": "#FFFFFF"},
-    {"id": "red", "name": "Kırmızı", "color": "#EF4444"},
-    {"id": "blue", "name": "Mavi", "color": "#3B82F6"},
-    {"id": "grey", "name": "Gri", "color": "#9CA3AF"},
-]
+DATA_FILE = PROJECT_ROOT / "seed_data" / "supplement_store_110_products.json"
 
-TAGS_POOL = [
-    "Vegan",
-    "Glutensiz",
-    "Vejetaryen",
-    "Şeker İlavesiz",
-    "Organik",
-    "Helal",
-    "Yeni Tasarım",
-    "Ergonomik",
-]
 
+# Only these 3 images are currently available.
+# These files must be located under public/products on the frontend.
 IMAGES_POOL = [
     "/products/bcaa.png",
     "/products/creatine.png",
     "/products/protein-bar.png",
 ]
 
-DESCRIPTIONS_POOL = [
-    "Hedeflerinize ulaşmanızı sağlayacak yüksek kaliteli bir ürün.",
-    "Performans ve onarım için dizayn edilmiş premium bir seçenek.",
-    "Günlük ihtiyacınızı karşılamaya yardımcı olan destekleyicidir.",
-    "Spor öncesi ve sonrasında en iyi yardımcınız. Performansınızı artırır.",
-    "İhtiyaç duyduğunuz temel özellikleri barındıran kompleks yapı.",
-]
 
-FEATURES_POOL = [
-    "Yüksek biyoyararlanım veya verimlilik sağlar.",
-    "Kolay kullanım ve pratik taşınabilirlik.",
-    "Premium materyallerden ve hammaddelerden üretilmiştir.",
-    "Günlük egzersiz rutininizi doğrudan destekler.",
-    "Modern çizgisi ve fonksiyonelliğiyle öne çıkar.",
-]
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
 
-INGREDIENTS_POOL = [
-    "Whey protein izolatı, aroma vericiler, sukraloz, ayçiçek lesitini.",
-    "L-sitrülin, Beta alanin, B vitaminleri kompleksi, tatlandırıcı.",
-    "Magnezyum sitrat, Çinko pikolinat, B6 vitamini, hacim artırıcı.",
-    "Kreatin monohidrat (%100 saf), aromasız.",
-    "Misel kazein proteini, kakao tozu, kıvam artırıcı (ksantan gam).",
-]
+
+def get_value(data, *keys, default=None):
+    """
+    Performs a safe read in case the JSON contains fields in camelCase or snake_case.
+    Example:
+    originalPrice / original_price
+    stockStatus / stock_status
+    reviewCount / review_count
+    """
+    for key in keys:
+        if key in data:
+            return data[key]
+
+    return default
+
+
+def load_seed_data():
+    if not DATA_FILE.exists():
+        raise FileNotFoundError(f"Seed JSON file not found: {DATA_FILE}")
+
+    with open(DATA_FILE, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    if "categories" not in data:
+        raise ValueError("'categories' field missing in JSON.")
+
+    if "products" not in data:
+        raise ValueError("'products' field missing in JSON.")
+
+    return data
+
+
+def clean_old_data(db):
+    print("Cleaning old data...")
+
+    tables_to_clean = [
+        "cart_items",
+        "order_items",
+        "wishlist_items",
+        "reviews",
+    ]
+
+    for table_name in tables_to_clean:
+        try:
+            db.execute(text(f"DELETE FROM {table_name}"))
+        except Exception:
+            pass
+
+    db.query(Product).delete()
+    db.query(Category).delete()
+    db.commit()
+
+    print("Old data cleaned.")
+
+
+def create_categories(db, categories_data):
+    print(f"Seeding {len(categories_data)} categories...")
+
+    category_map = {}
+
+    for category_data in categories_data:
+        key = category_data.get("key")
+        name = category_data.get("name")
+        description = category_data.get("description", "")
+
+        if not key:
+            raise ValueError(f"Category key missing: {category_data}")
+
+        if not name:
+            raise ValueError(f"Category name missing: {category_data}")
+
+        category = Category(
+            name=name,
+            description=description,
+        )
+
+        db.add(category)
+        db.commit()
+        db.refresh(category)
+
+        category_map[key] = category
+
+    print("Categories seeded.")
+    return category_map
+
+
+def get_category_key(product_data):
+    """
+    Finds the product's category key.
+    Most accurate expected field: categoryKey
+
+    But also supports other naming conventions if present in JSON:
+    category_key
+    category
+    """
+    return get_value(
+        product_data,
+        "categoryKey",
+        "category_key",
+        "category",
+        default=None,
+    )
+
+
+def normalize_stock_status(stock, stock_status):
+    if stock_status:
+        return stock_status
+
+    if stock <= 0:
+        return "out_of_stock"
+
+    if stock < 15:
+        return "low_stock"
+
+    return "in_stock"
+
+
+def create_products(db, products_data, category_map):
+    print(f"Seeding {len(products_data)} products from JSON...")
+
+    products = []
+
+    for index, product_data in enumerate(products_data, start=1):
+        category_key = get_category_key(product_data)
+
+        if not category_key:
+            raise ValueError(
+                f"CategoryKey missing in product {index}. "
+                f"Product: {product_data.get('name')}"
+            )
+
+        category = category_map.get(category_key)
+
+        if not category:
+            raise ValueError(
+                f"Category not found for product {index}. "
+                f"categoryKey={category_key}, product={product_data.get('name')}"
+            )
+
+        name = get_value(product_data, "name")
+
+        if not name:
+            raise ValueError(f"Name missing in product {index}: {product_data}")
+
+        price = get_value(product_data, "price", default=0)
+        original_price = get_value(
+            product_data,
+            "originalPrice",
+            "original_price",
+            default=None,
+        )
+
+        stock = get_value(product_data, "stock", default=0)
+        stock_status = get_value(
+            product_data,
+            "stockStatus",
+            "stock_status",
+            default=None,
+        )
+
+        stock_status = normalize_stock_status(stock, stock_status)
+
+        # IMPORTANT:
+        # We are not using the image field from the JSON.
+        # Because currently only 3 images are available.
+        # We randomly assign one of these 3 images to each product.
+        images = [random.choice(IMAGES_POOL)]
+
+        product = Product(
+            name=name,
+            description=get_value(product_data, "description", default=""),
+            stock=stock,
+            price=price,
+            brand=get_value(product_data, "brand", default="SUpplements"),
+            sub_type=get_value(product_data, "subType", "sub_type", default=None),
+            category_id=category.id,
+            # Discount comes from JSON.
+            # If original_price exists, the product appears as discounted.
+            # Otherwise it remains None.
+            original_price=original_price,
+            rating=get_value(product_data, "rating", default=0.0),
+            review_count=get_value(
+                product_data,
+                "reviewCount",
+                "review_count",
+                default=0,
+            ),
+            stock_status=stock_status,
+            is_new=get_value(
+                product_data,
+                "isNew",
+                "is_new",
+                default=False,
+            ),
+            images=images,
+            tags_json=get_value(
+                product_data,
+                "tags",
+                "tagsJson",
+                "tags_json",
+                default=[],
+            ),
+            flavors_json=get_value(
+                product_data,
+                "flavors",
+                "flavorsJson",
+                "flavors_json",
+                default=[],
+            ),
+            sizes_json=get_value(
+                product_data,
+                "sizes",
+                "sizesJson",
+                "sizes_json",
+                default=[],
+            ),
+            features=get_value(product_data, "features", default=[]),
+            ingredients=get_value(product_data, "ingredients", default=""),
+            nutrition_facts=get_value(
+                product_data,
+                "nutritionFacts",
+                "nutrition_facts",
+                default=None,
+            ),
+            usage_info=get_value(
+                product_data,
+                "usageInfo",
+                "usage_info",
+                default="",
+            ),
+        )
+
+        products.append(product)
+
+    db.add_all(products)
+    db.commit()
+
+    print(f"Products seeded: {len(products)}")
+
+
+def validate_seed_data(data):
+    categories = data["categories"]
+    products = data["products"]
+
+    category_keys = {category["key"] for category in categories}
+
+    if len(products) != 110:
+        print(
+            f"⚠️ Warning: Expected 110 products in JSON, "
+            f"but found {len(products)} products."
+        )
+
+    for index, product in enumerate(products, start=1):
+        category_key = get_category_key(product)
+
+        if category_key not in category_keys:
+            raise ValueError(
+                f"Product {index} has an invalid categoryKey value. "
+                f"categoryKey={category_key}, product={product.get('name')}"
+            )
+
+    print("Seed data validation passed.")
+
+
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
 
 
 def seed_db():
     db = SessionLocal()
 
     try:
-        print("Cleaning old data to prevent conflicts...")
-        db.execute(text("DELETE FROM cart_items"))
-        db.execute(text("DELETE FROM order_items"))
-        if "Review" in sys.modules:
-            try:
-                db.execute(text("DELETE FROM reviews"))
-            except Exception:
-                pass
+        data = load_seed_data()
+        validate_seed_data(data)
 
-        db.query(Product).delete()
-        db.query(Category).delete()
-        db.commit()
+        clean_old_data(db)
 
-        print("Seeding 7 exact categories...")
-        db_categories = {}
+        category_map = create_categories(db, data["categories"])
+        create_products(db, data["products"], category_map)
 
-        # We define them exactly matching the frontend filter keys
-        for key, description in CATEGORY_DESCRIPTIONS.items():
-            cat = Category(name=key.capitalize(), description=description)
-            db.add(cat)
-            db.commit()
-            db.refresh(cat)
-            db_categories[key] = cat
+        print(
+            f"✅ Successfully seeded DB: "
+            f"{len(data['categories'])} categories, {len(data['products'])} products."
+        )
 
-        products = []
-        print("Seeding 110 rich products covering all 7 categories...")
-
-        for _ in range(110):
-            # Pick a random category filter key
-            filter_key = random.choice(list(CATEGORY_FILTERS.keys()))
-            cat = db_categories[filter_key]
-
-            sub_type = random.choice(CATEGORY_FILTERS[filter_key])
-
-            # Accessories are more likely to have sports brands
-            if filter_key == "aksesuar":
-                brand = random.choice(["GymWear", "ProGear", "Supplements"])
-            else:
-                brand = random.choice(BRANDS[:7])
-
-            # Pricing logic
-            price = round(random.uniform(99, 1499), 2)
-            has_discount = random.choice([True, False, False])
-            original_price = (
-                round(price * random.uniform(1.2, 1.5), 2) if has_discount else None
-            )
-
-            # Stock logic
-            stock = random.randint(0, 300)
-            stock_status = "in_stock"
-            if stock == 0:
-                stock_status = "out_of_stock"
-            elif stock < 15:
-                stock_status = "low_stock"
-
-            # Logic branches depending on if it is an accessory or not
-            is_accessory = filter_key == "aksesuar"
-
-            # Frontend uses the "flavors" prop to render the color pickers
-            if is_accessory:
-                flavors = random.sample(COLORS_POOL, k=random.randint(1, 3))
-                sizes = [
-                    {
-                        "id": "sizem",
-                        "label": "M Beden",
-                        "price": price,
-                        "originalPrice": original_price,
-                    },
-                    {
-                        "id": "sizel",
-                        "label": "L Beden",
-                        "price": price,
-                        "originalPrice": original_price,
-                    },
-                ]
-                nutrition_facts = None
-                ingredients = "Yüksek kaliteli sporcu kumaşı / materyali."
-                usage_info = "Elde veya çamaşır makinesinde 30 derecede yıkayınız."
-                tags = random.sample(["Yeni Tasarım", "Ergonomik", "Vegan"], k=2)
-            else:
-                flavors = random.sample(FLAVORS_POOL, k=random.randint(1, 4))
-                sizes = [
-                    {
-                        "id": f"s_{random.randint(100, 500)}",
-                        "label": f"{random.randint(200, 1000)}g",
-                        "servings": random.randint(20, 60),
-                        "price": price,
-                        "originalPrice": original_price,
-                    }
-                ]
-                nutrition_facts = [
-                    {
-                        "label": "Enerji",
-                        "perServing": f"{random.randint(0, 150)} kcal",
-                        "per100g": f"{random.randint(200, 400)} kcal",
-                    },
-                    {
-                        "label": "Protein",
-                        "perServing": f"{random.randint(0, 30)}g",
-                        "per100g": f"{random.randint(10, 90)}g",
-                    },
-                    {
-                        "label": "Karbonhidrat",
-                        "perServing": f"{random.randint(0, 50)}g",
-                        "per100g": f"{random.randint(0, 100)}g",
-                    },
-                    {
-                        "label": "Yağ",
-                        "perServing": f"{random.uniform(0.1, 5.0):.1f}g",
-                        "per100g": f"{random.uniform(1.0, 15.0):.1f}g",
-                    },
-                ]
-                ingredients = random.choice(INGREDIENTS_POOL)
-                usage_info = (
-                    "1 ölçek (veya porsiyon) ürünü 250ml su ile karıştırıp tüketiniz."
-                )
-                tags = random.sample(TAGS_POOL[:6], k=random.randint(0, 3))
-
-            images = random.sample(IMAGES_POOL, k=random.randint(1, len(IMAGES_POOL)))
-            features = random.sample(FEATURES_POOL, k=random.randint(2, 4))
-
-            product = Product(
-                name=f"{brand} {sub_type}",
-                description=random.choice(DESCRIPTIONS_POOL),
-                stock=stock,
-                price=price,
-                brand=brand,
-                category_id=cat.id,
-                # --- Rich Fields for Frontend Mock ---
-                original_price=original_price,
-                rating=round(random.uniform(4.0, 5.0), 1) if stock > 0 else 0,
-                review_count=random.randint(0, 2500) if stock > 0 else 0,
-                stock_status=stock_status,
-                is_new=random.choice([True, False, False, False]),
-                images=images,
-                tags_json=tags,
-                flavors_json=flavors,
-                sizes_json=sizes,
-                features=features,
-                ingredients=ingredients,
-                nutrition_facts=nutrition_facts,
-                usage_info=usage_info,
-            )
-            products.append(product)
-
-        db.add_all(products)
-        db.commit()
-        print(f"Successfully seeded DB with 7 categories and {len(products)} products!")
-
-    except Exception as e:
-        print(f"Error seeding database: {e}")
+    except Exception as error:
+        print(f"❌ Error seeding database: {error}")
         db.rollback()
+        raise
+
     finally:
         db.close()
 

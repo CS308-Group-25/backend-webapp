@@ -12,18 +12,20 @@ class ReviewService:
         reviews = self.repo.get_all_by_status(status)
         result = []
         for r in reviews:
-            result.append({
-                "id": r.id,
-                "product_id": r.product_id,
-                "user_id": r.user_id,
-                "rating": r.rating,
-                "comment": r.comment,
-                "approval_status": r.approval_status,
-                "created_at": r.created_at,
-                "product_name": r.product.name if r.product else None,
-                "customer_name": r.user.name if r.user else None,
-                "customer_email": r.user.email if r.user else None,
-            })
+            result.append(
+                {
+                    "id": r.id,
+                    "product_id": r.product_id,
+                    "user_id": r.user_id,
+                    "rating": r.rating,
+                    "comment": r.comment,
+                    "approval_status": r.approval_status,
+                    "created_at": r.created_at,
+                    "product_name": r.product.name if r.product else None,
+                    "customer_name": r.user.name if r.user else None,
+                    "customer_email": r.user.email if r.user else None,
+                }
+            )
         return result
 
     def get_approved_reviews(self, product_id: int) -> list[Review]:
@@ -42,7 +44,7 @@ class ReviewService:
             rating=rating,
             comment=comment,
         )
-    
+
     def moderate_review(self, review_id: int, approval_status: str) -> Review:
         if approval_status == "approved":
             review = self.repo.approve(review_id)
@@ -56,4 +58,3 @@ class ReviewService:
         deleted = self.repo.delete(review_id)
         if not deleted:
             raise HTTPException(status_code=404, detail="Review not found")
-

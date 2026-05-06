@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -28,6 +28,8 @@ class CartItem(Base):
 
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
     quantity = Column(Integer, nullable=False, default=1)
+    # Stores human-readable variant info (e.g. "Çikolata / 400g") for display purposes
+    variant_name = Column(String, nullable=True)
 
     cart = relationship("Cart", back_populates="items")
     product = relationship("Product")

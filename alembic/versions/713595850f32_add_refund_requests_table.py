@@ -28,9 +28,7 @@ def upgrade() -> None:
         sa.Column("order_item_id", sa.Integer(), nullable=False),
         sa.Column("status", sa.String(length=30), nullable=False),
         sa.Column("reason", sa.String(), nullable=True),
-        sa.Column(
-            "refund_amount", sa.Numeric(precision=10, scale=2), nullable=False
-        ),
+        sa.Column("refund_amount", sa.Numeric(precision=10, scale=2), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -67,8 +65,6 @@ def downgrade() -> None:
     op.drop_index(
         op.f("ix_refund_requests_order_item_id"), table_name="refund_requests"
     )
-    op.drop_index(
-        op.f("ix_refund_requests_order_id"), table_name="refund_requests"
-    )
+    op.drop_index(op.f("ix_refund_requests_order_id"), table_name="refund_requests")
     op.drop_table("refund_requests")
     # ### end Alembic commands ###

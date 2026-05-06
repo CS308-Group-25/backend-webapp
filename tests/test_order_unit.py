@@ -10,6 +10,7 @@ from modules.orders.service import OrderService
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
+
 @pytest.fixture
 def repos():
     """Return (order_repo, cart_repo, product_repo) as mocks."""
@@ -44,7 +45,9 @@ def _make_cart(items: list, cart_id: int = 10):
 
 
 def _make_cart_item(product_id: int = 100, quantity: int = 2):
-    return SimpleNamespace(id=1, product_id=product_id, quantity=quantity)
+    return SimpleNamespace(
+        id=1, product_id=product_id, quantity=quantity, variant_name=None
+    )
 
 
 def _make_product(
@@ -75,7 +78,9 @@ def _make_service(
         invoice_service=invoice_service or MagicMock(),
     )
 
+
 # ── Tests ─────────────────────────────────────────────────────────────────────
+
 
 @patch("modules.orders.service.send_invoice_email")
 @patch("modules.orders.service.process_payment", return_value=True)
@@ -152,7 +157,7 @@ def test_place_order_stock_decrements_correctly(
 
     # update_stock is called twice: once in stock-check loop, once in order-item loop.
     # We assert at least one call carries the right args.
-    product_repo.update_stock.assert_called_with(product, 3)
+    product_repo.update_stock.assert_called_with(100, 3)
 
 
 @patch("modules.orders.service.send_invoice_email")

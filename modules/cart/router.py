@@ -39,7 +39,9 @@ def add_item_to_cart(
     current_user: User = Depends(get_current_user),
     service: CartService = Depends(get_cart_service),
 ):
-    return service.add_item(current_user.id, data.product_id, data.quantity)
+    return service.add_item(
+        current_user.id, data.product_id, data.quantity, data.variant_name
+    )
 
 
 @router.patch("/{cart_item_id}", response_model=CartItemResponse)
@@ -73,15 +75,23 @@ def remove_cart_item(
     return None
 
 
-@router.post("/bulk", response_model=BulkCartAddResponse, 
-             status_code=status.HTTP_200_OK)
+@router.post(
+    "/bulk", response_model=BulkCartAddResponse, status_code=status.HTTP_200_OK
+)
 def bulk_add_items(
     data: BulkCartAddRequest,
     current_user: User = Depends(get_current_user),
-    service: CartService = Depends(get_cart_service)
+    service: CartService = Depends(get_cart_service),
 ):
     result = service.bulk_add_items(
         current_user.id,
-        [{"product_id": i.product_id, "quantity": i.quantity} for i in data.items],
+        [
+            {
+                "product_id": i.product_id,
+                "quantity": i.quantity,
+                "variant_name": i.variant_name,
+            }
+            for i in data.items
+        ],
     )
     return result

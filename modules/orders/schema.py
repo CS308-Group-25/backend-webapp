@@ -20,6 +20,7 @@ class OrderItemResponse(BaseModel):
     name: str
     quantity: int
     price: Decimal
+    variant_name: str | None = None
     refund_request: RefundRequestSummary | None = None
 
 

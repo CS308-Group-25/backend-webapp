@@ -21,6 +21,7 @@ class ProductBase(BaseModel):
     warranty: Optional[str] = Field(None, max_length=100)
     distributor: Optional[str] = Field(None, max_length=200)
     brand: Optional[str] = Field(None, max_length=100)
+    sub_type: Optional[str] = Field(None, max_length=100)
     flavor: Optional[str] = Field(None, max_length=100)
     form: Optional[str] = Field(None, max_length=50)
     serving_size: Optional[str] = Field(None, max_length=50)
@@ -41,6 +42,7 @@ class ProductUpdate(BaseModel):
     warranty: Optional[str] = Field(None, max_length=100)
     distributor: Optional[str] = Field(None, max_length=200)
     brand: Optional[str] = Field(None, max_length=100)
+    sub_type: Optional[str] = Field(None, max_length=100)
     flavor: Optional[str] = Field(None, max_length=100)
     form: Optional[str] = Field(None, max_length=50)
     serving_size: Optional[str] = Field(None, max_length=50)
@@ -69,6 +71,7 @@ class ProductListResponse(BaseModel):
     rating: float | None
     review_count: int | None
     brand: str | None
+    sub_type: str | None
     flavor: str | None
     form: str | None
     goal_tags: str | None
@@ -95,6 +98,7 @@ class ProductDetailResponse(BaseModel):
     warranty: str | None
     distributor: str | None
     brand: str | None
+    sub_type: str | None
     flavor: str | None
     form: str | None
     serving_size: str | None

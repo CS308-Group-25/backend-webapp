@@ -1,16 +1,16 @@
-"""merge_wishlist_and_rich_product_fields
+"""merge multiple heads
 
-Revision ID: dca18a874d93
-Revises: 37ecd68a1d1e, 4fd413fc07c0
-Create Date: 2026-04-23 22:30:03.940476
+Revision ID: e2e260754b17
+Revises: 6e192c0948e4
+Create Date: 2026-05-02 22:31:09.315470
 
 """
 
 from typing import Sequence, Union
 
 # revision identifiers, used by Alembic.
-revision: str = "dca18a874d93"
-down_revision: Union[str, None] = ("37ecd68a1d1e", "4fd413fc07c0")
+revision: str = "e2e260754b17"
+down_revision: Union[str, None] = "6e192c0948e4"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
