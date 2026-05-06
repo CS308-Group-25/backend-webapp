@@ -47,6 +47,7 @@ class OrderService:
             created_at=order.created_at,
             items=[
                 OrderItemResponse(
+                    id=order_item.id,
                     product_id=order_item.product_id,
                     name=order_item.product.name,
                     quantity=order_item.quantity,
@@ -229,6 +230,7 @@ class OrderService:
                     total=order.total,
                     items=[
                         OrderItemResponse(
+                            id=item.id,
                             product_id=item.product_id,
                             name=item.product.name,
                             quantity=item.quantity,

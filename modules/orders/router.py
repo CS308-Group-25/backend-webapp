@@ -101,6 +101,7 @@ def update_order_status(
         created_at=updated_order.created_at,
         items=[
             OrderItemResponse(
+                id=item.id,
                 product_id=item.product_id,
                 name=item.product.name,
                 quantity=item.quantity,

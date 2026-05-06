@@ -16,6 +16,7 @@ class OrderRequest(BaseModel):
 
 class OrderItemResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: int
     product_id: int
     name: str
     quantity: int

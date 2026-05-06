@@ -362,6 +362,7 @@ def test_get_admin_orders_nested_items():
     user.email = "admin@test.com"
 
     item1 = MagicMock()
+    item1.id = 1
     item1.product_id = 101
     item1.quantity = 2
     item1.price = 50.0
@@ -369,6 +370,7 @@ def test_get_admin_orders_nested_items():
     item1.product.name = "Product A"
 
     item2 = MagicMock()
+    item2.id = 2
     item2.product_id = 102
     item2.quantity = 1
     item2.price = 50.0
