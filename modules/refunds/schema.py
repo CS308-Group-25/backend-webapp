@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
+from modules.refunds.model import RefundStatus
+
 
 class RefundRequestCreate(BaseModel):
     reason: str | None = None
@@ -36,3 +38,7 @@ class AdminRefundRequestResponse(BaseModel):
     refund_amount: Decimal
     reason: str | None
     status: str
+
+
+class RefundStatusUpdate(BaseModel):
+    status: RefundStatus

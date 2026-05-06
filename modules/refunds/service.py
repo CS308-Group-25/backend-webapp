@@ -3,15 +3,33 @@ from datetime import datetime, timezone
 from fastapi import HTTPException
 
 from modules.orders.repository import OrderRepository
-from modules.refunds.model import RefundRequest
+from modules.products.repository import ProductRepository
+from modules.refunds.model import RefundRequest, RefundStatus
 from modules.refunds.repository import RefundRepository
 from modules.refunds.schema import AdminRefundRequestResponse
 
 
 class RefundService:
-    def __init__(self, refund_repo: RefundRepository, order_repo: OrderRepository):
+    def __init__(
+        self,
+        refund_repo: RefundRepository,
+        order_repo: OrderRepository,
+        product_repo: ProductRepository,
+    ):
         self.refund_repo = refund_repo
         self.order_repo = order_repo
+        self.product_repo = product_repo
+
+    VALID_TRANSITIONS: dict[RefundStatus, list[RefundStatus]] = {
+        RefundStatus.requested: [RefundStatus.approved_waiting_return, 
+                                 RefundStatus.rejected],
+        RefundStatus.approved_waiting_return: [RefundStatus.returned_received, 
+                                               RefundStatus.rejected],
+        RefundStatus.returned_received: [RefundStatus.refunded, 
+                                         RefundStatus.rejected],
+        RefundStatus.rejected: [],
+        RefundStatus.refunded: [],
+    }
 
     def request_refund(
         self,
@@ -66,3 +84,51 @@ class RefundService:
             )
             for r in requests
         ]
+
+    def process_refund_request(
+        self, refund_id: int, new_status: RefundStatus
+    ) -> AdminRefundRequestResponse:
+        refund = self.refund_repo.get_by_id(refund_id)
+        if not refund:
+            raise HTTPException(status_code=404, detail="Refund request not found")
+
+        current_status = refund.status
+        allowed = self.VALID_TRANSITIONS.get(current_status, [])
+        if new_status not in allowed:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Invalid status transition from {refund.status} "
+                    f"to {new_status.value}"
+                ),
+            )
+
+        if new_status == RefundStatus.refunded:
+            self._restore_stock_and_credit(refund)
+
+        self.refund_repo.update_status(refund, new_status)
+        self.refund_repo.db.commit()
+        return self._build_admin_response(refund)
+
+    def _restore_stock_and_credit(self, refund: RefundRequest) -> None:
+        product = self.product_repo.get_by_id_for_update(refund.order_item.product_id)
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        self.product_repo.update_stock(product.id, -refund.order_item.quantity)
+
+        user = refund.order.user
+        user.store_credit = user.store_credit + refund.refund_amount
+
+    def _build_admin_response(
+        self, refund: RefundRequest
+    ) -> AdminRefundRequestResponse:
+        return AdminRefundRequestResponse(
+            id=refund.id,
+            customer_name=refund.order.user.name,
+            product_name=refund.order_item.product.name,
+            order_date=refund.order.created_at,
+            refund_amount=refund.refund_amount,
+            reason=refund.reason,
+            status=refund.status,
+        )
