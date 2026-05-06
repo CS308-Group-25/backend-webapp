@@ -42,6 +42,9 @@ def _make_service(order=None, active_request=None, product_repo=None, mock_refun
     order_repo = MagicMock()
     order_repo.get_by_order_id.return_value = order
 
+    if product_repo is None:
+        product_repo = MagicMock()
+
     service = RefundService(
         refund_repo=refund_repo, order_repo=order_repo, product_repo=product_repo
     )

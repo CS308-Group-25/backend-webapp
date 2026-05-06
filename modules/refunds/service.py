@@ -14,7 +14,7 @@ class RefundService:
         self,
         refund_repo: RefundRepository,
         order_repo: OrderRepository,
-        product_repo: ProductRepository | None = None,
+        product_repo: ProductRepository,
     ):
         self.refund_repo = refund_repo
         self.order_repo = order_repo
@@ -111,11 +111,6 @@ class RefundService:
         return self._build_admin_response(refund)
 
     def _restore_stock_and_credit(self, refund: RefundRequest) -> None:
-        if not self.product_repo:
-            raise HTTPException(
-                status_code=500, detail="Product repository not configured"
-            )
-
         product = self.product_repo.get_by_id_for_update(refund.order_item.product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
