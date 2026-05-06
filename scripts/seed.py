@@ -215,11 +215,33 @@ def create_products(db, products_data, category_map):
 
         product = Product(
             name=name,
+            model=get_value(product_data, "model", "subType", "sub_type", default=None),
+            serial_no=get_value(
+                product_data,
+                "serialNumber",
+                "serial_no",
+                "serialNo",
+                default=None,
+            ),
             description=get_value(product_data, "description", default=""),
             stock=stock,
             price=price,
+            warranty=get_value(
+                product_data,
+                "warrantyStatus",
+                "warranty_status",
+                "warranty",
+                default=None,
+            ),
+            distributor=get_value(product_data, "distributor", default=None),
             brand=get_value(product_data, "brand", default="SUpplements"),
-            sub_type=get_value(product_data, "subType", "sub_type", default=None),
+            sub_type=get_value(
+                product_data,
+                "model",
+                "subType",
+                "sub_type",
+                default=None,
+            ),
             category_id=category.id,
             # Discount comes from JSON.
             # If original_price exists, the product appears as discounted.

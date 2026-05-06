@@ -102,7 +102,6 @@
     {
       "id": "prod_001",
       "categoryKey": "protein",
-      "subType": "Whey Protein Tozu",
       "name": "Optimum Nutrition Whey Protein Tozu Advanced",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 279,
@@ -162,12 +161,15 @@
           "per100g": "7.0g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-001",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Whey Protein Tozu"
     },
     {
       "id": "prod_002",
       "categoryKey": "protein",
-      "subType": "Vegan Protein Tozu",
       "name": "Big Joy Vegan Protein Tozu Performance",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 183,
@@ -240,12 +242,15 @@
           "per100g": "17.6g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-002",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Vegan Protein Tozu"
     },
     {
       "id": "prod_003",
       "categoryKey": "protein",
-      "subType": "İzolat Protein Tozu",
       "name": "BSN İzolat Protein Tozu Power",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 189,
@@ -310,12 +315,15 @@
           "per100g": "3.2g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-003",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "İzolat Protein Tozu"
     },
     {
       "id": "prod_004",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "Hardline Hidrolize Protein Tozu Performance",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 234,
@@ -391,12 +399,15 @@
           "per100g": "19.9g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-004",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_005",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "BSN Hidrolize Protein Tozu Fit",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 58,
@@ -472,12 +483,15 @@
           "per100g": "16.0g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-005",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_006",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "Optimum Nutrition Hidrolize Protein Tozu Core",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 157,
@@ -550,12 +564,15 @@
           "per100g": "14.8g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-006",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_007",
       "categoryKey": "protein",
-      "subType": "İzolat Protein Tozu",
       "name": "Hardline İzolat Protein Tozu Performance",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 61,
@@ -620,12 +637,15 @@
           "per100g": "4.4g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-007",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "İzolat Protein Tozu"
     },
     {
       "id": "prod_008",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "Weider Hidrolize Protein Tozu Power",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 208,
@@ -687,12 +707,15 @@
           "per100g": "18.6g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-008",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_009",
       "categoryKey": "protein",
-      "subType": "İzolat Protein Tozu",
       "name": "Big Joy İzolat Protein Tozu Fit",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 276,
@@ -755,12 +778,15 @@
           "per100g": "11.8g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-009",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "İzolat Protein Tozu"
     },
     {
       "id": "prod_010",
       "categoryKey": "protein",
-      "subType": "Kazein Protein Tozu",
       "name": "Optimum Nutrition Kazein Protein Tozu Max",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 271,
@@ -820,12 +846,15 @@
           "per100g": "7.7g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-010",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kazein Protein Tozu"
     },
     {
       "id": "prod_011",
       "categoryKey": "protein",
-      "subType": "Kazein Protein Tozu",
       "name": "MyProtein Kazein Protein Tozu Performance",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 153,
@@ -884,12 +913,15 @@
           "per100g": "19.7g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-011",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kazein Protein Tozu"
     },
     {
       "id": "prod_012",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "Optimum Nutrition Hidrolize Protein Tozu Fit",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 68,
@@ -960,12 +992,15 @@
           "per100g": "13.5g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-012",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_013",
       "categoryKey": "protein",
-      "subType": "Kazein Protein Tozu",
       "name": "MyProtein Kazein Protein Tozu Power",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 4,
@@ -1031,12 +1066,15 @@
           "per100g": "15.5g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-013",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kazein Protein Tozu"
     },
     {
       "id": "prod_014",
       "categoryKey": "protein",
-      "subType": "Vegan Protein Tozu",
       "name": "Big Joy Vegan Protein Tozu Elite",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 211,
@@ -1103,12 +1141,15 @@
           "per100g": "7.9g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-014",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Vegan Protein Tozu"
     },
     {
       "id": "prod_015",
       "categoryKey": "protein",
-      "subType": "Whey Protein Tozu",
       "name": "Big Joy Whey Protein Tozu Advanced",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 274,
@@ -1180,12 +1221,15 @@
           "per100g": "2.0g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-015",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Whey Protein Tozu"
     },
     {
       "id": "prod_016",
       "categoryKey": "protein",
-      "subType": "Hidrolize Protein Tozu",
       "name": "Hardline Hidrolize Protein Tozu Plus",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 169,
@@ -1262,12 +1306,15 @@
           "per100g": "9.7g"
         }
       ],
-      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz."
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-016",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Hidrolize Protein Tozu"
     },
     {
       "id": "prod_017",
       "categoryKey": "spor",
-      "subType": "Karbonhidrat Tozu",
       "name": "Weider Karbonhidrat Tozu Performance",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 109,
@@ -1338,12 +1385,15 @@
           "per100g": "13.3g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-017",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Karbonhidrat Tozu"
     },
     {
       "id": "prod_018",
       "categoryKey": "spor",
-      "subType": "Kreatin",
       "name": "Hardline Kreatin Daily",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 2,
@@ -1407,12 +1457,15 @@
           "per100g": "10.1g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-018",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kreatin"
     },
     {
       "id": "prod_019",
       "categoryKey": "spor",
-      "subType": "Kreatin",
       "name": "Big Joy Kreatin Advanced",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 122,
@@ -1475,12 +1528,15 @@
           "per100g": "9.6g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-019",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kreatin"
     },
     {
       "id": "prod_020",
       "categoryKey": "spor",
-      "subType": "Karbonhidrat Tozu",
       "name": "Hardline Karbonhidrat Tozu Max",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 194,
@@ -1559,12 +1615,15 @@
           "per100g": "2.5g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-020",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Karbonhidrat Tozu"
     },
     {
       "id": "prod_021",
       "categoryKey": "spor",
-      "subType": "Enerji Jeli",
       "name": "MyProtein Enerji Jeli Power",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 108,
@@ -1628,12 +1687,15 @@
           "per100g": "12.2g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-021",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Jeli"
     },
     {
       "id": "prod_022",
       "categoryKey": "spor",
-      "subType": "Kreatin",
       "name": "SUpplements Kreatin Advanced",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 58,
@@ -1709,12 +1771,15 @@
           "per100g": "8.1g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-022",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kreatin"
     },
     {
       "id": "prod_023",
       "categoryKey": "spor",
-      "subType": "Enerji Jeli",
       "name": "Big Joy Enerji Jeli Power",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 235,
@@ -1790,12 +1855,15 @@
           "per100g": "2.5g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-023",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Jeli"
     },
     {
       "id": "prod_024",
       "categoryKey": "spor",
-      "subType": "Gainer",
       "name": "MyProtein Gainer Power",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 174,
@@ -1862,12 +1930,15 @@
           "per100g": "12.5g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-024",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Gainer"
     },
     {
       "id": "prod_025",
       "categoryKey": "spor",
-      "subType": "Enerji Jeli",
       "name": "Weider Enerji Jeli Fit",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 281,
@@ -1933,12 +2004,15 @@
           "per100g": "3.8g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-025",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Jeli"
     },
     {
       "id": "prod_026",
       "categoryKey": "spor",
-      "subType": "Kreatin",
       "name": "BSN Kreatin Plus",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 273,
@@ -2014,12 +2088,15 @@
           "per100g": "12.4g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-026",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kreatin"
     },
     {
       "id": "prod_027",
       "categoryKey": "spor",
-      "subType": "Pre-Workout",
       "name": "MyProtein Pre-Workout Elite",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 43,
@@ -2096,12 +2173,15 @@
           "per100g": "4.8g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-027",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Pre-Workout"
     },
     {
       "id": "prod_028",
       "categoryKey": "spor",
-      "subType": "Enerji Jeli",
       "name": "SUpplements Enerji Jeli Core",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 144,
@@ -2168,12 +2248,15 @@
           "per100g": "9.9g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-028",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Jeli"
     },
     {
       "id": "prod_029",
       "categoryKey": "spor",
-      "subType": "Enerji Jeli",
       "name": "Hardline Enerji Jeli Advanced",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 256,
@@ -2235,12 +2318,15 @@
           "per100g": "7.0g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-029",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Jeli"
     },
     {
       "id": "prod_030",
       "categoryKey": "spor",
-      "subType": "Karbonhidrat Tozu",
       "name": "SUpplements Karbonhidrat Tozu Power",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 209,
@@ -2312,12 +2398,15 @@
           "per100g": "10.3g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-030",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Karbonhidrat Tozu"
     },
     {
       "id": "prod_031",
       "categoryKey": "spor",
-      "subType": "Pre-Workout",
       "name": "MyProtein Pre-Workout Fit",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 226,
@@ -2380,12 +2469,15 @@
           "per100g": "13.7g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-031",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Pre-Workout"
     },
     {
       "id": "prod_032",
       "categoryKey": "spor",
-      "subType": "Kreatin",
       "name": "SUpplements Kreatin Advanced",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 241,
@@ -2457,12 +2549,15 @@
           "per100g": "8.8g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-032",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kreatin"
     },
     {
       "id": "prod_033",
       "categoryKey": "vitamin",
-      "subType": "D3",
       "name": "Big Joy D3 Plus",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 119,
@@ -2514,12 +2609,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-033",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "D3"
     },
     {
       "id": "prod_034",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "Optimum Nutrition C Vitamini Elite",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 79,
@@ -2588,12 +2686,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-034",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_035",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "Optimum Nutrition C Vitamini Pro",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 14,
@@ -2649,12 +2750,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-035",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_036",
       "categoryKey": "vitamin",
-      "subType": "Omega-3",
       "name": "Hardline Omega-3 Plus",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 118,
@@ -2719,12 +2823,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-036",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Omega-3"
     },
     {
       "id": "prod_037",
       "categoryKey": "vitamin",
-      "subType": "B12",
       "name": "SUpplements B12 Power",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 183,
@@ -2793,12 +2900,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-037",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "B12"
     },
     {
       "id": "prod_038",
       "categoryKey": "vitamin",
-      "subType": "B12",
       "name": "Hardline B12 Pro",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 158,
@@ -2858,12 +2968,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-038",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "B12"
     },
     {
       "id": "prod_039",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "Big Joy C Vitamini Advanced",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 239,
@@ -2932,12 +3045,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-039",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_040",
       "categoryKey": "vitamin",
-      "subType": "Multivitamin",
       "name": "Weider Multivitamin Fit",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 32,
@@ -2990,12 +3106,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-040",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Multivitamin"
     },
     {
       "id": "prod_041",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "BSN C Vitamini Fit",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 79,
@@ -3053,12 +3172,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-041",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_042",
       "categoryKey": "vitamin",
-      "subType": "B12",
       "name": "Optimum Nutrition B12 Power",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 10,
@@ -3113,12 +3235,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-042",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "B12"
     },
     {
       "id": "prod_043",
       "categoryKey": "vitamin",
-      "subType": "B12",
       "name": "MyProtein B12 Fit",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 13,
@@ -3171,12 +3296,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-043",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "B12"
     },
     {
       "id": "prod_044",
       "categoryKey": "vitamin",
-      "subType": "D3",
       "name": "Weider D3 Core",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 22,
@@ -3226,12 +3354,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-044",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "D3"
     },
     {
       "id": "prod_045",
       "categoryKey": "vitamin",
-      "subType": "D3",
       "name": "Weider D3 Elite",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 299,
@@ -3298,12 +3429,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-045",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "D3"
     },
     {
       "id": "prod_046",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "SUpplements C Vitamini Daily",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 130,
@@ -3353,12 +3487,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-046",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_047",
       "categoryKey": "vitamin",
-      "subType": "D3",
       "name": "Big Joy D3 Daily",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 147,
@@ -3423,12 +3560,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-047",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "D3"
     },
     {
       "id": "prod_048",
       "categoryKey": "vitamin",
-      "subType": "C Vitamini",
       "name": "Big Joy C Vitamini Fit",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 285,
@@ -3491,12 +3631,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1 tablet veya kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-048",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "C Vitamini"
     },
     {
       "id": "prod_049",
       "categoryKey": "amino",
-      "subType": "BCAA",
       "name": "Hardline BCAA Fit",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 174,
@@ -3556,12 +3699,15 @@
           "per100g": "11.2g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-049",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "BCAA"
     },
     {
       "id": "prod_050",
       "categoryKey": "amino",
-      "subType": "L-Karnitin",
       "name": "SUpplements L-Karnitin Pro",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 249,
@@ -3620,12 +3766,15 @@
           "per100g": "6.1g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-050",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "L-Karnitin"
     },
     {
       "id": "prod_051",
       "categoryKey": "amino",
-      "subType": "Beta Alanin",
       "name": "Big Joy Beta Alanin Performance",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 21,
@@ -3698,12 +3847,15 @@
           "per100g": "3.4g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-051",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Beta Alanin"
     },
     {
       "id": "prod_052",
       "categoryKey": "amino",
-      "subType": "L-Karnitin",
       "name": "Hardline L-Karnitin Performance",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 39,
@@ -3771,12 +3923,15 @@
           "per100g": "17.9g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-052",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "L-Karnitin"
     },
     {
       "id": "prod_053",
       "categoryKey": "amino",
-      "subType": "Beta Alanin",
       "name": "BSN Beta Alanin Performance",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 155,
@@ -3839,12 +3994,15 @@
           "per100g": "11.0g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-053",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Beta Alanin"
     },
     {
       "id": "prod_054",
       "categoryKey": "amino",
-      "subType": "BCAA",
       "name": "SUpplements BCAA Pro",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 43,
@@ -3916,12 +4074,15 @@
           "per100g": "15.0g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-054",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "BCAA"
     },
     {
       "id": "prod_055",
       "categoryKey": "amino",
-      "subType": "Beta Alanin",
       "name": "Big Joy Beta Alanin Elite",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 72,
@@ -3989,12 +4150,15 @@
           "per100g": "8.2g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-055",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Beta Alanin"
     },
     {
       "id": "prod_056",
       "categoryKey": "amino",
-      "subType": "EAA",
       "name": "MyProtein EAA Plus",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 51,
@@ -4070,12 +4234,15 @@
           "per100g": "6.2g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-056",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "EAA"
     },
     {
       "id": "prod_057",
       "categoryKey": "amino",
-      "subType": "Glutamin",
       "name": "BSN Glutamin Power",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 292,
@@ -4147,12 +4314,15 @@
           "per100g": "11.2g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-057",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Glutamin"
     },
     {
       "id": "prod_058",
       "categoryKey": "amino",
-      "subType": "EAA",
       "name": "Optimum Nutrition EAA Plus",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 13,
@@ -4214,12 +4384,15 @@
           "per100g": "2.1g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-058",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "EAA"
     },
     {
       "id": "prod_059",
       "categoryKey": "amino",
-      "subType": "BCAA",
       "name": "Optimum Nutrition BCAA Advanced",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 270,
@@ -4277,12 +4450,15 @@
           "per100g": "9.7g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-059",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "BCAA"
     },
     {
       "id": "prod_060",
       "categoryKey": "amino",
-      "subType": "Beta Alanin",
       "name": "BSN Beta Alanin Plus",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 43,
@@ -4356,12 +4532,15 @@
           "per100g": "8.3g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-060",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Beta Alanin"
     },
     {
       "id": "prod_061",
       "categoryKey": "amino",
-      "subType": "L-Karnitin",
       "name": "Big Joy L-Karnitin Elite",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 245,
@@ -4425,12 +4604,15 @@
           "per100g": "2.9g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-061",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "L-Karnitin"
     },
     {
       "id": "prod_062",
       "categoryKey": "amino",
-      "subType": "L-Karnitin",
       "name": "BSN L-Karnitin Pro",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 204,
@@ -4505,12 +4687,15 @@
           "per100g": "7.3g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-062",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "L-Karnitin"
     },
     {
       "id": "prod_063",
       "categoryKey": "amino",
-      "subType": "EAA",
       "name": "Weider EAA Daily",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 228,
@@ -4589,12 +4774,15 @@
           "per100g": "2.6g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-063",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "EAA"
     },
     {
       "id": "prod_064",
       "categoryKey": "amino",
-      "subType": "Glutamin",
       "name": "Hardline Glutamin Power",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 39,
@@ -4657,12 +4845,15 @@
           "per100g": "4.4g"
         }
       ],
-      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz."
+      "usageInfo": "1 porsiyon ürünü 200ml su ile karıştırıp antrenman sırasında veya sonrasında tüketiniz.",
+      "serialNumber": "SN-PROD-064",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Glutamin"
     },
     {
       "id": "prod_065",
       "categoryKey": "saglik",
-      "subType": "Probiyotik",
       "name": "SUpplements Probiyotik Elite",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 44,
@@ -4722,12 +4913,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-065",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Probiyotik"
     },
     {
       "id": "prod_066",
       "categoryKey": "saglik",
-      "subType": "Magnezyum",
       "name": "Optimum Nutrition Magnezyum Performance",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 282,
@@ -4795,12 +4989,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-066",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Magnezyum"
     },
     {
       "id": "prod_067",
       "categoryKey": "saglik",
-      "subType": "Kolajen",
       "name": "SUpplements Kolajen Fit",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 265,
@@ -4860,12 +5057,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-067",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kolajen"
     },
     {
       "id": "prod_068",
       "categoryKey": "saglik",
-      "subType": "Probiyotik",
       "name": "Weider Probiyotik Elite",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 87,
@@ -4915,12 +5115,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-068",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Probiyotik"
     },
     {
       "id": "prod_069",
       "categoryKey": "saglik",
-      "subType": "Magnezyum",
       "name": "Hardline Magnezyum Fit",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 247,
@@ -4969,12 +5172,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-069",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Magnezyum"
     },
     {
       "id": "prod_070",
       "categoryKey": "saglik",
-      "subType": "Çinko",
       "name": "Hardline Çinko Performance",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 263,
@@ -5031,12 +5237,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-070",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çinko"
     },
     {
       "id": "prod_071",
       "categoryKey": "saglik",
-      "subType": "Çinko",
       "name": "MyProtein Çinko Elite",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 255,
@@ -5090,12 +5299,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-071",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çinko"
     },
     {
       "id": "prod_072",
       "categoryKey": "saglik",
-      "subType": "Probiyotik",
       "name": "SUpplements Probiyotik Elite",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 206,
@@ -5157,12 +5369,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-072",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Probiyotik"
     },
     {
       "id": "prod_073",
       "categoryKey": "saglik",
-      "subType": "Çinko",
       "name": "Big Joy Çinko Performance",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 73,
@@ -5212,12 +5427,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-073",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çinko"
     },
     {
       "id": "prod_074",
       "categoryKey": "saglik",
-      "subType": "Kolajen",
       "name": "SUpplements Kolajen Core",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 259,
@@ -5277,12 +5495,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-074",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kolajen"
     },
     {
       "id": "prod_075",
       "categoryKey": "saglik",
-      "subType": "Balık Yağı",
       "name": "Weider Balık Yağı Plus",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 87,
@@ -5333,12 +5554,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-075",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Balık Yağı"
     },
     {
       "id": "prod_076",
       "categoryKey": "saglik",
-      "subType": "Balık Yağı",
       "name": "SUpplements Balık Yağı Max",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 287,
@@ -5400,12 +5624,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-076",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Balık Yağı"
     },
     {
       "id": "prod_077",
       "categoryKey": "saglik",
-      "subType": "Kolajen",
       "name": "BSN Kolajen Advanced",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 250,
@@ -5473,12 +5700,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-077",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kolajen"
     },
     {
       "id": "prod_078",
       "categoryKey": "saglik",
-      "subType": "Magnezyum",
       "name": "MyProtein Magnezyum Plus",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 139,
@@ -5533,12 +5763,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-078",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Magnezyum"
     },
     {
       "id": "prod_079",
       "categoryKey": "saglik",
-      "subType": "Kolajen",
       "name": "SUpplements Kolajen Power",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 164,
@@ -5589,12 +5822,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-079",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kolajen"
     },
     {
       "id": "prod_080",
       "categoryKey": "saglik",
-      "subType": "Probiyotik",
       "name": "BSN Probiyotik Core",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 171,
@@ -5661,12 +5897,15 @@
           "per100g": "-"
         }
       ],
-      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz."
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-080",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Probiyotik"
     },
     {
       "id": "prod_081",
       "categoryKey": "bar",
-      "subType": "Enerji Bar",
       "name": "MyProtein Enerji Bar Core",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 218,
@@ -5749,12 +5988,15 @@
           "per100g": "8.5g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-081",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Bar"
     },
     {
       "id": "prod_082",
       "categoryKey": "bar",
-      "subType": "Enerji Bar",
       "name": "Optimum Nutrition Enerji Bar Pro",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 257,
@@ -5828,12 +6070,15 @@
           "per100g": "16.9g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-082",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Bar"
     },
     {
       "id": "prod_083",
       "categoryKey": "bar",
-      "subType": "Enerji Bar",
       "name": "Hardline Enerji Bar Core",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 270,
@@ -5907,12 +6152,15 @@
           "per100g": "9.5g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-083",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Bar"
     },
     {
       "id": "prod_084",
       "categoryKey": "bar",
-      "subType": "Brownie",
       "name": "Optimum Nutrition Brownie Fit",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 11,
@@ -5978,12 +6226,15 @@
           "per100g": "4.4g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-084",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Brownie"
     },
     {
       "id": "prod_085",
       "categoryKey": "bar",
-      "subType": "Fıstık Ezmeli",
       "name": "BSN Fıstık Ezmeli Daily",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 193,
@@ -6066,12 +6317,15 @@
           "per100g": "4.8g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-085",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Fıstık Ezmeli"
     },
     {
       "id": "prod_086",
       "categoryKey": "bar",
-      "subType": "Enerji Bar",
       "name": "Hardline Enerji Bar Pro",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 8,
@@ -6141,12 +6395,15 @@
           "per100g": "12.4g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-086",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Bar"
     },
     {
       "id": "prod_087",
       "categoryKey": "bar",
-      "subType": "Granola Bar",
       "name": "MyProtein Granola Bar Advanced",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 266,
@@ -6230,12 +6487,15 @@
           "per100g": "6.1g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-087",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Granola Bar"
     },
     {
       "id": "prod_088",
       "categoryKey": "bar",
-      "subType": "Enerji Bar",
       "name": "Big Joy Enerji Bar Power",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 213,
@@ -6303,12 +6563,15 @@
           "per100g": "3.3g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-088",
+      "distributor": "Provitamin Sağlık Ürünleri Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Enerji Bar"
     },
     {
       "id": "prod_089",
       "categoryKey": "bar",
-      "subType": "Brownie",
       "name": "Hardline Brownie Fit",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 155,
@@ -6389,12 +6652,15 @@
           "per100g": "8.5g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-089",
+      "distributor": "Hardline Nutrition Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Brownie"
     },
     {
       "id": "prod_090",
       "categoryKey": "bar",
-      "subType": "Fıstık Ezmeli",
       "name": "SUpplements Fıstık Ezmeli Pro",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 163,
@@ -6468,12 +6734,15 @@
           "per100g": "11.0g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-090",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Fıstık Ezmeli"
     },
     {
       "id": "prod_091",
       "categoryKey": "bar",
-      "subType": "Granola Bar",
       "name": "BSN Granola Bar Power",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 251,
@@ -6544,12 +6813,15 @@
           "per100g": "3.1g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-091",
+      "distributor": "Fitline Sporcu Besinleri Dağıtım A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Granola Bar"
     },
     {
       "id": "prod_092",
       "categoryKey": "bar",
-      "subType": "Brownie",
       "name": "SUpplements Brownie Power",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 210,
@@ -6632,12 +6904,15 @@
           "per100g": "9.3g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-092",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Brownie"
     },
     {
       "id": "prod_093",
       "categoryKey": "bar",
-      "subType": "Brownie",
       "name": "MyProtein Brownie Plus",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 41,
@@ -6708,12 +6983,15 @@
           "per100g": "17.6g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-093",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Brownie"
     },
     {
       "id": "prod_094",
       "categoryKey": "bar",
-      "subType": "Brownie",
       "name": "SUpplements Brownie Advanced",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 278,
@@ -6787,12 +7065,15 @@
           "per100g": "19.8g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-094",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Brownie"
     },
     {
       "id": "prod_095",
       "categoryKey": "bar",
-      "subType": "Protein Bar",
       "name": "Weider Protein Bar Performance",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 38,
@@ -6876,12 +7157,15 @@
           "per100g": "6.8g"
         }
       ],
-      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz."
+      "usageInfo": "Öğün aralarında veya antrenman öncesi/sonrasında doğrudan tüketiniz.",
+      "serialNumber": "SN-PROD-095",
+      "distributor": "Global Nutrition Türkiye A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Protein Bar"
     },
     {
       "id": "prod_096",
       "categoryKey": "aksesuar",
-      "subType": "Çanta",
       "name": "SUpplements Çanta Elite",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 46,
@@ -6927,12 +7211,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-096",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çanta"
     },
     {
       "id": "prod_097",
       "categoryKey": "aksesuar",
-      "subType": "Shaker",
       "name": "GymWear Shaker Pro",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 166,
@@ -6987,12 +7274,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-097",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Shaker"
     },
     {
       "id": "prod_098",
       "categoryKey": "aksesuar",
-      "subType": "Kemer",
       "name": "ProGear Kemer Power",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 215,
@@ -7046,12 +7336,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-098",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kemer"
     },
     {
       "id": "prod_099",
       "categoryKey": "aksesuar",
-      "subType": "Shaker",
       "name": "ProGear Shaker Performance",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 168,
@@ -7102,12 +7395,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-099",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Shaker"
     },
     {
       "id": "prod_100",
       "categoryKey": "aksesuar",
-      "subType": "Bileklik",
       "name": "GymWear Bileklik Performance",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 201,
@@ -7161,12 +7457,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-100",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Bileklik"
     },
     {
       "id": "prod_101",
       "categoryKey": "aksesuar",
-      "subType": "Shaker",
       "name": "ProGear Shaker Power",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 78,
@@ -7221,12 +7520,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-101",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Shaker"
     },
     {
       "id": "prod_102",
       "categoryKey": "aksesuar",
-      "subType": "Bileklik",
       "name": "SUpplements Bileklik Pro",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 181,
@@ -7271,12 +7573,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-102",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Bileklik"
     },
     {
       "id": "prod_103",
       "categoryKey": "aksesuar",
-      "subType": "Bileklik",
       "name": "SUpplements Bileklik Fit",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 113,
@@ -7320,12 +7625,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-103",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Bileklik"
     },
     {
       "id": "prod_104",
       "categoryKey": "aksesuar",
-      "subType": "Shaker",
       "name": "GymWear Shaker Elite",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 266,
@@ -7375,12 +7683,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-104",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Shaker"
     },
     {
       "id": "prod_105",
       "categoryKey": "aksesuar",
-      "subType": "Eldiven",
       "name": "SUpplements Eldiven Plus",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 169,
@@ -7426,12 +7737,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-105",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Eldiven"
     },
     {
       "id": "prod_106",
       "categoryKey": "aksesuar",
-      "subType": "Çanta",
       "name": "SUpplements Çanta Daily",
       "description": "Günlük ihtiyacınızı karşılamaya yardımcı olan takviyedir.",
       "stock": 105,
@@ -7480,12 +7794,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-106",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çanta"
     },
     {
       "id": "prod_107",
       "categoryKey": "aksesuar",
-      "subType": "Bileklik",
       "name": "SUpplements Bileklik Performance",
       "description": "Kas gelişimi ve gücünüzü destekleyen yüksek kaliteli formül.",
       "stock": 300,
@@ -7540,12 +7857,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-107",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Bileklik"
     },
     {
       "id": "prod_108",
       "categoryKey": "aksesuar",
-      "subType": "Eldiven",
       "name": "ProGear Eldiven Elite",
       "description": "İhtiyaç duyduğunuz temel besin öğelerini içeren kompleks yapı.",
       "stock": 70,
@@ -7590,12 +7910,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-108",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Eldiven"
     },
     {
       "id": "prod_109",
       "categoryKey": "aksesuar",
-      "subType": "Çanta",
       "name": "SUpplements Çanta Max",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 248,
@@ -7645,12 +7968,15 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-109",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Çanta"
     },
     {
       "id": "prod_110",
       "categoryKey": "aksesuar",
-      "subType": "Shaker",
       "name": "GymWear Shaker Advanced",
       "description": "Premium hammaddelerle üretilmiş, güvenilir ve etkili çözüm.",
       "stock": 86,
@@ -7696,7 +8022,11 @@
       ],
       "ingredients": "Dayanıklı sporcu materyali ve ergonomik kullanım sağlayan bileşenler.",
       "nutritionFacts": null,
-      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz."
+      "usageInfo": "Ürün tipine göre spor sırasında veya günlük kullanımda tercih ediniz.",
+      "serialNumber": "SN-PROD-110",
+      "distributor": "Genel Sporcu Gıdaları Distribütörlüğü A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Shaker"
     }
   ]
 }
