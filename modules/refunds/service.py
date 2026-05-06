@@ -23,7 +23,7 @@ class RefundService:
     VALID_TRANSITIONS: dict[str, list[str]] = {
         "requested": ["approved_waiting_return", "rejected"],
         "approved_waiting_return": ["returned_received", "rejected"],
-        "returned_received": ["refunded"],
+        "returned_received": ["refunded", "rejected"],
         "rejected": [],
         "refunded": [],
     }

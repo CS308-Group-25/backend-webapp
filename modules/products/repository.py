@@ -98,4 +98,3 @@ class ProductRepository:
             ),
             {"qty": quantity, "pid": product_id},
         )
-        # commit in calling service

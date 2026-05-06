@@ -168,7 +168,7 @@ def test_stock_and_credit_restored_on_refunded():
     # Technically not every state but the document doesn't specify and rejecting 
     # a refund after certain states would make no sense
 
-@pytest.mark.parametrize("initial_status", ["requested", "approved_waiting_return"])
+@pytest.mark.parametrize("initial_status", ["requested", "approved_waiting_return", "returned_received"])
 def test_reject_at_any_stage(initial_status):
     mock_refund = MagicMock()
     mock_refund.status = initial_status
