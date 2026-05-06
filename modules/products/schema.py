@@ -77,6 +77,8 @@ class ProductListResponse(BaseModel):
     goal_tags: str | None
     images: list[str] | None
     tags_json: list[str] | None
+    flavors_json: list[Any] | None
+    sizes_json: list[Any] | None
     category: CategoryResponse | None
 
     model_config = {"from_attributes": True}
