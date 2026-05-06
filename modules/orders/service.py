@@ -262,7 +262,7 @@ class OrderService:
 
         # Restore stock for each item in the cancelled order
         for item in order.items:
-            self.product_repo.update_stock(item.product_id, -item.quantity)
+            self.product_repo.increment_stock(item.product_id, item.quantity)
 
         self.order_repo.db.commit()
 

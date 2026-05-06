@@ -4,7 +4,12 @@ from unittest.mock import MagicMock
 
 import pytest
 from fastapi import HTTPException
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
+from core.database import get_db
+from core.dependencies import get_current_user, require_sales_manager
+from main import app
 from modules.refunds.model import RefundStatus
 from modules.refunds.service import RefundService
 
@@ -187,11 +192,9 @@ def test_stock_and_credit_restored_on_refunded():
         mock_refund, RefundStatus.refunded
     )
     refund_repo.db.commit.assert_called_once()
-
-
-    # Technically not every state but the document doesn't specify and rejecting 
-    # a refund after certain states would make no sense
-
+    
+# Technically not every state but the document doesn't specify and rejecting 
+# a refund after certain states would make no sense
 @pytest.mark.parametrize("initial_status", ["requested", 
                                             "approved_waiting_return", 
                                             "returned_received"])
@@ -212,3 +215,34 @@ def test_reject_at_any_stage(initial_status):
         mock_refund, RefundStatus.rejected
     )
     refund_repo.db.commit.assert_called_once()
+
+
+def test_get_admin_refund_requests_smoke():
+    """Smoke test to ensure router passes product_repo, avoiding 500."""
+    mock_db = MagicMock(spec=Session)
+    app.dependency_overrides[get_db] = lambda: mock_db
+    mock_user = MagicMock()
+    app.dependency_overrides[require_sales_manager] = lambda: mock_user
+    client = TestClient(app)
+    try:
+        response = client.get("/api/v1/admin/refund-requests")
+        assert response.status_code != 500
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_request_refund_smoke():
+    """Smoke test for POST refund request endpoint."""
+    mock_db = MagicMock(spec=Session)
+    app.dependency_overrides[get_db] = lambda: mock_db
+    mock_user = MagicMock()
+    app.dependency_overrides[get_current_user] = lambda: mock_user
+    client = TestClient(app)
+    try:
+        response = client.post(
+            "/api/v1/orders/1/items/1/refund-requests",
+            json={"reason": "test"},
+        )
+        assert response.status_code != 500
+    finally:
+        app.dependency_overrides.clear()

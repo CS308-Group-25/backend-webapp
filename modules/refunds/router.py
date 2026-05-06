@@ -34,7 +34,8 @@ def request_refund(
 ):
     refund_repo = RefundRepository(db)
     order_repo = OrderRepository(db)
-    service = RefundService(refund_repo, order_repo)
+    product_repo = ProductRepository(db)
+    service = RefundService(refund_repo, order_repo, product_repo)
     return service.request_refund(
         user_id=current_user.id,
         order_id=order_id,
@@ -53,7 +54,8 @@ def get_admin_refund_requests(
 ):
     refund_repo = RefundRepository(db)
     order_repo = OrderRepository(db)
-    service = RefundService(refund_repo, order_repo)
+    product_repo = ProductRepository(db)
+    service = RefundService(refund_repo, order_repo, product_repo)
     return service.get_admin_refund_requests(status)
 
 

@@ -98,3 +98,14 @@ class ProductRepository:
             ),
             {"qty": quantity, "pid": product_id},
         )
+        # commit in calling service
+
+    def increment_stock(self, product_id: int, quantity: int) -> None:
+        # Inverse of update_stock (decrement). Used for refunds/cancellations.
+        from sqlalchemy import text
+
+        self.db.execute(
+            text("UPDATE products SET stock = stock + :qty WHERE id = :pid"),
+            {"qty": quantity, "pid": product_id},
+        )
+        # commit in calling service
