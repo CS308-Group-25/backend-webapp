@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from core.database import get_db
@@ -10,7 +10,6 @@ from modules.invoices.service import InvoiceService
 from modules.orders.repository import OrderRepository
 from modules.orders.schema import (
     AdminOrderResponse,
-    OrderItemResponse,
     OrderRequest,
     OrderResponse,
     StatusUpdateRequest,
@@ -88,28 +87,7 @@ def update_order_status(
     cart_repo = CartRepository(db)
     product_repo = ProductRepository(db)
     service = OrderService(order_repo, cart_repo, product_repo)
-    updated_order = service.update_order_status(order_id, data.status)
-    if not updated_order:
-        raise HTTPException(status_code=404, detail="Order not found")
-
-    return OrderResponse(
-        id=updated_order.id,
-        status=updated_order.status,
-        total=updated_order.total,
-        invoice_id=updated_order.invoice.id if updated_order.invoice else None,
-        delivery_address=updated_order.delivery_address,
-        created_at=updated_order.created_at,
-        items=[
-            OrderItemResponse(
-                id=item.id,
-                product_id=item.product_id,
-                name=item.product.name,
-                quantity=item.quantity,
-                price=item.price,
-            )
-            for item in updated_order.items
-        ],
-    )
+    return service.update_order_status(order_id, data.status)
 
 
 @router.patch("/{order_id}", response_model=OrderResponse, status_code=200)
