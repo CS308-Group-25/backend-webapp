@@ -262,7 +262,8 @@ def test_update_status_valid_transition():
 
 
 def test_update_status_any_transition_allowed():
-    """Strict transition rules removed — any non-cancelled status can be changed to any other."""
+    """Strict transition rules removed — 
+    any non-cancelled status can be changed to any other."""
     from datetime import datetime, timezone
 
     order_repo = MagicMock()
@@ -304,8 +305,32 @@ def test_update_status_order_not_found_raises_404():
 
 
 # def test_update_status_same_status_no_update_called():
-#     """T-212: Commented out — idempotent same-status check removed along with transition rules."""
-#     ...
+#     """T-212: Commented out — idempotent same-status check 
+#     removed along with transition rules."""
+#     # Arrange
+#     order_repo = MagicMock()
+#     order = MagicMock(spec=Order)
+#     order.id = 1
+#     order.status = "processing"
+#     order.total = 100.0
+#     order.invoice = None
+#     order.delivery_address = "Address"
+#     from datetime import datetime, timezone
+#
+#     order.created_at = datetime.now(timezone.utc)
+#     order.items = []
+#
+#     order_repo.get_by_order_id.return_value = order
+#
+#     service = _make_service(order_repo=order_repo)
+#
+#     # Act
+#     result = service.update_order_status(order_id=1, new_status="processing")
+#
+#     # Assert
+#     assert result.status == "processing"
+#     # Ensure update_order_status was NEVER called because status didn't change
+#     order_repo.update_order_status.assert_not_called()
 
 
 def test_update_status_same_status_calls_update():
@@ -368,7 +393,21 @@ def test_update_status_processing_to_in_transit_valid():
 
 # def test_update_status_delivered_to_processing_invalid():
 #     """T-213: Commented out — strict transition rules removed."""
-#     ...
+#     # Arrange
+#     order_repo = MagicMock()
+#     order = MagicMock(spec=Order)
+#     order.status = "delivered"
+#     order_repo.get_by_order_id.return_value = order
+#
+#     service = _make_service(order_repo=order_repo)
+#
+#     # Act & Assert
+#     with pytest.raises(HTTPException) as exc_info:
+#         service.update_order_status(order_id=1, new_status="processing")
+#
+#     assert exc_info.value.status_code == 400
+#     assert "Invalid status transition" in exc_info.value.detail
+#     order_repo.update_order_status.assert_not_called()
 
 
 def test_update_status_cancelled_order_raises_400():
