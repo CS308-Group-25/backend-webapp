@@ -377,8 +377,14 @@ def create_demo_reviews(db, products):
     reviews = []
 
     for product_index, product in enumerate(popular_products):
+        comment_limit = 10 if product_index == 0 else 5
+
         for comment_index, (user, comment) in enumerate(
-            zip(users, DEMO_REVIEW_COMMENTS, strict=True)
+            zip(
+                users[:comment_limit],
+                DEMO_REVIEW_COMMENTS[:comment_limit],
+                strict=True,
+            )
         ):
             minute_offset = (
                 product_index * len(DEMO_REVIEW_COMMENTS)
