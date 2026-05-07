@@ -28,21 +28,54 @@ class ReviewService:
             )
         return result
 
-    def get_approved_reviews(self, product_id: int) -> list[Review]:
-        return self.repo.get_approved_by_product(product_id)
+    def get_approved_reviews(self, product_id: int) -> list:
+        reviews = self.repo.get_approved_by_product(product_id)
+        return [
+            {
+                "id": r.id,
+                "product_id": r.product_id,
+                "user_id": r.user_id,
+                "rating": r.rating,
+                "comment": r.comment,
+                "approval_status": r.approval_status,
+                "created_at": r.created_at,
+                "customer_name": r.user.name if r.user else None,
+            }
+            for r in reviews
+        ]
 
     def submit_review(
-        self, user_id: int, product_id: int, rating: int, comment: str | None
+        self, user_id: int, product_id: int, rating: int | None, comment: str | None
     ) -> Review:
-        if rating < 1 or rating > 5:
+        clean_comment = comment.strip() if comment else None
+
+        if rating is None and not clean_comment:
+            raise HTTPException(
+                status_code=422, detail="Rating or comment is required"
+            )
+
+        if rating is not None and (rating < 1 or rating > 5):
             raise HTTPException(
                 status_code=422, detail="Rating must be between 1 and 5"
             )
-        return self.repo.create(
+
+        if rating is not None and clean_comment:
+            raise HTTPException(
+                status_code=422,
+                detail="Submit rating and comment separately",
+            )
+
+        if rating is not None:
+            return self.repo.upsert_rating(
+                user_id=user_id,
+                product_id=product_id,
+                rating=rating,
+            )
+
+        return self.repo.create_comment(
             user_id=user_id,
             product_id=product_id,
-            rating=rating,
-            comment=comment,
+            comment=clean_comment or "",
         )
 
     def moderate_review(self, review_id: int, approval_status: str) -> Review:

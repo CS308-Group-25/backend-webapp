@@ -74,6 +74,7 @@ class ProductListResponse(BaseModel):
     is_new: bool | None
     rating: float | None
     review_count: int | None
+    comment_count: int | None
     brand: str | None
     sub_type: str | None
     flavor: str | None
@@ -99,6 +100,7 @@ class ProductDetailResponse(BaseModel):
     original_price: float | None
     rating: float | None
     review_count: int | None
+    comment_count: int | None
     stock_status: str | None
     is_new: bool | None
     warranty: str | None
