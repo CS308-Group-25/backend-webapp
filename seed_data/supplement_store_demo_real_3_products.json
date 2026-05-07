@@ -1,0 +1,324 @@
+{
+  "metadata": {
+    "totalProducts": 110,
+    "totalCategories": 7,
+    "imageAssignment": "deterministic_by_category",
+    "availableImages": [
+      "/products/bcaa.png",
+      "/products/creatine.png",
+      "/products/protein-bar.png"
+    ],
+    "note": "Protein category display name changed to Protein Tozu. Protein Bar only exists under Bar & Atıştırmalık."
+  },
+  "categories": [
+    {
+      "key": "protein",
+      "name": "Protein Tozu",
+      "description": "Kas gelişimi için premium protein tozları."
+    },
+    {
+      "key": "spor",
+      "name": "Spor Gıdaları",
+      "description": "Antrenman performansını artıran sporcu gıdaları."
+    },
+    {
+      "key": "vitamin",
+      "name": "Vitamin",
+      "description": "Günlük sağlık ve zindelik için esansiyel vitaminler."
+    },
+    {
+      "key": "amino",
+      "name": "Amino Asit",
+      "description": "Hızlı onarım sağlayan saf amino asit formülleri."
+    },
+    {
+      "key": "saglik",
+      "name": "Sağlık",
+      "description": "Genel vücut sağlığını destekleyen gıda takviyeleri."
+    },
+    {
+      "key": "bar",
+      "name": "Bar & Atıştırmalık",
+      "description": "Gün içinde atıştırabileceğiniz protein ve enerji barları."
+    },
+    {
+      "key": "aksesuar",
+      "name": "Aksesuar",
+      "description": "Spor salonunda hayatınızı kolaylaştıracak ekipman ve giysiler."
+    }
+  ],
+  "categorySubTypes": {
+    "protein": [
+      "Whey Protein Tozu",
+      "Vegan Protein Tozu",
+      "Kazein Protein Tozu",
+      "İzolat Protein Tozu",
+      "Hidrolize Protein Tozu"
+    ],
+    "spor": [
+      "Pre-Workout",
+      "Kreatin",
+      "Gainer",
+      "Enerji Jeli",
+      "Karbonhidrat Tozu"
+    ],
+    "vitamin": [
+      "Multivitamin",
+      "B12",
+      "D3",
+      "C Vitamini",
+      "Omega-3"
+    ],
+    "amino": [
+      "BCAA",
+      "Glutamin",
+      "L-Karnitin",
+      "EAA",
+      "Beta Alanin"
+    ],
+    "saglik": [
+      "Probiyotik",
+      "Kolajen",
+      "Çinko",
+      "Magnezyum",
+      "Balık Yağı"
+    ],
+    "bar": [
+      "Protein Bar",
+      "Enerji Bar",
+      "Granola Bar",
+      "Fıstık Ezmeli",
+      "Brownie"
+    ],
+    "aksesuar": [
+      "Shaker",
+      "Eldiven",
+      "Kemer",
+      "Çanta",
+      "Bileklik"
+    ]
+  },
+  "products": [
+    {
+      "id": "prod_065",
+      "categoryKey": "saglik",
+      "name": "SUpplements Probiyotik Elite",
+      "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
+      "stock": 0,
+      "price": 1362.22,
+      "brand": "SUpplements",
+      "originalPrice": null,
+      "rating": 5.0,
+      "reviewCount": 1309,
+      "stockStatus": "out_of_stock",
+      "isNew": false,
+      "images": [
+        "/products/bcaa.png"
+      ],
+      "tags": [],
+      "flavors": [
+        {
+          "id": "banana",
+          "name": "Muz",
+          "color": "#FFE135"
+        },
+        {
+          "id": "unflavored",
+          "name": "Aromasız",
+          "color": "#E5E7EB"
+        },
+        {
+          "id": "van",
+          "name": "Vanilya",
+          "color": "#F3E5AB"
+        }
+      ],
+      "sizes": [
+        {
+          "id": "s_828",
+          "label": "300g",
+          "servings": 43,
+          "price": 1362.22,
+          "originalPrice": null
+        }
+      ],
+      "features": [
+        "Kolay karışır ve pratik kullanım sunar.",
+        "Yüksek biyoyararlanım sağlar.",
+        "Pratik kullanım sunar.",
+        "Sertifikalı üretim tesislerinde üretilmiştir."
+      ],
+      "ingredients": "Sağlık destekleyici aktif bileşenler, mineral kompleksi, kapsül bileşenleri.",
+      "nutritionFacts": [
+        {
+          "label": "Aktif Bileşen",
+          "perServing": "292 mg",
+          "per100g": "-"
+        },
+        {
+          "label": "Destekleyici Bileşen",
+          "perServing": "409 mg",
+          "per100g": "-"
+        }
+      ],
+      "usageInfo": "Günde 1-2 kapsülü yemekle birlikte bol su ile tüketiniz.",
+      "serialNumber": "SN-PROD-065",
+      "distributor": "Supplementler Sporcu Gıdaları A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Probiyotik"
+    },
+    {
+      "id": "prod_027",
+      "categoryKey": "spor",
+      "name": "MyProtein Pre-Workout Elite",
+      "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
+      "stock": 1,
+      "price": 1244.04,
+      "brand": "MyProtein",
+      "originalPrice": null,
+      "rating": 4.1,
+      "reviewCount": 1704,
+      "stockStatus": "low_stock",
+      "isNew": false,
+      "images": [
+        "/products/creatine.png"
+      ],
+      "tags": [
+        "Organik"
+      ],
+      "flavors": [
+        {
+          "id": "mango",
+          "name": "Mango",
+          "color": "#F59E0B"
+        },
+        {
+          "id": "biscuit",
+          "name": "Bisküvi",
+          "color": "#D2A679"
+        },
+        {
+          "id": "straw",
+          "name": "Çilek",
+          "color": "#E8474C"
+        },
+        {
+          "id": "banana",
+          "name": "Muz",
+          "color": "#FFE135"
+        }
+      ],
+      "sizes": [
+        {
+          "id": "s_539",
+          "label": "500g",
+          "servings": 56,
+          "price": 1244.04,
+          "originalPrice": null
+        }
+      ],
+      "features": [
+        "Yüksek biyoyararlanım sağlar.",
+        "Sertifikalı üretim tesislerinde üretilmiştir.",
+        "Pratik kullanım sunar.",
+        "Günlük egzersiz rutininizi destekler."
+      ],
+      "ingredients": "Performans destekleyici bileşenler, aroma verici, tatlandırıcı.",
+      "nutritionFacts": [
+        {
+          "label": "Enerji",
+          "perServing": "104 kcal",
+          "per100g": "267 kcal"
+        },
+        {
+          "label": "Protein",
+          "perServing": "12g",
+          "per100g": "45g"
+        },
+        {
+          "label": "Karbonhidrat",
+          "perServing": "17g",
+          "per100g": "27g"
+        },
+        {
+          "label": "Yağ",
+          "perServing": "4.6g",
+          "per100g": "4.8g"
+        }
+      ],
+      "usageInfo": "1 porsiyon ürünü 300ml su ile karıştırıp antrenman öncesi tüketiniz.",
+      "serialNumber": "SN-PROD-027",
+      "distributor": "MP Türkiye Distribütörlük Ltd. Şti.",
+      "warrantyStatus": "not_applicable",
+      "model": "Pre-Workout"
+    },
+    {
+      "id": "prod_010",
+      "categoryKey": "protein",
+      "name": "Optimum Nutrition Kazein Protein Tozu Max",
+      "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
+      "stock": 100,
+      "price": 937.64,
+      "brand": "Optimum Nutrition",
+      "originalPrice": null,
+      "rating": 4.1,
+      "reviewCount": 2080,
+      "stockStatus": "in_stock",
+      "isNew": true,
+      "images": [
+        "/products/protein-bar.png"
+      ],
+      "tags": [
+        "Vegan"
+      ],
+      "flavors": [
+        {
+          "id": "biscuit",
+          "name": "Bisküvi",
+          "color": "#D2A679"
+        }
+      ],
+      "sizes": [
+        {
+          "id": "s_513",
+          "label": "250g",
+          "servings": 56,
+          "price": 937.64,
+          "originalPrice": null
+        }
+      ],
+      "features": [
+        "Sertifikalı üretim tesislerinde üretilmiştir.",
+        "Pratik kullanım sunar."
+      ],
+      "ingredients": "Protein karışımı, aroma vericiler, tatlandırıcı, ayçiçek lesitini.",
+      "nutritionFacts": [
+        {
+          "label": "Enerji",
+          "perServing": "60 kcal",
+          "per100g": "358 kcal"
+        },
+        {
+          "label": "Protein",
+          "perServing": "12g",
+          "per100g": "61g"
+        },
+        {
+          "label": "Karbonhidrat",
+          "perServing": "44g",
+          "per100g": "79g"
+        },
+        {
+          "label": "Yağ",
+          "perServing": "4.7g",
+          "per100g": "7.7g"
+        }
+      ],
+      "usageInfo": "1 porsiyon protein tozunu 250ml su veya süt ile karıştırıp antrenman sonrası tüketiniz.",
+      "serialNumber": "SN-PROD-010",
+      "distributor": "Globia Gıda ve Sporcu Ürünleri A.Ş.",
+      "warrantyStatus": "not_applicable",
+      "model": "Kazein Protein Tozu"
+    }
+  ]
+}
