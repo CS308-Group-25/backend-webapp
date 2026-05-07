@@ -4,6 +4,7 @@ import json
 import os
 import random
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from sqlalchemy import text
@@ -11,8 +12,11 @@ from sqlalchemy import text
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.database import SessionLocal
+from modules.auth.model import User
+from modules.auth.service import pwd_context
 from modules.categories.model import Category
 from modules.products.model import Product
+from modules.reviews.model import Review
 
 
 random.seed(42)
@@ -38,6 +42,32 @@ IMAGES_POOL = [
     "/products/bcaa.png",
     "/products/creatine.png",
     "/products/protein-bar.png",
+]
+
+DEMO_REVIEW_COMMENTS = [
+    "Urun cok kullanisli, teslimattan sonra memnun kaldim.",
+    "Aromasi guzel ve kullanimi rahat.",
+    "Paketleme iyiydi, urun beklentimi karsiladi.",
+    "Antrenman sonrasi toparlanmada iyi hissettirdi.",
+    "Fiyat performans olarak basarili buldum.",
+    "Tekrar almayi dusunurum.",
+    "Kargo hizliydi, urun sorunsuz geldi.",
+    "Icerik bilgileri net ve kullanimi kolay.",
+    "Tadi bekledigimden daha iyi cikti.",
+    "Demo icin populer urun yorumudur.",
+]
+
+DEMO_REVIEW_USERS = [
+    ("Mehmet Er", "demo.review.01@example.com"),
+    ("Ayse Demir", "demo.review.02@example.com"),
+    ("Deniz Kaya", "demo.review.03@example.com"),
+    ("Ece Yilmaz", "demo.review.04@example.com"),
+    ("Can Arslan", "demo.review.05@example.com"),
+    ("Elif Sahin", "demo.review.06@example.com"),
+    ("Burak Aydin", "demo.review.07@example.com"),
+    ("Zeynep Koc", "demo.review.08@example.com"),
+    ("Mert Celik", "demo.review.09@example.com"),
+    ("Selin Aksoy", "demo.review.10@example.com"),
 ]
 
 
@@ -305,6 +335,63 @@ def create_products(db, products_data, category_map):
     db.commit()
 
     print(f"Products seeded: {len(products)}")
+    return products
+
+
+def get_or_create_demo_review_users(db):
+    users = []
+
+    for name, email in DEMO_REVIEW_USERS:
+        user = db.query(User).filter(User.email == email).first()
+
+        if user is None:
+            user = User(
+                name=name,
+                email=email,
+                password_hash=pwd_context.hash("demo_password"),
+                role="customer",
+                tax_id="1111111111",
+                address="Demo Address",
+            )
+            db.add(user)
+            db.flush()
+
+        users.append(user)
+
+    db.commit()
+    return users
+
+
+def create_demo_reviews(db, products):
+    if not products:
+        print("No products found. Skipping demo reviews.")
+        return
+
+    popular_product = products[0]
+    users = get_or_create_demo_review_users(db)
+    now = datetime.now(timezone.utc)
+
+    reviews = [
+        Review(
+            product_id=popular_product.id,
+            user_id=user.id,
+            rating=None,
+            comment=comment,
+            approval_status="approved",
+            created_at=now - timedelta(minutes=index),
+        )
+        for index, (user, comment) in enumerate(
+            zip(users, DEMO_REVIEW_COMMENTS, strict=True)
+        )
+    ]
+
+    db.add_all(reviews)
+    db.commit()
+
+    print(
+        f"Demo reviews seeded: {len(reviews)} approved comments "
+        f"for product_id={popular_product.id}."
+    )
 
 
 def validate_seed_data(data):
@@ -346,7 +433,8 @@ def seed_db():
         clean_old_data(db)
 
         category_map = create_categories(db, data["categories"])
-        create_products(db, data["products"], category_map)
+        products = create_products(db, data["products"], category_map)
+        create_demo_reviews(db, products)
 
         print(
             f"✅ Successfully seeded DB: "
