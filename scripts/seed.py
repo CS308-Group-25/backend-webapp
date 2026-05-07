@@ -380,6 +380,9 @@ def create_demo_reviews(db, products):
         for comment_index, (user, comment) in enumerate(
             zip(users, DEMO_REVIEW_COMMENTS, strict=True)
         ):
+            minute_offset = (
+                product_index * len(DEMO_REVIEW_COMMENTS)
+            ) + comment_index
             reviews.append(
                 Review(
                     product_id=product.id,
@@ -387,9 +390,7 @@ def create_demo_reviews(db, products):
                     rating=None,
                     comment=comment,
                     approval_status="approved",
-                    created_at=now - timedelta(
-                        minutes=(product_index * len(DEMO_REVIEW_COMMENTS)) + comment_index
-                    ),
+                    created_at=now - timedelta(minutes=minute_offset),
                 )
             )
 
