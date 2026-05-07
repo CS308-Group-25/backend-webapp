@@ -367,30 +367,38 @@ def create_demo_reviews(db, products):
         print("No products found. Skipping demo reviews.")
         return
 
-    popular_product = products[0]
+    popular_products = [product for product in products if product.stock > 0][:2]
+    if not popular_products:
+        popular_products = products[:2]
+
     users = get_or_create_demo_review_users(db)
     now = datetime.now(timezone.utc)
 
-    reviews = [
-        Review(
-            product_id=popular_product.id,
-            user_id=user.id,
-            rating=None,
-            comment=comment,
-            approval_status="approved",
-            created_at=now - timedelta(minutes=index),
-        )
-        for index, (user, comment) in enumerate(
+    reviews = []
+
+    for product_index, product in enumerate(popular_products):
+        for comment_index, (user, comment) in enumerate(
             zip(users, DEMO_REVIEW_COMMENTS, strict=True)
-        )
-    ]
+        ):
+            reviews.append(
+                Review(
+                    product_id=product.id,
+                    user_id=user.id,
+                    rating=None,
+                    comment=comment,
+                    approval_status="approved",
+                    created_at=now - timedelta(
+                        minutes=(product_index * len(DEMO_REVIEW_COMMENTS)) + comment_index
+                    ),
+                )
+            )
 
     db.add_all(reviews)
     db.commit()
 
     print(
         f"Demo reviews seeded: {len(reviews)} approved comments "
-        f"for product_id={popular_product.id}."
+        f"for product_ids={[product.id for product in popular_products]}."
     )
 
 
