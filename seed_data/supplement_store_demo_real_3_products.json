@@ -102,7 +102,7 @@
     {
       "id": "prod_065",
       "categoryKey": "saglik",
-      "name": "SUpplements Probiyotik Elite",
+      "name": "A - SUpplements Probiyotik Elite",
       "description": "Sporseverlerin tercih ettiği kanıtlanmış performans formülü.",
       "stock": 0,
       "price": 1362.22,
@@ -170,7 +170,7 @@
     {
       "id": "prod_027",
       "categoryKey": "spor",
-      "name": "MyProtein Pre-Workout Elite",
+      "name": "B - MyProtein Pre-Workout Elite",
       "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
       "stock": 1,
       "price": 1244.04,
@@ -255,8 +255,8 @@
     {
       "id": "prod_010",
       "categoryKey": "protein",
-      "name": "Optimum Nutrition Kazein Protein Tozu Max",
-      "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş ürün.",
+      "name": "C - Optimum Nutrition Kazein Protein Tozu Max",
+      "description": "Antrenman öncesi ve sonrası kullanım için optimize edilmiş şahane bir üründür.",
       "stock": 100,
       "price": 937.64,
       "brand": "Optimum Nutrition",
