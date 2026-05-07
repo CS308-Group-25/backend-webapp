@@ -29,7 +29,7 @@ random.seed(42)
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 
-DATA_FILE = PROJECT_ROOT / "seed_data" / "supplement_store_110_products.json"
+DATA_FILE = PROJECT_ROOT / "seed_data" / "supplement_store_demo_real_3_products.json"
 
 
 # Only these 3 images are currently available.
