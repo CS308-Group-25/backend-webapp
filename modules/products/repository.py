@@ -1,8 +1,12 @@
 from datetime import datetime, timezone
+from decimal import Decimal
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.attributes import set_committed_value
 
 from modules.products.model import Product
+from modules.reviews.model import Review
 
 
 class ProductRepository:
@@ -43,15 +47,19 @@ class ProductRepository:
 
         total = query.count()
         items = query.offset((page - 1) * page_size).limit(page_size).all()
+        self._attach_review_stats(items)
 
         return items, total
 
     def get_by_id(self, product_id: int) -> Product | None:
-        return (
+        product = (
             self.db.query(Product)
             .filter(Product.id == product_id, Product.deleted_at.is_(None))
             .first()
         )
+        if product is not None:
+            self._attach_review_stats([product])
+        return product
 
     def get_by_id_for_update(self, product_id: int) -> Product | None:
         """
@@ -109,3 +117,49 @@ class ProductRepository:
             {"qty": quantity, "pid": product_id},
         )
         # commit in calling service
+
+    def _attach_review_stats(self, products: list[Product]) -> None:
+        product_ids = [product.id for product in products]
+        if not product_ids:
+            return
+
+        rating_stats = (
+            self.db.query(
+                Review.product_id,
+                func.avg(Review.rating).label("average_rating"),
+                func.count(Review.id).label("rating_count"),
+            )
+            .filter(Review.product_id.in_(product_ids))
+            .filter(Review.rating.is_not(None))
+            .group_by(Review.product_id)
+            .all()
+        )
+        comment_stats = (
+            self.db.query(
+                Review.product_id,
+                func.count(Review.id).label("comment_count"),
+            )
+            .filter(Review.product_id.in_(product_ids))
+            .filter(Review.approval_status == "approved")
+            .filter(Review.comment.is_not(None))
+            .group_by(Review.product_id)
+            .all()
+        )
+
+        rating_stats_by_product_id = {
+            product_id: (average_rating, rating_count)
+            for product_id, average_rating, rating_count in rating_stats
+        }
+        comment_counts_by_product_id = {
+            product_id: comment_count for product_id, comment_count in comment_stats
+        }
+
+        for product in products:
+            average_rating, rating_count = rating_stats_by_product_id.get(
+                product.id,
+                (0, 0),
+            )
+            rounded_rating = Decimal(str(round(float(average_rating or 0), 2)))
+            set_committed_value(product, "rating", rounded_rating)
+            set_committed_value(product, "review_count", int(rating_count or 0))
+            product.comment_count = int(comment_counts_by_product_id.get(product.id, 0))
