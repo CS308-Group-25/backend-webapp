@@ -14,7 +14,13 @@ def create_pm():
     tax_id = os.getenv("PM_TAX_ID")
     address = os.getenv("PM_ADDRESS")
 
-    missing = [k for k, v in {"PM_EMAIL": email, "PM_PASSWORD": password, "PM_TAX_ID": tax_id, "PM_ADDRESS": address}.items() if not v]
+    env_vars = {
+        "PM_EMAIL": email,
+        "PM_PASSWORD": password,
+        "PM_TAX_ID": tax_id,
+        "PM_ADDRESS": address,
+    }
+    missing = [k for k, v in env_vars.items() if not v]
     if missing:
         print(f"Error: missing required environment variables: {', '.join(missing)}")
         sys.exit(1)

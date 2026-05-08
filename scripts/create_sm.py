@@ -14,7 +14,13 @@ def create_sm():
     tax_id = os.getenv("SM_TAX_ID")
     address = os.getenv("SM_ADDRESS")
 
-    missing = [k for k, v in {"SM_EMAIL": email, "SM_PASSWORD": password, "SM_TAX_ID": tax_id, "SM_ADDRESS": address}.items() if not v]
+    env_vars = {
+        "SM_EMAIL": email,
+        "SM_PASSWORD": password,
+        "SM_TAX_ID": tax_id,
+        "SM_ADDRESS": address,
+    }
+    missing = [k for k, v in env_vars.items() if not v]
     if missing:
         print(f"Error: missing required environment variables: {', '.join(missing)}")
         sys.exit(1)
