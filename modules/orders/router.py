@@ -80,9 +80,9 @@ def get_admin_orders(
 def update_order_status(
     order_id: int,
     data: StatusUpdateRequest,
+    current_user: User = Depends(require_product_manager),
     db: Session = Depends(get_db),
 ):
-    # TODO: Add require_product_manager before production
     order_repo = OrderRepository(db)
     cart_repo = CartRepository(db)
     product_repo = ProductRepository(db)
