@@ -9,9 +9,24 @@ from modules.auth.service import pwd_context
 
 
 def create_pm():
+    email = os.getenv("PM_EMAIL")
+    password = os.getenv("PM_PASSWORD")
+    tax_id = os.getenv("PM_TAX_ID")
+    address = os.getenv("PM_ADDRESS")
+
+    env_vars = {
+        "PM_EMAIL": email,
+        "PM_PASSWORD": password,
+        "PM_TAX_ID": tax_id,
+        "PM_ADDRESS": address,
+    }
+    missing = [k for k, v in env_vars.items() if not v]
+    if missing:
+        print(f"Error: missing required environment variables: {', '.join(missing)}")
+        sys.exit(1)
+
     db = SessionLocal()
     try:
-        email = os.getenv("PM_EMAIL", "pm@example.com")
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             print("PM user already exists.")
@@ -20,14 +35,14 @@ def create_pm():
         pm = User(
             name="Product Manager",
             email=email,
-            password_hash=pwd_context.hash(os.getenv("PM_PASSWORD", "pm_password")),
+            password_hash=pwd_context.hash(password),
             role="product_manager",
-            tax_id=os.getenv("PM_TAX_ID", "1234567890"),
-            address=os.getenv("PM_ADDRESS", "PM Office"),
+            tax_id=tax_id,
+            address=address,
         )
         db.add(pm)
         db.commit()
-        print(f"Successfully created PM user: {email} / pm_password")
+        print(f"Successfully created PM user: {email}")
     except Exception as e:
         print(f"Error: {e}")
         db.rollback()

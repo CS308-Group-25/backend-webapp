@@ -9,9 +9,24 @@ from modules.auth.service import pwd_context
 
 
 def create_sm():
+    email = os.getenv("SM_EMAIL")
+    password = os.getenv("SM_PASSWORD")
+    tax_id = os.getenv("SM_TAX_ID")
+    address = os.getenv("SM_ADDRESS")
+
+    env_vars = {
+        "SM_EMAIL": email,
+        "SM_PASSWORD": password,
+        "SM_TAX_ID": tax_id,
+        "SM_ADDRESS": address,
+    }
+    missing = [k for k, v in env_vars.items() if not v]
+    if missing:
+        print(f"Error: missing required environment variables: {', '.join(missing)}")
+        sys.exit(1)
+
     db = SessionLocal()
     try:
-        email = os.getenv("SM_EMAIL", "sales@example.com")
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             print("Sales manager user already exists.")
@@ -20,14 +35,14 @@ def create_sm():
         sm = User(
             name="Sales Manager",
             email=email,
-            password_hash=pwd_context.hash(os.getenv("SM_PASSWORD", "sales_password")),
+            password_hash=pwd_context.hash(password),
             role="sales_manager",
-            tax_id=os.getenv("SM_TAX_ID", "0000000000"),
-            address=os.getenv("SM_ADDRESS", "Sales Office"),
+            tax_id=tax_id,
+            address=address,
         )
         db.add(sm)
         db.commit()
-        print("Created sales@example.com / sales_password")
+        print(f"Successfully created SM user: {email}")
     except Exception as e:
         print(f"Error: {e}")
         db.rollback()
