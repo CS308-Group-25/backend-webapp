@@ -34,6 +34,7 @@ class OrderResponse(BaseModel):
     items: List[OrderItemResponse]
     delivery_address: str
     created_at: datetime
+    payment_method: str | None = None
 
 
 class AdminOrderResponse(BaseModel):
@@ -41,12 +42,16 @@ class AdminOrderResponse(BaseModel):
     order_id: int
     customer_id: int
     total: Decimal
+    invoice_id: int | None = None
+    invoice_number: str | None = None
     items: List[OrderItemResponse]
     delivery_address: str
     status: str
     completed: bool
     customer_name: str
     customer_email: str
+    created_at: datetime
+    payment_method: str | None = None
 
 
 class StatusUpdateRequest(BaseModel):

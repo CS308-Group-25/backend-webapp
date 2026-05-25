@@ -31,6 +31,15 @@ class OrderService:
         self.invoice_service = invoice_service
         self.refund_repo = refund_repo
 
+    def _payment_method_label(self, order: Order) -> str | None:
+        if not order.payment:
+            return None
+        if order.payment.card_brand.startswith("Kapıda Ödeme"):
+            return order.payment.card_brand
+        if order.payment.card_last4:
+            return f"Kredi Kartı (*{order.payment.card_last4})"
+        return order.payment.card_brand or "Kredi Kartı"
+
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
         Converts a SQLAlchemy Order object into an OrderResponse Pydantic schema.
@@ -45,6 +54,7 @@ class OrderService:
             invoice_id=order.invoice.id if order.invoice else None,
             delivery_address=order.delivery_address,
             created_at=order.created_at,
+            payment_method=self._payment_method_label(order),
             items=[
                 OrderItemResponse(
                     id=order_item.id,
@@ -231,6 +241,10 @@ class OrderService:
                     order_id=order.id,
                     customer_id=order.user_id,
                     total=order.total,
+                    invoice_id=order.invoice.id if order.invoice else None,
+                    invoice_number=(
+                        order.invoice.invoice_number if order.invoice else None
+                    ),
                     items=[
                         OrderItemResponse(
                             id=item.id,
@@ -238,6 +252,7 @@ class OrderService:
                             name=item.product.name,
                             quantity=item.quantity,
                             price=item.price,
+                            variant_name=item.variant_name,
                         )
                         for item in order.items
                     ],
@@ -246,6 +261,8 @@ class OrderService:
                     completed=(order.status == "delivered"),
                     customer_name=order.user.name,
                     customer_email=order.user.email,
+                    created_at=order.created_at,
+                    payment_method=self._payment_method_label(order),
                 )
             )
         return results
