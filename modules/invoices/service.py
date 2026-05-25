@@ -12,6 +12,7 @@ from xhtml2pdf import pisa
 from modules.invoices.model import Invoice
 from modules.invoices.repository import InvoiceRepository
 from modules.invoices.schema import AdminInvoiceItem, AdminInvoiceListItem
+from modules.payments import payment_method_label
 
 _MONTHS_TR = [
     "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
@@ -76,7 +77,7 @@ class InvoiceService:
             subtotal = sum(item.quantity * item.price for item in order.items)
             tax_amount = round(Decimal(str(subtotal)) * Decimal("0.01"), 2)
             total_amount = subtotal + tax_amount
-            payment_method = self._payment_method_label(order)
+            payment_method = payment_method_label(order, default="Kredi Kartı")
             invoice_items = [
                 AdminInvoiceItem(
                     product_id=item.product_id,
@@ -166,21 +167,12 @@ class InvoiceService:
                 return phone, address
         return "", delivery_address
 
-    def _payment_method_label(self, order) -> str:
-        if not order.payment:
-            return "Kredi Kartı"
-        if order.payment.card_brand.startswith("Kapıda Ödeme"):
-            return order.payment.card_brand
-        if order.payment.card_last4:
-            return f"Kredi Kartı (*{order.payment.card_last4})"
-        return order.payment.card_brand or "Kredi Kartı"
-
     def _render_html(
         self, order, invoice_number, subtotal, tax_amount, total_with_tax
     ) -> str:
         phone, address = self._split_address(order.delivery_address)
         date_str = self._fmt_date(order.created_at)
-        payment_method = self._payment_method_label(order)
+        payment_method = payment_method_label(order, default="Kredi Kartı")
 
         items_rows = ""
         for item in order.items:
