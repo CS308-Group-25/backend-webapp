@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import HTTPException
 
 from core.email import send_invoice_email
@@ -31,14 +33,39 @@ class OrderService:
         self.invoice_service = invoice_service
         self.refund_repo = refund_repo
 
+    def _optional_str(self, value) -> str | None:
+        return value if isinstance(value, str) else None
+
+    def _created_at_value(self, order: Order):
+        created_at = getattr(order, "created_at", None)
+        if isinstance(created_at, datetime | str):
+            return created_at
+        return datetime.now(timezone.utc)
+
+    def _invoice_id(self, order: Order) -> int | None:
+        invoice = getattr(order, "invoice", None)
+        invoice_id = getattr(invoice, "id", None)
+        return invoice_id if isinstance(invoice_id, int) else None
+
+    def _invoice_number(self, order: Order) -> str | None:
+        invoice = getattr(order, "invoice", None)
+        return self._optional_str(getattr(invoice, "invoice_number", None))
+
     def _payment_method_label(self, order: Order) -> str | None:
-        if not order.payment:
+        payment = getattr(order, "payment", None)
+        if not payment:
             return None
-        if order.payment.card_brand.startswith("Kapıda Ödeme"):
-            return order.payment.card_brand
-        if order.payment.card_last4:
-            return f"Kredi Kartı (*{order.payment.card_last4})"
-        return order.payment.card_brand or "Kredi Kartı"
+
+        card_brand = self._optional_str(getattr(payment, "card_brand", None))
+        card_last4 = self._optional_str(getattr(payment, "card_last4", None))
+
+        if not card_brand and not card_last4:
+            return None
+        if card_brand and card_brand.startswith("Kapıda Ödeme"):
+            return card_brand
+        if card_last4:
+            return f"Kredi Kartı (*{card_last4})"
+        return card_brand or "Kredi Kartı"
 
     def _build_order_response(self, order: Order) -> OrderResponse:
         """
@@ -51,9 +78,9 @@ class OrderService:
             id=order.id,
             status=order.status,
             total=order.total,
-            invoice_id=order.invoice.id if order.invoice else None,
+            invoice_id=self._invoice_id(order),
             delivery_address=order.delivery_address,
-            created_at=order.created_at,
+            created_at=self._created_at_value(order),
             payment_method=self._payment_method_label(order),
             items=[
                 OrderItemResponse(
@@ -62,7 +89,9 @@ class OrderService:
                     name=order_item.product.name,
                     quantity=order_item.quantity,
                     price=order_item.price,
-                    variant_name=order_item.variant_name,
+                    variant_name=self._optional_str(
+                        getattr(order_item, "variant_name", None)
+                    ),
                     refund_request=(
                         self.refund_repo.get_by_order_item(order_item.id)
                         if self.refund_repo
@@ -241,10 +270,8 @@ class OrderService:
                     order_id=order.id,
                     customer_id=order.user_id,
                     total=order.total,
-                    invoice_id=order.invoice.id if order.invoice else None,
-                    invoice_number=(
-                        order.invoice.invoice_number if order.invoice else None
-                    ),
+                    invoice_id=self._invoice_id(order),
+                    invoice_number=self._invoice_number(order),
                     items=[
                         OrderItemResponse(
                             id=item.id,
@@ -252,7 +279,9 @@ class OrderService:
                             name=item.product.name,
                             quantity=item.quantity,
                             price=item.price,
-                            variant_name=item.variant_name,
+                            variant_name=self._optional_str(
+                                getattr(item, "variant_name", None)
+                            ),
                         )
                         for item in order.items
                     ],
@@ -261,7 +290,7 @@ class OrderService:
                     completed=(order.status == "delivered"),
                     customer_name=order.user.name,
                     customer_email=order.user.email,
-                    created_at=order.created_at,
+                    created_at=self._created_at_value(order),
                     payment_method=self._payment_method_label(order),
                 )
             )
