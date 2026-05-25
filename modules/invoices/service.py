@@ -11,7 +11,8 @@ from xhtml2pdf import pisa
 
 from modules.invoices.model import Invoice
 from modules.invoices.repository import InvoiceRepository
-from modules.invoices.schema import AdminInvoiceListItem
+from modules.invoices.schema import AdminInvoiceItem, AdminInvoiceListItem
+from modules.payments import payment_method_label
 
 _MONTHS_TR = [
     "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
@@ -70,16 +71,41 @@ class InvoiceService:
             page,
             page_size
         )
-        items = [
-            AdminInvoiceListItem(
-                id=inv.id,
-                invoice_number=inv.invoice_number,
-                customer_name=inv.order.user.name,
-                total=inv.total,
-                created_at=inv.created_at,
+        items = []
+        for inv in invoices:
+            order = inv.order
+            subtotal = sum(item.quantity * item.price for item in order.items)
+            tax_amount = round(Decimal(str(subtotal)) * Decimal("0.01"), 2)
+            total_amount = subtotal + tax_amount
+            payment_method = payment_method_label(order, default="Kredi Kartı")
+            invoice_items = [
+                AdminInvoiceItem(
+                    product_id=item.product_id,
+                    name=item.product.name,
+                    quantity=item.quantity,
+                    unit_price=item.price,
+                    total_price=item.quantity * item.price,
+                )
+                for item in order.items
+            ]
+
+            items.append(
+                AdminInvoiceListItem(
+                    id=inv.id,
+                    order_id=order.id,
+                    invoice_number=inv.invoice_number,
+                    customer_name=order.user.name,
+                    customer_email=order.user.email,
+                    delivery_address=order.delivery_address,
+                    payment_method=payment_method,
+                    total=inv.total,
+                    created_at=inv.created_at,
+                    items=invoice_items,
+                    subtotal=subtotal,
+                    tax_amount=tax_amount,
+                    total_amount=total_amount,
+                )
             )
-            for inv in invoices
-        ]
         return items, total
 
     def generate_invoice(self, order) -> Invoice:
@@ -146,11 +172,7 @@ class InvoiceService:
     ) -> str:
         phone, address = self._split_address(order.delivery_address)
         date_str = self._fmt_date(order.created_at)
-        payment_method = (
-            f"Kredi Kartı (*{order.payment.card_last4})"
-            if order.payment
-            else "Kredi Kartı"
-        )
+        payment_method = payment_method_label(order, default="Kredi Kartı")
 
         items_rows = ""
         for item in order.items:

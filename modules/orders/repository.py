@@ -21,7 +21,7 @@ class OrderRepository:
         )
         if status:
             query = query.filter(Order.status == status)
-        return query.all()
+        return query.order_by(Order.created_at.desc()).all()
 
     def create_order(
         self,
