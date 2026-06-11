@@ -93,4 +93,24 @@ class ProductService:
                 updated[str(product_id)] = str(price)
                 self.discount_repo.update_original_prices(discount, updated)
 
-        return self.repo.update_product(product, {"price": price})
+        update_data: dict = {"price": price}
+
+        sizes = product.sizes_json
+        if sizes:
+            ref_raw = sizes[0].get("price") if isinstance(sizes[0], dict) else None
+            ref = Decimal(str(ref_raw)) if ref_raw else None
+            updated_sizes = []
+            for size in sizes:
+                if not isinstance(size, dict) or size.get("price") is None:
+                    updated_sizes.append(size)
+                    continue
+                if ref:
+                    scaled = Decimal(str(size["price"])) * price / ref
+                    new_size_price = scaled.quantize(Decimal("0.01"))
+                else:
+                    # sizes[0].price is None or 0 — set every size to new price
+                    new_size_price = price.quantize(Decimal("0.01"))
+                updated_sizes.append({**size, "price": float(new_size_price)})
+            update_data["sizes_json"] = updated_sizes
+
+        return self.repo.update_product(product, update_data)
