@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from fastapi import HTTPException
 
+from modules.discounts.repository import DiscountRepository
 from modules.products.model import Product
 from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate, ProductUpdate
@@ -13,10 +14,11 @@ class ProductService:
         self,
         repo: ProductRepository,
         notification_service: WishlistNotificationService | None = None,
+        discount_repo: DiscountRepository | None = None,
     ):
         self.repo = repo
-        # Optional: fires wishlist price-drop emails when a price update is detected
         self.notification_service = notification_service
+        self.discount_repo = discount_repo
 
     def list_products(
         self,
@@ -81,4 +83,14 @@ class ProductService:
 
     def set_price(self, product_id: int, price: Decimal) -> Product:
         product = self.get_product(product_id)
+
+        # Keep every active discount's stored original in sync with the new base
+        # price. Without this, remove_discount() would restore the stale
+        # pre-sales-manager value and silently overwrite this update.
+        if self.discount_repo is not None:
+            for discount in self.discount_repo.get_by_product_id(product_id):
+                updated = dict(discount.original_prices)
+                updated[str(product_id)] = str(price)
+                self.discount_repo.update_original_prices(discount, updated)
+
         return self.repo.update_product(product, {"price": price})
