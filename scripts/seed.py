@@ -150,7 +150,10 @@ def clean_old_data(db):
 
     # User deletion runs after all FK references are cleared.
     db.execute(text("DELETE FROM users WHERE email LIKE :p"), {"p": "%@example.com"})
-    db.execute(text("DELETE FROM users WHERE email = :e"), {"e": DEMO_CUSTOMER["email"]})
+    db.execute(
+        text("DELETE FROM users WHERE email = :e"),
+        {"e": DEMO_CUSTOMER["email"]},
+    )
 
     db.commit()
 
@@ -508,14 +511,14 @@ def create_demo_efgh_products(db, category_map: dict) -> list:
             "category": cat("saglik"),
             "description": "Demo product E — purchased over 30 days ago.",
         },
-        # F: delivered <30 days ago — refund allowed; stock visibly increases after approval
+        # F: delivered <30 days ago — refund allowed; stock increases after approval
         {
             "name": "Product F",
             "serial_no": "DEMO-F-001",
             "price": Decimal("199.99"),
             "stock": 5,
             "category": cat("protein"),
-            "description": "Demo product F — purchased within 30 days, eligible for refund.",
+            "description": "Demo product F — within 30 days, eligible for refund.",
         },
         # G: processing — cancellation is available at this stage
         {
@@ -575,10 +578,10 @@ def create_demo_orders(db, customer: User, efgh_products: list) -> None:
     # G: processing             → cancellation available
     # H: in_transit             → status display only
     order_specs = [
-        {"label": "E", "product": efgh_products[0], "status": "delivered",  "days_ago": 35},
-        {"label": "F", "product": efgh_products[1], "status": "delivered",  "days_ago": 10},
-        {"label": "G", "product": efgh_products[2], "status": "processing", "days_ago": 2},
-        {"label": "H", "product": efgh_products[3], "status": "in_transit", "days_ago": 5},
+        {"label": "E", "product": efgh_products[0], "status": "delivered", "days_ago": 35},  # noqa: E501
+        {"label": "F", "product": efgh_products[1], "status": "delivered", "days_ago": 10},  # noqa: E501
+        {"label": "G", "product": efgh_products[2], "status": "processing", "days_ago": 2},  # noqa: E501
+        {"label": "H", "product": efgh_products[3], "status": "in_transit", "days_ago": 5},  # noqa: E501
     ]
 
     for spec in order_specs:
@@ -695,7 +698,8 @@ def seed_db():
 
         print(
             f"\n✅ DB ready for demo.\n"
-            f"\n  Customer:        {DEMO_CUSTOMER['email']} / {DEMO_CUSTOMER['password']}"
+            f"\n  Customer:        "
+            f"{DEMO_CUSTOMER['email']} / {DEMO_CUSTOMER['password']}"
             f"\n  Product Manager: {pm_email} / {pm_password}"
             f"\n  Sales Manager:   {sm_email} / {sm_password}"
             f"\n\n  Catalog products:"
@@ -703,7 +707,8 @@ def seed_db():
             f"\n    B={products[1].name[:35]} (stock={products[1].stock})"
             f"\n    C={products[2].name[:35]} (stock={products[2].stock})"
             f"\n    E=Product E  F=Product F  G=Product G  H=Product H"
-            f"\n  Orders: E(delivered >30d), F(delivered <10d), G(processing), H(in_transit)"
+            f"\n  Orders: E(delivered >30d), F(delivered <10d),"
+            f" G(processing), H(in_transit)"
             f"\n  Wishlist: Product C in customer wishlist\n"
         )
 
