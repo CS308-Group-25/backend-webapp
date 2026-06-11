@@ -15,7 +15,7 @@ Expected outcome
 
 Usage
 -----
-    python scripts/test_concurrency_manual.py
+    python tests/test_concurrency_manual.py
 
 Requires DATABASE_URL in .env.  The FastAPI server does NOT need to be running.
 """
@@ -31,11 +31,16 @@ from unittest.mock import MagicMock, patch
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-# ── Stub optional dependency that may not be installed ───────────────────────
+# ── Stub optional dependency only if it is genuinely missing ─────────────────
 # xhtml2pdf is only needed for PDF generation, which is mocked in this test.
-_stub = MagicMock()
-sys.modules.setdefault("xhtml2pdf", _stub)
-sys.modules.setdefault("xhtml2pdf.pisa", _stub)
+# We stub solely on ImportError so that, when pytest imports this module during
+# collection, we never shadow a real, installed xhtml2pdf for the other tests.
+try:
+    import xhtml2pdf  # noqa: F401
+except ImportError:
+    _stub = MagicMock()
+    sys.modules["xhtml2pdf"] = _stub
+    sys.modules["xhtml2pdf.pisa"] = _stub
 
 # ── App imports (after stub) ──────────────────────────────────────────────────
 from fastapi import HTTPException  # noqa: E402
