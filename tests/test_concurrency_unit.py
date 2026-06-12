@@ -90,6 +90,9 @@ def test_concurrent_last_item_first_caller_succeeds_second_gets_409(
     )
 
     assert result is not None
+    # The decrement must run against the row read under the lock, not the
+    # unlocked pre-check read — assert the SELECT FOR UPDATE path executed.
+    product_repo_a.get_by_id_for_update.assert_called_once_with(77)
     product_repo_a.update_stock.assert_called_once_with(77, 1)
     order_repo_a.db.commit.assert_called_once()
 
@@ -111,6 +114,7 @@ def test_concurrent_last_item_first_caller_succeeds_second_gets_409(
         )
 
     assert exc.value.status_code == 409
+    product_repo_b.get_by_id_for_update.assert_called_once_with(77)
     order_repo_b.create_order.assert_not_called()
     order_repo_b.create_payment.assert_not_called()
     order_repo_b.db.rollback.assert_called_once()
@@ -144,6 +148,84 @@ def test_oversell_prevented_by_locked_recheck(mock_payment):
         )
 
     assert exc.value.status_code == 409
+    product_repo.get_by_id_for_update.assert_called_once_with(55)
+    order_repo.create_order.assert_not_called()
+    product_repo.update_stock.assert_not_called()
+    order_repo.db.rollback.assert_called_once()
+    order_repo.db.commit.assert_not_called()
+
+
+@patch("modules.orders.service.process_payment", return_value=True)
+def test_multi_item_cart_no_partial_decrement_when_second_item_short(mock_payment):
+    """
+    T-238d: Atomicity across items. A two-product cart locks every row and
+    re-validates stock *before* any decrement. The first product has ample
+    stock, but the second has been depleted by a concurrent transaction. The
+    locked re-check on the second item raises 409, and because all re-checks
+    run ahead of the first update_stock call, the first product's stock is
+    never decremented — no partial state spans the two items.
+    """
+    order_repo = MagicMock()
+    cart_repo = MagicMock()
+    product_repo = MagicMock()
+
+    cart_repo.get.return_value = _make_cart(
+        [
+            _make_cart_item(product_id=11, quantity=1),
+            _make_cart_item(product_id=22, quantity=2),
+        ]
+    )
+
+    def _by_id(pid):
+        return _make_product(product_id=pid, stock=5)
+
+    # Pre-check passes for both; under the lock the second item is short.
+    def _locked(pid):
+        return _make_product(product_id=pid, stock=5 if pid == 11 else 1)
+
+    product_repo.get_by_id.side_effect = _by_id
+    product_repo.get_by_id_for_update.side_effect = _locked
+
+    with pytest.raises(HTTPException) as exc:
+        _make_service(order_repo, cart_repo, product_repo).place_order(
+            user_id=1, data=_make_order_request()
+        )
+
+    assert exc.value.status_code == 409
+    # Both rows were locked before the failure was raised.
+    assert product_repo.get_by_id_for_update.call_count == 2
+    # No decrement ran for the in-stock first item — atomic all-or-nothing.
+    product_repo.update_stock.assert_not_called()
+    order_repo.create_order.assert_not_called()
+    order_repo.db.rollback.assert_called_once()
+    order_repo.db.commit.assert_not_called()
+
+
+@patch("modules.orders.service.process_payment", return_value=True)
+def test_product_deleted_between_precheck_and_lock_raises_404(mock_payment):
+    """
+    T-238e: A product passes the unlocked pre-check but is deleted by another
+    transaction before the lock is acquired, so get_by_id_for_update returns
+    None. The service raises 404 inside the atomic block and rolls back,
+    leaving no order or stock change behind.
+    """
+    order_repo = MagicMock()
+    cart_repo = MagicMock()
+    product_repo = MagicMock()
+
+    cart_repo.get.return_value = _make_cart(
+        [_make_cart_item(product_id=88, quantity=1)]
+    )
+    product_repo.get_by_id.return_value = _make_product(product_id=88, stock=3)
+    product_repo.get_by_id_for_update.return_value = None
+
+    with pytest.raises(HTTPException) as exc:
+        _make_service(order_repo, cart_repo, product_repo).place_order(
+            user_id=1, data=_make_order_request()
+        )
+
+    assert exc.value.status_code == 404
+    product_repo.get_by_id_for_update.assert_called_once_with(88)
     order_repo.create_order.assert_not_called()
     product_repo.update_stock.assert_not_called()
     order_repo.db.rollback.assert_called_once()

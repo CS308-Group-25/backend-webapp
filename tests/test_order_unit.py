@@ -155,9 +155,10 @@ def test_place_order_stock_decrements_correctly(
 
     service.place_order(user_id=1, data=order_request)
 
-    # update_stock is called twice: once in stock-check loop, once in order-item loop.
-    # We assert at least one call carries the right args.
-    product_repo.update_stock.assert_called_with(100, 3)
+    # Stock is decremented exactly once, in the order-item loop. The unlocked
+    # pre-check and the locked re-check only read stock — they never decrement —
+    # so a single purchased line must produce exactly one update_stock call.
+    product_repo.update_stock.assert_called_once_with(100, 3)
 
 
 @patch("modules.orders.service.send_invoice_email")
@@ -481,19 +482,22 @@ def test_get_admin_orders_nested_items():
 
 
 @patch("modules.orders.service.process_payment", return_value=True)
-def test_place_order_stock_depleted_after_payment_raises_409(
+def test_place_order_stock_depleted_before_lock_raises_409_without_charging(
     mock_payment, service, repos, order_request
 ):
     """
-    T-237: If stock drops between the pre-payment check and the locked
-    re-validation inside the transaction, a 409 should be raised.
+    T-237: If stock drops between the unlocked pre-check and the locked
+    re-validation inside the transaction, a 409 should be raised. The card
+    must NOT be charged, because payment is taken only after stock is
+    reserved under the row lock — a checkout that loses the race for the
+    last unit is rejected before any money moves.
     """
     order_repo, cart_repo, product_repo = repos
 
     cart_item = _make_cart_item(quantity=2)
     cart_repo.get.return_value = _make_cart([cart_item])
 
-    # Pre-payment check sees sufficient stock
+    # Unlocked pre-check sees sufficient stock
     product_repo.get_by_id.return_value = _make_product(stock=5)
 
     # Inside the transaction, stock has dropped below requested quantity
@@ -503,5 +507,6 @@ def test_place_order_stock_depleted_after_payment_raises_409(
         service.place_order(user_id=1, data=order_request)
 
     assert exc.value.status_code == 409
+    mock_payment.assert_not_called()
     order_repo.create_order.assert_not_called()
     order_repo.create_payment.assert_not_called()
