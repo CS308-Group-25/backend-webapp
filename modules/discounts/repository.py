@@ -14,6 +14,9 @@ class DiscountRepository:
         self.db.refresh(discount)
         return discount
 
+    def get_all(self) -> list[Discount]:
+        return self.db.query(Discount).all()
+
     def get_by_id(self, discount_id: int) -> Discount | None:
         return self.db.query(Discount).filter(Discount.id == discount_id).first()
 
