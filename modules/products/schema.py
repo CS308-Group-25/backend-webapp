@@ -48,6 +48,16 @@ class ProductUpdate(BaseModel):
     serving_size: Optional[str] = Field(None, max_length=50)
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
+    sizes_json: Optional[list[Any]] = None
+    flavors_json: Optional[list[Any]] = None
+    images: Optional[list[str]] = None
+    features: Optional[list[str]] = None
+    ingredients: Optional[str] = None
+    nutrition_facts: Optional[list[Any]] = None
+    usage_info: Optional[str] = None
+    stock_status: Optional[str] = None
+    is_new: Optional[bool] = None
+    original_price: Optional[Decimal] = None
 
 
 class ProductRead(ProductBase):
