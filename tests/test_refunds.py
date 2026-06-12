@@ -184,8 +184,8 @@ def test_stock_and_credit_restored_on_refunded():
     service.process_refund_request(1, RefundStatus.refunded)
 
     product_repo.get_by_id_for_update.assert_called_once_with(42)
-    product_repo.update_stock.assert_called_once_with(
-        42, -mock_refund.order_item.quantity
+    product_repo.increment_stock.assert_called_once_with(
+        42, mock_refund.order_item.quantity
     )
     assert mock_user.store_credit == Decimal("200.00")
     refund_repo.update_status.assert_called_once_with(

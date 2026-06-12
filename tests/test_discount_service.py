@@ -93,7 +93,8 @@ def test_apply_discount_triggers_wishlist_notification():
     discount_repo = MagicMock()
     product_repo = MagicMock()
     wishlist_repo = MagicMock()
-    service = DiscountService(discount_repo, product_repo, wishlist_repo)
+    notif_repo = MagicMock()
+    service = DiscountService(discount_repo, product_repo, wishlist_repo, notif_repo)
 
     product = Product(id=1, name="Whey Protein", price=Decimal("100.00"), stock=50)
     product_repo.get_by_id.return_value = product
@@ -104,17 +105,15 @@ def test_apply_discount_triggers_wishlist_notification():
     )
     wishlist_repo.get_users_by_product.return_value = [wishlisted_user]
 
-    with patch("modules.discounts.service.send_wishlist_discount_email") as mock_email:
-        service.apply_discount(
-            product_ids=[1],
-            discount_rate=Decimal("20"),
-            created_by=99,
-        )
+    service.apply_discount(
+        product_ids=[1],
+        discount_rate=Decimal("20"),
+        created_by=99,
+    )
 
-    mock_email.assert_called_once_with(
-        to_email="ali@example.com",
-        user_name="Ali Veli",
-        product_name="Whey Protein",
-        old_price=100.0,
-        new_price=80.0,
+    notif_repo.create.assert_called_once_with(
+        5,
+        "Favori listenizde bulunan 'Whey Protein' "
+        "ürününde %20 indirim! "
+        "100.00 TL → 80.00 TL",
     )
