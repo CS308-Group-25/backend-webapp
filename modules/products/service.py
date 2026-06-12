@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from fastapi import HTTPException
 
+from modules.discounts.repository import DiscountRepository
 from modules.products.model import Product
 from modules.products.repository import ProductRepository
 from modules.products.schema import ProductCreate, ProductUpdate
@@ -13,10 +14,11 @@ class ProductService:
         self,
         repo: ProductRepository,
         notification_service: WishlistNotificationService | None = None,
+        discount_repo: DiscountRepository | None = None,
     ):
         self.repo = repo
-        # Optional: fires wishlist price-drop emails when a price update is detected
         self.notification_service = notification_service
+        self.discount_repo = discount_repo
 
     def list_all_admin(
         self,
@@ -93,13 +95,39 @@ class ProductService:
         product = self.get_product(product_id)
         self.repo.soft_delete_product(product)
 
-
     def set_price(self, product_id: int, price: Decimal) -> Product:
         product = self.get_product(product_id)
-        return self.repo.update_product(product, {"price": price})
+
+        # Keep every active discount's stored original in sync with the new base
+        # price. Without this, remove_discount() would restore the stale
+        # pre-sales-manager value and silently overwrite this update.
+        if getattr(self, "discount_repo", None) is not None:
+            for discount in self.discount_repo.get_by_product_id(product_id):
+                updated = dict(discount.original_prices)
+                updated[str(product_id)] = str(price)
+                self.discount_repo.update_original_prices(discount, updated)
+
+        update_data: dict = {"price": price}
+
+        sizes = product.sizes_json
+        if sizes:
+            ref_raw = sizes[0].get("price") if isinstance(sizes[0], dict) else None
+            ref = Decimal(str(ref_raw)) if ref_raw else None
+            updated_sizes = []
+            for size in sizes:
+                if not isinstance(size, dict) or size.get("price") is None:
+                    updated_sizes.append(size)
+                    continue
+                if ref:
+                    scaled = Decimal(str(size["price"])) * price / ref
+                    new_size_price = scaled.quantize(Decimal("0.01"))
+                else:
+                    new_size_price = price.quantize(Decimal("0.01"))
+                updated_sizes.append({**size, "price": float(new_size_price)})
+            update_data["sizes_json"] = updated_sizes
+
+        return self.repo.update_product(product, update_data)
 
     def cleanup_wishlist_deleted_products(self) -> None:
         # Clear wishlist items where product no longer exists
         return self.repo.cleanup_wishlist_deleted_products()
-
-

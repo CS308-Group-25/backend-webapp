@@ -6,6 +6,7 @@ from core.dependencies import (
     require_product_manager,
     require_sales_manager,
 )
+from modules.discounts.repository import DiscountRepository
 from modules.products.repository import ProductRepository
 from modules.products.schema import (
     PaginatedProductResponse,
@@ -135,5 +136,6 @@ def set_product_price(
     _: None = Depends(require_sales_manager),
 ):
     repo = ProductRepository(db)
-    service = ProductService(repo)
+    service = ProductService(repo, discount_repo=DiscountRepository(db))
+
     return service.set_price(product_id, price_in.price)
