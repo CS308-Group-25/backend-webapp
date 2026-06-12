@@ -24,6 +24,7 @@ from modules.reports.router import router as reports_router  # noqa: E402
 from modules.reviews.router import admin_router as reviews_admin_router  # noqa: E402
 from modules.reviews.router import router as reviews_router  # noqa: E402
 from modules.wishlist.router import router as wishlist_router  # noqa: E402
+from modules.notifications.router import router as notifications_router  # noqa: E402
 
 app = FastAPI(title="SUpplements Store")
 
@@ -51,6 +52,7 @@ app.include_router(reviews_admin_router)
 app.include_router(refunds_router)
 app.include_router(refunds_admin_router)
 app.include_router(wishlist_router)
+app.include_router(notifications_router)
 app.include_router(reports_router)
 
 

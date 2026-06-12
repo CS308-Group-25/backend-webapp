@@ -7,6 +7,7 @@ from modules.auth.model import User
 from modules.discounts.repository import DiscountRepository
 from modules.discounts.schema import DiscountCreate, DiscountRead
 from modules.discounts.service import DiscountService
+from modules.notifications.repository import NotificationRepository
 from modules.products.repository import ProductRepository
 from modules.wishlist.repository import WishlistRepository
 
@@ -36,6 +37,7 @@ def create_discount(
         DiscountRepository(db),
         ProductRepository(db),
         WishlistRepository(db),
+        NotificationRepository(db),
     )
     return service.apply_discount(
         product_ids=discount_in.product_ids,

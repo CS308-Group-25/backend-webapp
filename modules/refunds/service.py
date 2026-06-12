@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from fastapi import HTTPException
 
+from modules.notifications.repository import NotificationRepository
 from modules.orders.repository import OrderRepository
 from modules.products.repository import ProductRepository
 from modules.refunds.model import RefundRequest, RefundStatus
@@ -15,10 +16,12 @@ class RefundService:
         refund_repo: RefundRepository,
         order_repo: OrderRepository,
         product_repo: ProductRepository,
+        notif_repo: NotificationRepository | None = None,
     ):
         self.refund_repo = refund_repo
         self.order_repo = order_repo
         self.product_repo = product_repo
+        self.notif_repo = notif_repo
 
     VALID_TRANSITIONS: dict[RefundStatus, list[RefundStatus]] = {
         RefundStatus.requested: [RefundStatus.approved_waiting_return, 
@@ -106,6 +109,28 @@ class RefundService:
         if new_status == RefundStatus.refunded:
             self._restore_stock_and_credit(refund)
 
+        if self.notif_repo:
+            _NOTIF_MESSAGES: dict[RefundStatus, str] = {
+                RefundStatus.approved_waiting_return: (
+                    f"'{refund.order_item.product.name}' için iade talebiniz onaylandı. "
+                    "Lütfen ürünü iade edin."
+                ),
+                RefundStatus.returned_received: (
+                    f"'{refund.order_item.product.name}' iadesi teslim alındı. "
+                    "İşleminiz değerlendiriliyor."
+                ),
+                RefundStatus.refunded: (
+                    f"'{refund.order_item.product.name}' iadeniz tamamlandı. "
+                    f"{float(refund.refund_amount):.2f} TL store kredinize eklendi."
+                ),
+                RefundStatus.rejected: (
+                    f"'{refund.order_item.product.name}' için iade talebiniz reddedildi."
+                ),
+            }
+            message = _NOTIF_MESSAGES.get(new_status)
+            if message:
+                self.notif_repo.create(refund.order.user_id, message)
+
         self.refund_repo.update_status(refund, new_status)
         self.refund_repo.db.commit()
         return self._build_admin_response(refund)
@@ -115,7 +140,7 @@ class RefundService:
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        self.product_repo.update_stock(product.id, -refund.order_item.quantity)
+        self.product_repo.increment_stock(product.id, refund.order_item.quantity)
 
         user = refund.order.user
         user.store_credit = user.store_credit + refund.refund_amount

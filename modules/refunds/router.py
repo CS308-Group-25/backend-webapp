@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from core.database import get_db
 from core.dependencies import get_current_user, require_sales_manager
 from modules.auth.model import User
+from modules.notifications.repository import NotificationRepository
 from modules.orders.repository import OrderRepository
 from modules.products.repository import ProductRepository
 from modules.refunds.model import RefundStatus
@@ -73,5 +74,6 @@ def update_refund_request(
     refund_repo = RefundRepository(db)
     order_repo = OrderRepository(db)
     product_repo = ProductRepository(db)
-    service = RefundService(refund_repo, order_repo, product_repo)
+    notif_repo = NotificationRepository(db)
+    service = RefundService(refund_repo, order_repo, product_repo, notif_repo)
     return service.process_refund_request(refund_id, data.status)

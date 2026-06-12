@@ -21,7 +21,6 @@ from modules.invoices.model import Invoice
 from modules.orders.model import Order, OrderItem, Payment
 from modules.products.model import Product
 from modules.reviews.model import Review
-from modules.wishlist.model import WishlistItem
 
 
 random.seed(42)
@@ -50,9 +49,9 @@ IMAGES_POOL = [
 ]
 
 DEMO_CUSTOMER = {
-    "name": "Demo Musteri",
-    "email": "customer@demo.com",
-    "password": "demo123",
+    "name": "Janok Dincer",
+    "email": "janokdincer3@gmail.com",
+    "password": "Janok123",
     "address": "Levent, Istanbul",
     "tax_id": "9999999999",
 }
@@ -663,18 +662,6 @@ def create_demo_orders(db, customer: User, efgh_products: list) -> None:
     print("Demo orders seeded.")
 
 
-def create_demo_wishlist(db, customer: User, products: list) -> None:
-    print("Seeding demo wishlist...")
-
-    db.add(WishlistItem(
-        user_id=customer.id,
-        product_id=products[2].id,
-    ))
-    db.commit()
-
-    print(f"Wishlist seeded: '{products[2].name[:40]}' added for {customer.email}.")
-
-
 def validate_seed_data(data):
     categories = data["categories"]
     products = data["products"]
@@ -741,8 +728,7 @@ def seed_db():
             f"\n    C={products[2].name[:35]} (stock={products[2].stock})"
             f"\n    E=Product E  F=Product F  G=Product G  H=Product H"
             f"\n  Orders: E(delivered >30d), F(delivered <10d),"
-            f" G(processing), H(in_transit)"
-            f"\n  Wishlist: Product C in customer wishlist\n"
+            f" G(processing), H(in_transit)\n"
         )
 
     except Exception as error:

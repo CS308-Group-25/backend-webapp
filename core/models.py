@@ -14,3 +14,4 @@ from modules.products.model import Product  # noqa: F401
 from modules.refunds.model import RefundRequest  # noqa: F401
 from modules.reviews.model import Review  # noqa: F401
 from modules.wishlist.model import WishlistItem  # noqa: F401
+from modules.notifications.model import Notification  # noqa: F401

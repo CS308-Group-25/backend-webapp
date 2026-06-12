@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from core.dependencies import (
+    require_admin,
     require_product_manager,
     require_sales_manager,
 )
@@ -17,7 +18,7 @@ from modules.products.schema import (
     ProductUpdate,
 )
 from modules.products.service import ProductService
-from modules.wishlist.notification_service import WishlistNotificationService
+from modules.notifications.repository import NotificationRepository
 from modules.wishlist.repository import WishlistRepository
 
 router = APIRouter(prefix="/api/v1/products", tags=["products"])
@@ -67,7 +68,7 @@ def list_admin_products(
     page: int = 1,
     page_size: int = 1000,
     db: Session = Depends(get_db),
-    _: None = Depends(require_product_manager),
+    _: None = Depends(require_admin),
 ):
     """Admin product listing — includes unpriced drafts invisible to customers."""
     repo = ProductRepository(db)
@@ -109,9 +110,7 @@ def update_product(
     _: None = Depends(require_product_manager),
 ):
     repo = ProductRepository(db)
-    # Build the notification service so price-drop emails are sent automatically
-    notification_service = WishlistNotificationService(WishlistRepository(db))
-    service = ProductService(repo, notification_service)
+    service = ProductService(repo)
 
     return service.update_product(product_id, product_in)
 
@@ -138,4 +137,19 @@ def set_product_price(
     repo = ProductRepository(db)
     service = ProductService(repo, discount_repo=DiscountRepository(db))
 
-    return service.set_price(product_id, price_in.price)
+    old_price = repo.get_by_id(product_id)
+    old_price_val = float(old_price.price) if old_price and old_price.price is not None else None
+    updated = service.set_price(product_id, price_in.price)
+
+    if old_price_val is not None and float(price_in.price) < old_price_val:
+        wishlist_repo = WishlistRepository(db)
+        notif_repo = NotificationRepository(db)
+        wishlisted_users = wishlist_repo.get_users_by_product(product_id)
+        for user in wishlisted_users:
+            notif_repo.create(
+                user.id,
+                f"Favori listenizde bulunan '{updated.name}' ürününün fiyatı düştü! Yeni fiyat: {float(price_in.price):.2f} TL",
+            )
+        db.commit()
+
+    return updated

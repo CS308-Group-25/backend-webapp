@@ -13,8 +13,15 @@ class WishlistService:
         self.product_repo = product_repo
 
     def get_by_user(self, user_id: int) -> list[WishlistItem]:
-        """Return all wishlist items for the given user."""
-        return self.repo.get_by_user(user_id)
+        """Return wishlist items for the user, purging any whose product no longer exists."""
+        items = self.repo.get_by_user(user_id)
+        valid = []
+        for item in items:
+            if self.product_repo.get_by_id(item.product_id):
+                valid.append(item)
+            else:
+                self.repo.remove(user_id, item.product_id)
+        return valid
 
     def add(self, user_id: int, product_id: int) -> WishlistItem:
         """Add a product to the user's wishlist.
