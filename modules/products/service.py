@@ -18,6 +18,14 @@ class ProductService:
         # Optional: fires wishlist price-drop emails when a price update is detected
         self.notification_service = notification_service
 
+    def list_all_admin(
+        self,
+        page: int = 1,
+        page_size: int = 1000,
+    ) -> tuple[list[Product], int]:
+        """Admin-only: returns ALL products including unpriced drafts."""
+        return self.repo.get_all_admin(page=page, page_size=page_size)
+
     def list_products(
         self,
         search: str | None = None,
@@ -39,6 +47,13 @@ class ProductService:
 
     def get_product(self, product_id: int) -> Product:
         product = self.repo.get_by_id(product_id)
+        if product is None:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        return product
+
+    def get_admin_product(self, product_id: int) -> Product:
+        product = self.repo.get_admin_by_id(product_id)
         if product is None:
             raise HTTPException(status_code=404, detail="Product not found")
 
@@ -82,3 +97,9 @@ class ProductService:
     def set_price(self, product_id: int, price: Decimal) -> Product:
         product = self.get_product(product_id)
         return self.repo.update_product(product, {"price": price})
+
+    def cleanup_wishlist_deleted_products(self) -> None:
+        # Clear wishlist items where product no longer exists
+        return self.repo.cleanup_wishlist_deleted_products()
+
+

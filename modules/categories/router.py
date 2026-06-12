@@ -8,6 +8,10 @@ from modules.categories.schema import (
     CategoryCreate,
     CategoryResponse,
     CategoryUpdate,
+    SubCategoryCreate,
+    SubCategoryListResponse,
+    SubCategoryResponse,
+    SubCategoryUpdate,
 )
 from modules.categories.service import CategoryService
 
@@ -57,3 +61,50 @@ def delete_category(
     repo = CategoryRepository(db)
     service = CategoryService(repo)
     service.delete_category(category_id)
+
+
+@admin_router.get("/sub-categories", response_model=list[SubCategoryListResponse])
+def list_sub_categories(
+    db: Session = Depends(get_db), _: None = Depends(require_product_manager)
+):
+    repo = CategoryRepository(db)
+    service = CategoryService(repo)
+    return service.list_sub_categories()
+
+
+@admin_router.post(
+    "/sub-categories",
+    response_model=SubCategoryResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_sub_category(
+    data: SubCategoryCreate,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = CategoryRepository(db)
+    service = CategoryService(repo)
+    return service.create_sub_category(data)
+
+
+@admin_router.patch("/sub-categories/{sub_id}", response_model=SubCategoryResponse)
+def update_sub_category(
+    sub_id: int,
+    data: SubCategoryUpdate,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = CategoryRepository(db)
+    service = CategoryService(repo)
+    return service.update_sub_category(sub_id, data)
+
+
+@admin_router.delete("/sub-categories/{sub_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_sub_category(
+    sub_id: int,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = CategoryRepository(db)
+    service = CategoryService(repo)
+    service.delete_sub_category(sub_id)
