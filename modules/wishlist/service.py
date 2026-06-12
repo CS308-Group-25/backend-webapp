@@ -13,7 +13,7 @@ class WishlistService:
         self.product_repo = product_repo
 
     def get_by_user(self, user_id: int) -> list[WishlistItem]:
-        """Return wishlist items for the user, purging any whose product no longer exists."""
+        """Return wishlist items, purging any whose product no longer exists."""
         items = self.repo.get_by_user(user_id)
         valid = []
         for item in items:

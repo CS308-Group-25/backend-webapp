@@ -91,7 +91,8 @@ class DiscountService:
                 for user in self.wishlist_repo.get_users_by_product(product.id):
                     self.notif_repo.create(
                         user.id,
-                        f"Favori listenizde bulunan '{product.name}' ürününde %{int(discount_rate)} indirim! "
+                        f"Favori listenizde bulunan '{product.name}' "
+                        f"ürününde %{int(discount_rate)} indirim! "
                         f"{old_price_f:.2f} TL → {new_price_f:.2f} TL",
                     )
             self.discount_repo.db.commit()

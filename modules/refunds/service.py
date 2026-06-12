@@ -112,7 +112,8 @@ class RefundService:
         if self.notif_repo:
             _NOTIF_MESSAGES: dict[RefundStatus, str] = {
                 RefundStatus.approved_waiting_return: (
-                    f"'{refund.order_item.product.name}' için iade talebiniz onaylandı. "
+                    f"'{refund.order_item.product.name}' "
+                    "için iade talebiniz onaylandı. "
                     "Lütfen ürünü iade edin."
                 ),
                 RefundStatus.returned_received: (
@@ -124,7 +125,8 @@ class RefundService:
                     f"{float(refund.refund_amount):.2f} TL store kredinize eklendi."
                 ),
                 RefundStatus.rejected: (
-                    f"'{refund.order_item.product.name}' için iade talebiniz reddedildi."
+                    f"'{refund.order_item.product.name}' "
+                    "için iade talebiniz reddedildi."
                 ),
             }
             message = _NOTIF_MESSAGES.get(new_status)

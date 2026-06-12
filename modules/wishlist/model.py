@@ -14,7 +14,12 @@ class WishlistItem(Base):
     # FK to the user who owns this wishlist entry
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     # FK to the saved product
-    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, index=True)
+    product_id = Column(
+        Integer,
+        ForeignKey("products.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     created_at = Column(
         DateTime(timezone=True), default=func.now(), server_default=func.now()
     )

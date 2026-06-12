@@ -8,6 +8,7 @@ from core.dependencies import (
     require_sales_manager,
 )
 from modules.discounts.repository import DiscountRepository
+from modules.notifications.repository import NotificationRepository
 from modules.products.repository import ProductRepository
 from modules.products.schema import (
     PaginatedProductResponse,
@@ -18,7 +19,6 @@ from modules.products.schema import (
     ProductUpdate,
 )
 from modules.products.service import ProductService
-from modules.notifications.repository import NotificationRepository
 from modules.wishlist.repository import WishlistRepository
 
 router = APIRouter(prefix="/api/v1/products", tags=["products"])
@@ -138,7 +138,9 @@ def set_product_price(
     service = ProductService(repo, discount_repo=DiscountRepository(db))
 
     old_price = repo.get_by_id(product_id)
-    old_price_val = float(old_price.price) if old_price and old_price.price is not None else None
+    old_price_val = (
+        float(old_price.price) if old_price and old_price.price is not None else None
+    )
     updated = service.set_price(product_id, price_in.price)
 
     if old_price_val is not None and float(price_in.price) < old_price_val:
@@ -148,7 +150,8 @@ def set_product_price(
         for user in wishlisted_users:
             notif_repo.create(
                 user.id,
-                f"Favori listenizde bulunan '{updated.name}' ürününün fiyatı düştü! Yeni fiyat: {float(price_in.price):.2f} TL",
+                f"Favori listenizde bulunan '{updated.name}' ürününün fiyatı düştü! "
+                f"Yeni fiyat: {float(price_in.price):.2f} TL",
             )
         db.commit()
 

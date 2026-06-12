@@ -17,10 +17,17 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.drop_constraint(op.f('wishlist_items_product_id_fkey'), 'wishlist_items', type_='foreignkey')
-    op.create_foreign_key(None, 'wishlist_items', 'products', ['product_id'], ['id'], ondelete='CASCADE')
+    op.drop_constraint(
+        op.f('wishlist_items_product_id_fkey'), 'wishlist_items', type_='foreignkey'
+    )
+    op.create_foreign_key(
+        None, 'wishlist_items', 'products', ['product_id'], ['id'], ondelete='CASCADE'
+    )
 
 
 def downgrade() -> None:
     op.drop_constraint(None, 'wishlist_items', type_='foreignkey')
-    op.create_foreign_key(op.f('wishlist_items_product_id_fkey'), 'wishlist_items', 'products', ['product_id'], ['id'])
+    op.create_foreign_key(
+        op.f('wishlist_items_product_id_fkey'),
+        'wishlist_items', 'products', ['product_id'], ['id'],
+    )
