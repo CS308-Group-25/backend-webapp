@@ -13,6 +13,19 @@ from modules.wishlist.repository import WishlistRepository
 router = APIRouter(prefix="/api/v1/admin/discounts", tags=["admin-discounts"])
 
 
+@router.get("", response_model=list[DiscountRead])
+def list_discounts(
+    db: Session = Depends(get_db),
+    _: None = Depends(require_sales_manager),
+):
+    service = DiscountService(
+        DiscountRepository(db),
+        ProductRepository(db),
+        WishlistRepository(db),
+    )
+    return service.list_discounts()
+
+
 @router.post("", response_model=DiscountRead, status_code=status.HTTP_201_CREATED)
 def create_discount(
     discount_in: DiscountCreate,

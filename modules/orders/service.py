@@ -137,18 +137,11 @@ class OrderService:
 
             total += item.quantity * product.price
 
-        # Try to process payment
-        payment_success = process_payment(
-            card_number=data.card_number,
-            card_last4=data.card_last4,
-            card_brand=data.card_brand,
-            amount=total,
-        )
-        if not payment_success:
-            raise HTTPException(status_code=400, detail="Payment failed")
-
-        # Atomic block: order creation, stock decrement, and payment recording
-        # are committed together — rollback on any failure ensures no partial state.
+        # Atomic block: stock re-validation under lock, payment, order creation,
+        # stock decrement, and payment recording are committed together — rollback
+        # on any failure ensures no partial state. The card is only charged once
+        # stock is reserved under the row locks, so a checkout that loses the race
+        # for the last item is rejected before any payment is taken.
         try:
             # Lock each product row and re-validate stock under the lock.
             locked_products: dict[int, object] = {}
@@ -167,6 +160,19 @@ class OrderService:
                     )
 
                 locked_products[item.product_id] = product
+
+            # Charge only after every row is locked and stock confirmed. The locks
+            # are held until the commit/rollback below, so the reserved units
+            # cannot be taken by a concurrent checkout between this charge and the
+            # commit — no charge can succeed without a guaranteed reservation.
+            payment_success = process_payment(
+                card_number=data.card_number,
+                card_last4=data.card_last4,
+                card_brand=data.card_brand,
+                amount=total,
+            )
+            if not payment_success:
+                raise HTTPException(status_code=400, detail="Payment failed")
 
             order = self.order_repo.create_order(
                 user_id=user_id,

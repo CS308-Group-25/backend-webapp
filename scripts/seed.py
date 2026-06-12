@@ -5,18 +5,23 @@ import os
 import random
 import sys
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from pathlib import Path
 
 from sqlalchemy import text
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import core.models  # noqa: F401 — registers all models with SQLAlchemy metadata
 from core.database import SessionLocal
 from modules.auth.model import User
 from modules.auth.service import pwd_context
 from modules.categories.model import Category
+from modules.invoices.model import Invoice
+from modules.orders.model import Order, OrderItem, Payment
 from modules.products.model import Product
 from modules.reviews.model import Review
+from modules.wishlist.model import WishlistItem
 
 
 random.seed(42)
@@ -43,6 +48,14 @@ IMAGES_POOL = [
     "/products/creatine.png",
     "/products/protein-bar.png",
 ]
+
+DEMO_CUSTOMER = {
+    "name": "Demo Musteri",
+    "email": "customer@demo.com",
+    "password": "demo123",
+    "address": "Levent, Istanbul",
+    "tax_id": "9999999999",
+}
 
 DEMO_REVIEW_COMMENTS = [
     "Urun cok kullanisli, teslimattan sonra memnun kaldim.",
@@ -110,18 +123,37 @@ def load_seed_data():
 def clean_old_data(db):
     print("Cleaning old data...")
 
-    tables_to_clean = [
-        "cart_items",
-        "order_items",
-        "wishlist_items",
-        "reviews",
+    # Delete in FK-safe order. Savepoints let individual statements fail silently
+    # (e.g. table missing on first run) without aborting the whole transaction.
+    ordered_deletes = [
+        "DELETE FROM refund_requests",
+        "DELETE FROM invoices",
+        "DELETE FROM payments",
+        "DELETE FROM cart_items",
+        "DELETE FROM order_items",
+        "DELETE FROM wishlist_items",
+        "DELETE FROM reviews",
+        "DELETE FROM discounts",
+        "DELETE FROM orders",
+        "DELETE FROM carts",
+        "DELETE FROM products",
+        "DELETE FROM categories",
     ]
 
-    for table_name in tables_to_clean:
+    for sql in ordered_deletes:
+        db.execute(text("SAVEPOINT clean_sp"))
         try:
-            db.execute(text(f"DELETE FROM {table_name}"))
+            db.execute(text(sql))
+            db.execute(text("RELEASE SAVEPOINT clean_sp"))
         except Exception:
-            pass
+            db.execute(text("ROLLBACK TO SAVEPOINT clean_sp"))
+
+    # User deletion runs after all FK references are cleared.
+    db.execute(text("DELETE FROM users WHERE email LIKE :p"), {"p": "%@example.com"})
+    db.execute(
+        text("DELETE FROM users WHERE email = :e"),
+        {"e": DEMO_CUSTOMER["email"]},
+    )
 
     from modules.categories.model import SubCategory
     db.query(Product).delete()
@@ -439,17 +471,217 @@ def create_demo_reviews(db, products):
     )
 
 
+def create_managers(db):
+    print("Seeding manager accounts...")
+
+    managers = [
+        {
+            "name": "Product Manager",
+            "email": os.getenv("PM_EMAIL", "pm@example.com"),
+            "password": os.getenv("PM_PASSWORD", "pm_password"),
+            "tax_id": os.getenv("PM_TAX_ID", "1234567890"),
+            "address": os.getenv("PM_ADDRESS", "PM Office"),
+            "role": "product_manager",
+        },
+        {
+            "name": "Sales Manager",
+            "email": os.getenv("SM_EMAIL", "sales@example.com"),
+            "password": os.getenv("SM_PASSWORD", "sales_password"),
+            "tax_id": os.getenv("SM_TAX_ID", "0000000000"),
+            "address": os.getenv("SM_ADDRESS", "Sales Office"),
+            "role": "sales_manager",
+        },
+    ]
+
+    for m in managers:
+        user = User(
+            name=m["name"],
+            email=m["email"],
+            password_hash=pwd_context.hash(m["password"]),
+            tax_id=m["tax_id"],
+            address=m["address"],
+            role=m["role"],
+        )
+        db.add(user)
+
+    db.commit()
+    print("Manager accounts seeded.")
+
+
+def create_demo_customer(db) -> User:
+    print("Seeding demo customer...")
+
+    customer = User(
+        name=DEMO_CUSTOMER["name"],
+        email=DEMO_CUSTOMER["email"],
+        password_hash=pwd_context.hash(DEMO_CUSTOMER["password"]),
+        tax_id=DEMO_CUSTOMER["tax_id"],
+        address=DEMO_CUSTOMER["address"],
+        role="customer",
+    )
+    db.add(customer)
+    db.commit()
+    db.refresh(customer)
+
+    print(f"Demo customer seeded: {customer.email}")
+    return customer
+
+
+def create_demo_efgh_products(db, category_map: dict) -> list:
+    print("Seeding demo products E/F/G/H...")
+
+    categories = list(category_map.values())
+    cat = lambda key: category_map.get(key, categories[0])  # noqa: E731
+
+    specs = [
+        # E: delivered >30 days ago — customer can review it, but refund is blocked
+        {
+            "name": "Product E",
+            "serial_no": "DEMO-E-001",
+            "price": Decimal("249.99"),
+            "stock": 5,
+            "category": cat("saglik"),
+            "description": "Demo product E — purchased over 30 days ago.",
+        },
+        # F: delivered <30 days ago — refund allowed; stock increases after approval
+        {
+            "name": "Product F",
+            "serial_no": "DEMO-F-001",
+            "price": Decimal("199.99"),
+            "stock": 5,
+            "category": cat("protein"),
+            "description": "Demo product F — within 30 days, eligible for refund.",
+        },
+        # G: processing — cancellation is available at this stage
+        {
+            "name": "Product G",
+            "serial_no": "DEMO-G-001",
+            "price": Decimal("149.99"),
+            "stock": 10,
+            "category": cat("vitamin"),
+            "description": "Demo product G — order currently in processing.",
+        },
+        # H: in_transit — shows delivery status flow
+        {
+            "name": "Product H",
+            "serial_no": "DEMO-H-001",
+            "price": Decimal("99.99"),
+            "stock": 10,
+            "category": cat("amino"),
+            "description": "Demo product H — order currently in transit.",
+        },
+    ]
+
+    products = []
+    for s in specs:
+        p = Product(
+            name=s["name"],
+            serial_no=s["serial_no"],
+            description=s["description"],
+            price=s["price"],
+            stock=s["stock"],
+            stock_status="in_stock",
+            brand="SUpplements",
+            category_id=s["category"].id,
+            images=[random.choice(IMAGES_POOL)],
+            tags_json=[],
+            flavors_json=[],
+            sizes_json=[],
+            features=[],
+        )
+        db.add(p)
+        products.append(p)
+
+    db.commit()
+    for p in products:
+        db.refresh(p)
+
+    print(f"Demo products E/F/G/H seeded: {[p.name for p in products]}")
+    return products
+
+
+def create_demo_orders(db, customer: User, efgh_products: list) -> None:
+    print("Seeding demo orders...")
+
+    now = datetime.now(timezone.utc)
+
+    # E: delivered, >30 days ago → review allowed, refund blocked by 30-day window
+    # F: delivered, <30 days ago → refund allowed
+    # G: processing             → cancellation available
+    # H: in_transit             → status display only
+    order_specs = [
+        {"label": "E", "product": efgh_products[0], "status": "delivered", "days_ago": 35},  # noqa: E501
+        {"label": "F", "product": efgh_products[1], "status": "delivered", "days_ago": 10},  # noqa: E501
+        {"label": "G", "product": efgh_products[2], "status": "processing", "days_ago": 2},  # noqa: E501
+        {"label": "H", "product": efgh_products[3], "status": "in_transit", "days_ago": 5},  # noqa: E501
+    ]
+
+    for spec in order_specs:
+        product = spec["product"]
+        price = product.price if product.price is not None else Decimal("99.99")
+        created_at = now - timedelta(days=spec["days_ago"])
+
+        order = Order(
+            user_id=customer.id,
+            delivery_address=customer.address,
+            status=spec["status"],
+            total=price,
+            created_at=created_at,
+        )
+        db.add(order)
+        db.flush()  # populate order.id before creating invoice
+
+        db.add(OrderItem(
+            order_id=order.id,
+            product_id=product.id,
+            quantity=1,
+            price=price,
+        ))
+
+        db.add(Payment(
+            order_id=order.id,
+            card_last4="1234",
+            card_brand="Visa",
+            status="success",
+            created_at=created_at,
+        ))
+
+        db.add(Invoice(
+            order_id=order.id,
+            invoice_number=f"INV-2026-{order.id:05d}",
+            total=price,
+            created_at=created_at,
+        ))
+
+        print(
+            f"  Order {spec['label']}: product='{product.name[:35]}', "
+            f"status={spec['status']}, date={created_at.date()}, "
+            f"invoice=INV-2026-{order.id:05d}"
+        )
+
+    db.commit()
+    print("Demo orders seeded.")
+
+
+def create_demo_wishlist(db, customer: User, products: list) -> None:
+    print("Seeding demo wishlist...")
+
+    db.add(WishlistItem(
+        user_id=customer.id,
+        product_id=products[2].id,
+    ))
+    db.commit()
+
+    print(f"Wishlist seeded: '{products[2].name[:40]}' added for {customer.email}.")
+
+
 def validate_seed_data(data):
     categories = data["categories"]
     products = data["products"]
 
     category_keys = {category["key"] for category in categories}
 
-    if len(products) != 110:
-        print(
-            f"⚠️ Warning: Expected 110 products in JSON, "
-            f"but found {len(products)} products."
-        )
+    print(f"Loaded {len(products)} products.")
 
     for index, product in enumerate(products, start=1):
         category_key = get_category_key(product)
@@ -480,11 +712,37 @@ def seed_db():
         category_map = create_categories(db, data["categories"])
         create_sub_categories(db, data["products"], category_map)
         products = create_products(db, data["products"], category_map)
+
+        for product, letter in zip(products, ["A", "B", "C"]):
+            product.name = f"Product {letter}"
+        db.commit()
+
         create_demo_reviews(db, products)
 
+        create_managers(db)
+        customer = create_demo_customer(db)
+        efgh_products = create_demo_efgh_products(db, category_map)
+        create_demo_orders(db, customer, efgh_products)
+
+        pm_email = os.getenv("PM_EMAIL", "pm@example.com")
+        pm_password = os.getenv("PM_PASSWORD", "pm_password")
+        sm_email = os.getenv("SM_EMAIL", "sales@example.com")
+        sm_password = os.getenv("SM_PASSWORD", "sales_password")
+
         print(
-            f"✅ Successfully seeded DB: "
-            f"{len(data['categories'])} categories, {len(data['products'])} products."
+            f"\n✅ DB ready for demo.\n"
+            f"\n  Customer:        "
+            f"{DEMO_CUSTOMER['email']} / {DEMO_CUSTOMER['password']}"
+            f"\n  Product Manager: {pm_email} / {pm_password}"
+            f"\n  Sales Manager:   {sm_email} / {sm_password}"
+            f"\n\n  Catalog products:"
+            f"\n    A={products[0].name[:35]} (stock={products[0].stock})"
+            f"\n    B={products[1].name[:35]} (stock={products[1].stock})"
+            f"\n    C={products[2].name[:35]} (stock={products[2].stock})"
+            f"\n    E=Product E  F=Product F  G=Product G  H=Product H"
+            f"\n  Orders: E(delivered >30d), F(delivered <10d),"
+            f" G(processing), H(in_transit)"
+            f"\n  Wishlist: Product C in customer wishlist\n"
         )
 
     except Exception as error:

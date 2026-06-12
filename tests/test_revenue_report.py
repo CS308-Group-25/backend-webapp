@@ -40,7 +40,7 @@ def test_revenue_excludes_refunded_orders():
     assert result.revenue == Decimal("300.00")
     assert result.cost == Decimal("300.00") * COST_MARGIN
     assert result.profit == Decimal("300.00") * (1 - COST_MARGIN)
-    assert len(result.chart_data) == 2
+    assert len(result.chart_data) == 31
 
 
 def test_date_range_filter_is_passed_to_repository():
@@ -59,6 +59,6 @@ def test_date_range_filter_is_passed_to_repository():
     result = service.get_revenue_report(from_date=from_date, to_date=to_date)
 
     service.repository.get_revenue_by_date.assert_called_once_with(from_date, to_date)
-    assert len(result.chart_data) == 1
-    assert result.chart_data[0].date == date(2024, 3, 15)
-    assert result.chart_data[0].revenue == Decimal("500.00")
+    assert len(result.chart_data) == 31
+    assert result.chart_data[14].date == date(2024, 3, 15)
+    assert result.chart_data[14].revenue == Decimal("500.00")
