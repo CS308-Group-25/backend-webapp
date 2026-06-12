@@ -126,6 +126,15 @@ class OrderService:
                     detail=f"Insufficient stock for {product.name} request",
                 )
 
+            if product.price is None:
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                    f"Product '{product.name}' has no price set yet. A Sales "
+                    "Manager must set the price before it can be purchased."
+                ),
+                )
+
             total += item.quantity * product.price
 
         # Atomic block: stock re-validation under lock, payment, order creation,
@@ -179,7 +188,7 @@ class OrderService:
                     order_id=order.id,
                     product_id=product.id,
                     quantity=item.quantity,
-                    price=product.price,
+                    price=product.price or 0,
                     variant_name=item.variant_name,
                 )
                 self.product_repo.update_stock(product.id, item.quantity)

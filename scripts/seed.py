@@ -155,6 +155,10 @@ def clean_old_data(db):
         {"e": DEMO_CUSTOMER["email"]},
     )
 
+    from modules.categories.model import SubCategory
+    db.query(Product).delete()
+    db.query(SubCategory).delete()
+    db.query(Category).delete()
     db.commit()
 
     print("Old data cleaned.")
@@ -189,6 +193,34 @@ def create_categories(db, categories_data):
 
     print("Categories seeded.")
     return category_map
+
+
+def create_sub_categories(db, products_data, category_map):
+    from modules.categories.model import SubCategory
+    print("Seeding subcategories from products...")
+    sub_categories = []
+    unique_subtypes = {}
+    
+    for product_data in products_data:
+        category_key = get_category_key(product_data)
+        category = category_map.get(category_key)
+        sub_type = get_value(product_data, "model", "subType", "sub_type", default=None)
+        
+        if category and sub_type and sub_type.strip():
+            key = (sub_type.strip(), category.id)
+            if key not in unique_subtypes:
+                unique_subtypes[key] = True
+                sub = SubCategory(
+                    name=sub_type.strip(), 
+                    category_id=category.id,
+                    description=f"{sub_type.strip()} alt kategorisi ürünleri."
+                )
+                sub_categories.append(sub)
+                db.add(sub)
+                
+    db.commit()
+    print(f"SubCategories seeded: {len(sub_categories)}")
+
 
 
 def get_category_key(product_data):
@@ -678,6 +710,7 @@ def seed_db():
         clean_old_data(db)
 
         category_map = create_categories(db, data["categories"])
+        create_sub_categories(db, data["products"], category_map)
         products = create_products(db, data["products"], category_map)
 
         for product, letter in zip(products, ["A", "B", "C"]):

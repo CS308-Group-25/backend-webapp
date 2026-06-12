@@ -22,7 +22,12 @@ class ProductRepository:
         page: int = 1,
         page_size: int = 20,
     ) -> tuple[list[Product], int]:
-        query = self.db.query(Product).filter(Product.deleted_at.is_(None))
+        # Public endpoint: only show products priced by a Sales Manager.
+        # Products with price=NULL are drafts and must not appear in customer catalog.
+        query = self.db.query(Product).filter(
+            Product.deleted_at.is_(None),
+            Product.price.is_not(None),
+        )
 
         if search:
             term = f"%{search}%"
@@ -48,13 +53,44 @@ class ProductRepository:
         total = query.count()
         items = query.offset((page - 1) * page_size).limit(page_size).all()
         self._attach_review_stats(items)
+        return items, total
 
+    def get_all_admin(
+        self,
+        page: int = 1,
+        page_size: int = 1000,
+    ) -> tuple[list[Product], int]:
+        """
+        Admin-only listing: returns ALL non-deleted products including
+        those without a price (drafts waiting for Sales Manager to set price).
+        """
+        query = self.db.query(Product).filter(Product.deleted_at.is_(None))
+        total = query.count()
+        items = query.offset((page - 1) * page_size).limit(page_size).all()
+        self._attach_review_stats(items)
         return items, total
 
     def get_by_id(self, product_id: int) -> Product | None:
         product = (
             self.db.query(Product)
-            .filter(Product.id == product_id, Product.deleted_at.is_(None))
+            .filter(
+                Product.id == product_id,
+                Product.deleted_at.is_(None),
+                Product.price.is_not(None),  # Hide unpriced products from customers
+            )
+            .first()
+        )
+        if product is not None:
+            self._attach_review_stats([product])
+        return product
+
+    def get_admin_by_id(self, product_id: int) -> Product | None:
+        product = (
+            self.db.query(Product)
+            .filter(
+                Product.id == product_id,
+                Product.deleted_at.is_(None)
+            )
             .first()
         )
         if product is not None:
@@ -163,3 +199,5 @@ class ProductRepository:
             set_committed_value(product, "rating", rounded_rating)
             set_committed_value(product, "review_count", int(rating_count or 0))
             product.comment_count = int(comment_counts_by_product_id.get(product.id, 0))
+
+

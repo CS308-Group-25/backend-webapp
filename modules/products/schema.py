@@ -27,6 +27,14 @@ class ProductBase(BaseModel):
     serving_size: Optional[str] = Field(None, max_length=50)
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
+    images: Optional[list[str]] = None
+    tags_json: Optional[list[str]] = None
+    flavors_json: Optional[list[Any]] = None
+    sizes_json: Optional[list[Any]] = None
+    features: Optional[list[str]] = None
+    ingredients: Optional[str] = None
+    nutrition_facts: Optional[list[Any]] = None
+    usage_info: Optional[str] = None
 
 
 class ProductCreate(ProductBase):
@@ -48,9 +56,10 @@ class ProductUpdate(BaseModel):
     serving_size: Optional[str] = Field(None, max_length=50)
     goal_tags: Optional[str] = Field(None, max_length=300)
     category_id: Optional[int] = None
-    sizes_json: Optional[list[Any]] = None
-    flavors_json: Optional[list[Any]] = None
     images: Optional[list[str]] = None
+    tags_json: Optional[list[str]] = None
+    flavors_json: Optional[list[Any]] = None
+    sizes_json: Optional[list[Any]] = None
     features: Optional[list[str]] = None
     ingredients: Optional[str] = None
     nutrition_facts: Optional[list[Any]] = None
@@ -63,6 +72,21 @@ class ProductUpdate(BaseModel):
 class ProductRead(ProductBase):
     id: int
     price: Optional[Decimal] = None
+    original_price: Optional[Decimal] = None
+    stock_status: Optional[str] = None
+    is_new: Optional[bool] = None
+    rating: Optional[Decimal] = None
+    review_count: Optional[int] = None
+    comment_count: Optional[int] = None
+    images: Optional[list[str]] = None
+    tags_json: Optional[list[str]] = None
+    flavors_json: Optional[list[Any]] = None
+    sizes_json: Optional[list[Any]] = None
+    features: Optional[list[str]] = None
+    ingredients: Optional[str] = None
+    nutrition_facts: Optional[list[Any]] = None
+    usage_info: Optional[str] = None
+    category: Optional[CategoryResponse] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
 

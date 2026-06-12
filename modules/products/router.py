@@ -62,6 +62,33 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
     return service.get_product(product_id)
 
 
+@admin_router.get("", response_model=PaginatedProductResponse)
+def list_admin_products(
+    page: int = 1,
+    page_size: int = 1000,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    """Admin product listing — includes unpriced drafts invisible to customers."""
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+    items, total = service.list_all_admin(page=page, page_size=page_size)
+    return PaginatedProductResponse(
+        items=items, total=total, page=page, page_size=page_size
+    )
+
+
+@admin_router.get("/{product_id}", response_model=ProductDetailResponse)
+def get_admin_product(
+    product_id: int, 
+    db: Session = Depends(get_db),
+    _: None = Depends(require_product_manager),
+):
+    repo = ProductRepository(db)
+    service = ProductService(repo)
+    return service.get_admin_product(product_id)
+
+
 @admin_router.post("", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
 def create_product(
     product_in: ProductCreate,
