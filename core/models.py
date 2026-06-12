@@ -4,6 +4,7 @@
 
 import modules.categories.model  # noqa: E402, F401
 import modules.products.model  # noqa: E402, F401
+from modules.addresses.model import Address  # noqa: F401
 from modules.auth.model import User  # noqa: F401
 from modules.cart.model import Cart, CartItem  # noqa: F401
 from modules.categories.model import Category, SubCategory  # noqa: F401

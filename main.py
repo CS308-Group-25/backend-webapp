@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 import core.models  # noqa: E402, F401
+from modules.addresses.router import router as addresses_router  # noqa: E402
 from modules.auth.router import router as auth_router  # noqa: E402
 from modules.cart.router import router as cart_router  # noqa: E402
 from modules.categories.router import (  # noqa: E402
@@ -36,6 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(addresses_router)
 app.include_router(auth_router)
 app.include_router(cart_router)
 app.include_router(products_router)
