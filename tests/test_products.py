@@ -136,8 +136,12 @@ def test_set_product_price_success(client: TestClient, mock_sales_manager):
     mock_service.set_price.return_value = mock_product
 
     with patch(
-        "modules.products.router.ProductService") as mock_service_class:
+        "modules.products.router.ProductService") as mock_service_class, \
+         patch("modules.products.router.ProductRepository") as mock_repo_class:
         mock_service_class.return_value = mock_service
+        mock_repo = MagicMock()
+        mock_repo.get_by_id.return_value = None
+        mock_repo_class.return_value = mock_repo
         response = client.patch(
             "/api/v1/admin/products/1/price", json={"price": "49.99"}
             )

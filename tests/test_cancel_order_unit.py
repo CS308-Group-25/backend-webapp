@@ -46,14 +46,14 @@ def test_cancel_order_success_when_pending():
     order_repo.update_order_status.assert_called_once_with(1, "cancelled")
 
 
-def test_cancel_order_returns_400_when_processing():
-    """T-203: Cancelling a processing order raises 400 and never touches the repo."""
+def test_cancel_order_returns_400_when_in_transit():
+    """T-203: Cancelling an in-transit order raises 400 and never touches the repo."""
     order_repo = MagicMock()
 
     order = MagicMock(spec=Order)
     order.id = 1
     order.user_id = 42
-    order.status = "processing"
+    order.status = "in_transit"
 
     order_repo.get_by_order_id.return_value = order
 

@@ -96,7 +96,9 @@ class ProductService:
         self.repo.soft_delete_product(product)
 
     def set_price(self, product_id: int, price: Decimal) -> Product:
-        product = self.get_product(product_id)
+        product = self.repo.get_admin_by_id(product_id)
+        if product is None:
+            raise HTTPException(status_code=404, detail="Product not found")
 
         # Keep every active discount's stored original in sync with the new base
         # price. Without this, remove_discount() would restore the stale

@@ -4,11 +4,13 @@
 
 import modules.categories.model  # noqa: E402, F401
 import modules.products.model  # noqa: E402, F401
+from modules.addresses.model import Address  # noqa: F401
 from modules.auth.model import User  # noqa: F401
 from modules.cart.model import Cart, CartItem  # noqa: F401
 from modules.categories.model import Category, SubCategory  # noqa: F401
 from modules.discounts.model import Discount  # noqa: F401
 from modules.invoices.model import Invoice  # noqa: F401
+from modules.notifications.model import Notification  # noqa: F401
 from modules.orders.model import Order, OrderItem, Payment  # noqa: E402, F401
 from modules.products.model import Product  # noqa: F401
 from modules.refunds.model import RefundRequest  # noqa: F401

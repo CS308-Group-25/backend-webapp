@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 import core.models  # noqa: E402, F401
+from modules.addresses.router import router as addresses_router  # noqa: E402
 from modules.auth.router import router as auth_router  # noqa: E402
 from modules.cart.router import router as cart_router  # noqa: E402
 from modules.categories.router import (  # noqa: E402
@@ -14,6 +15,7 @@ from modules.categories.router import router as categories_router  # noqa: E402
 from modules.discounts.router import router as discounts_router  # noqa: E402
 from modules.invoices.router import admin_router as invoices_admin_router  # noqa: E402
 from modules.invoices.router import router as invoices_router  # noqa: E402
+from modules.notifications.router import router as notifications_router  # noqa: E402
 from modules.orders.router import admin_router as orders_admin_router  # noqa: E402
 from modules.orders.router import router as orders_router  # noqa: E402
 from modules.products.router import admin_router as products_admin_router  # noqa: E402
@@ -35,6 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(addresses_router)
 app.include_router(auth_router)
 app.include_router(cart_router)
 app.include_router(products_router)
@@ -51,6 +54,7 @@ app.include_router(reviews_admin_router)
 app.include_router(refunds_router)
 app.include_router(refunds_admin_router)
 app.include_router(wishlist_router)
+app.include_router(notifications_router)
 app.include_router(reports_router)
 
 

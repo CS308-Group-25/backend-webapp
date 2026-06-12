@@ -300,7 +300,7 @@ class OrderService:
         if order.user_id != user_id:
             raise HTTPException(status_code=403, detail="Access forbidden.")
 
-        CANCALLABLE_STATUSES = {"pending", "confirmed"}
+        CANCALLABLE_STATUSES = {"pending", "confirmed", "processing"}
         if order.status not in CANCALLABLE_STATUSES:
             raise HTTPException(
                 status_code=400,
