@@ -64,6 +64,9 @@ class ProductUpdate(BaseModel):
     ingredients: Optional[str] = None
     nutrition_facts: Optional[list[Any]] = None
     usage_info: Optional[str] = None
+    stock_status: Optional[str] = None
+    is_new: Optional[bool] = None
+    original_price: Optional[Decimal] = None
 
 
 class ProductRead(ProductBase):
