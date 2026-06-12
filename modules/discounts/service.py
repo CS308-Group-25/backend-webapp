@@ -23,6 +23,9 @@ class DiscountService:
         self.product_repo = product_repo
         self.wishlist_repo = wishlist_repo
 
+    def list_discounts(self) -> list[Discount]:
+        return self.discount_repo.get_all()
+
     def apply_discount(
         self,
         product_ids: list[int],
@@ -41,9 +44,14 @@ class DiscountService:
                 raise HTTPException(
                     status_code=400, detail=f"Product {pid} has no base price set"
                 )
+            if product.original_price is not None:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Product {pid} already has an active discount",
+                )
             products.append(product)
 
-        # Persist original prices before overwriting — never recalculate on restore
+        # Snapshot prices now — create_discount commits and expires ORM objects
         original_prices = {str(p.id): str(p.price) for p in products}
 
         discount = self.discount_repo.create_discount({
@@ -56,10 +64,26 @@ class DiscountService:
         new_prices = {}
         multiplier = (Decimal(100) - discount_rate) / Decimal(100)
         for product in products:
-            new_price = (
-                Decimal(str(product.price)) * multiplier).quantize(Decimal("0.01"))
+            # Read price BEFORE writing original_price — avoids stale reads if
+            # the ORM flushes between attribute assignments on an expired object.
+            original = Decimal(str(product.price))
+            new_price = (original * multiplier).quantize(Decimal("0.01"))
             new_prices[product.id] = new_price
-            self.product_repo.update_product(product, {"price": new_price})
+
+            update_data: dict = {"original_price": original, "price": new_price}
+            sizes = product.sizes_json
+            if sizes:
+                updated_sizes = []
+                for size in sizes:
+                    if isinstance(size, dict) and size.get("price") is not None:
+                        scaled = (Decimal(str(size["price"])) * multiplier).quantize(
+                            Decimal("0.01")
+                        )
+                        updated_sizes.append({**size, "price": float(scaled)})
+                    else:
+                        updated_sizes.append(size)
+                update_data["sizes_json"] = updated_sizes
+            self.product_repo.update_product(product, update_data)
 
         for product in products:
             old_price_f = float(original_prices[str(product.id)])
@@ -87,11 +111,35 @@ class DiscountService:
         if discount is None:
             raise HTTPException(status_code=404, detail="Discount not found")
 
-        # Restore original prices before deleting the record
+        # Restore original prices before deleting the record.
+        # Prefer product.original_price (set since this fix); fall back to the
+        # JSON snapshot in the discount row for discounts created before the fix.
         for str_pid, str_price in discount.original_prices.items():
             product = self.product_repo.get_by_id(int(str_pid))
             if product is None:
                 continue  # product was soft-deleted; nothing to restore
-            self.product_repo.update_product(product, {"price": Decimal(str_price)})
+            restore_to = (
+                product.original_price
+                if product.original_price is not None
+                else Decimal(str_price)
+            )
+            update_data: dict = {"price": restore_to, "original_price": None}
+            sizes = product.sizes_json
+            if sizes:
+                ref_raw = sizes[0].get("price") if isinstance(sizes[0], dict) else None
+                ref = Decimal(str(ref_raw)) if ref_raw else None
+                if ref:
+                    ratio = restore_to / ref
+                    updated_sizes = []
+                    for size in sizes:
+                        if isinstance(size, dict) and size.get("price") is not None:
+                            restored = (
+                                Decimal(str(size["price"])) * ratio
+                            ).quantize(Decimal("0.01"))
+                            updated_sizes.append({**size, "price": float(restored)})
+                        else:
+                            updated_sizes.append(size)
+                    update_data["sizes_json"] = updated_sizes
+            self.product_repo.update_product(product, update_data)
 
         self.discount_repo.delete_discount(discount)
